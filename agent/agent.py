@@ -354,6 +354,20 @@ def get_order(wrapper: RunContextWrapper[AuthContext], order_id: int) -> dict[st
     return _call(wrapper, get_order_logic, order_id)
 
 
+@function_tool
+def check_return_eligibility(
+    wrapper: RunContextWrapper[AuthContext], order_id: int
+) -> dict[str, Any]:
+    """Check whether an order can be returned for a refund, and why.
+
+    Returns the return window that applies (a store override or the platform
+    default), days since delivery, the date the window closes, the policy id to
+    cite, and a one-sentence reason. If the order record is inconsistent,
+    eligible is null and data_issue says why.
+    """
+    return _call(wrapper, hw_tools.check_return_eligibility, order_id)
+
+
 def _issue_refund_impl(
     wrapper: RunContextWrapper[AuthContext], order_id: int, amount_usd: float, reason: str
 ) -> dict[str, Any]:
@@ -427,15 +441,34 @@ def find_order(
     return _call(wrapper, hw_tools.find_order, query)
 
 
+@function_tool
+def search_customer_orders(
+    wrapper: RunContextWrapper[AuthContext],
+    customer_id: int,
+    product_query: str | None = None,
+) -> dict[str, Any]:
+    """Search one customer's orders (support staff only), newest first, up to 10.
+
+    Results include product titles and report total_matches; when truncated is
+    true, older matches exist that are not shown.
+
+    Args:
+        customer_id: The customer's user id.
+        product_query: Optional product name to match (fuzzy).
+    """
+    return _call(wrapper, hw_tools.search_customer_orders, customer_id, product_query)
+
+
 # Progressive disclosure: a session exposes only the tools its role can use.
-# Fewer tools mean fewer wrong choices and cleaner evals. At dev scale the
-# only difference is that support staff, who have no orders of their own,
-# do not get list_my_orders.
+# Fewer tools mean fewer wrong choices and cleaner evals. Support staff, who
+# have no orders of their own, do not get list_my_orders; only support gets
+# search_customer_orders.
 _COMMON_TOOLS = [
     search_help_center,
     get_policy,
     search_products,
     get_order,
+    check_return_eligibility,
     issue_refund,
     cancel_order,
     escalate_to_human,
@@ -443,7 +476,7 @@ _COMMON_TOOLS = [
 TOOLS_BY_ROLE = {
     "shopper": _COMMON_TOOLS + [list_my_orders, find_order],
     "merchant": _COMMON_TOOLS + [list_my_orders, find_order],
-    "support": _COMMON_TOOLS + [find_order],
+    "support": _COMMON_TOOLS + [find_order, search_customer_orders],
 }
 
 

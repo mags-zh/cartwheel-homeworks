@@ -19,19 +19,23 @@ They are marked xfail and flip to passing as you implement each function.
 from __future__ import annotations
 
 import re
+from datetime import date, timedelta
 from typing import Any
 
 from rapidfuzz import fuzz
 
 from agent import db
-from agent.auth import AuthContext, can_cancel_order, permission_denied
+from agent.auth import AuthContext, can_cancel_order, can_view_order, permission_denied
+from agent.config import load_facts
 from agent.helpcenter import load_policy_docs
 from agent.killswitch import kill_switch
+from seed.eligibility import effective_return_window_days, is_refund_eligible
 
 MAX_SEARCH_LIMIT = 25
 DEFAULT_ORDER_LIMIT = 20
 FIND_ORDER_LIMIT = 5
 FIND_ORDER_MIN_SCORE = 80
+CUSTOMER_ORDER_LIMIT = 10
 _WORD_RE = re.compile(r"[a-z0-9]+")
 
 
@@ -303,9 +307,15 @@ def find_order(ctx: AuthContext, query: str) -> dict[str, Any]:
         titles = {p.id: p.title for p in db.list_products(conn)}
         candidates = db.list_order_search_candidates(conn, **scope)
 
+    matching_products = _matching_product_ids(titles, query_words)
+    matches = [o.to_public_dict() for o in candidates if o.product_id in matching_products]
+    return {"ok": True, "orders": matches[:FIND_ORDER_LIMIT]}
+
+
+def _matching_product_ids(titles: dict[int, str], query_words: list[str]) -> set[int]:
     # Every query word must closely match some title word. Whole-string fuzzy
     # scores match on shared adjectives ("Heavy-Duty Vase" ~ "Heavy-Duty Webcam").
-    matching_products = {
+    return {
         product_id
         for product_id, title in titles.items()
         if all(
@@ -313,5 +323,223 @@ def find_order(ctx: AuthContext, query: str) -> dict[str, Any]:
             for q in query_words
         )
     }
-    matches = [o.to_public_dict() for o in candidates if o.product_id in matching_products]
-    return {"ok": True, "orders": matches[:FIND_ORDER_LIMIT]}
+
+
+def search_customer_orders(
+    ctx: AuthContext, customer_id: int, product_query: str | None = None
+) -> dict[str, Any]:
+    """Search one customer's orders on behalf of support staff. Risk tier: read.
+
+    Support may view any customer's orders (SPEC access matrix), but get_order
+    needs an exact id and find_order searches every customer at once and shows
+    only the five newest matches. This tool scopes the search to one customer.
+
+    Access rules: support only. Shoppers and merchants get permission_denied
+    even if the tool is somehow exposed to them; their own scopes are covered
+    by list_my_orders and find_order.
+
+    Args:
+        ctx: The caller's auth context.
+        customer_id: The shopper whose orders to search.
+        product_query: Optional product name, matched with the same per-word
+            fuzzy rule as find_order. Blank means no product filter.
+
+    There is deliberately no date filter: the model does not know the world
+    date, so it would have to guess the year for requests like "in May". It
+    reads the dates in the results instead.
+
+    Returns:
+        {"ok": True, "customer_id": int, "orders": [...], "count": int,
+        "total_matches": int, "truncated": bool} with at most
+        CUSTOMER_ORDER_LIMIT orders in find_order's newest-first order, each
+        the public order dict plus "product_title". Matching is applied before
+        truncation. When truncated, a "note" tells the model that older matches
+        exist and to ask for the order number or a more specific product.
+        Errors: permission_denied for a non-support caller; not_found when
+        customer_id is not a shopper.
+    """
+    if ctx.role != "support":
+        return permission_denied(
+            f"role '{ctx.role}' (user {ctx.user_id}) may not search another customer's orders"
+        )
+    query_words = _words(product_query or "")
+
+    with db.connection() as conn:
+        customer = db.get_user(conn, customer_id)
+        if customer is None or customer.role != "shopper":
+            return {"ok": False, "error": "not_found", "reason": f"no customer with id {customer_id}"}
+        titles = {p.id: p.title for p in db.list_products(conn)}
+        candidates = db.list_order_search_candidates(conn, user_id=customer_id)
+
+    matching_products = _matching_product_ids(titles, query_words) if query_words else None
+    matches = [
+        o for o in candidates if matching_products is None or o.product_id in matching_products
+    ]
+    shown = [
+        {**o.to_public_dict(), "product_title": titles.get(o.product_id)}
+        for o in matches[:CUSTOMER_ORDER_LIMIT]
+    ]
+    result: dict[str, Any] = {
+        "ok": True,
+        "customer_id": customer_id,
+        "orders": shown,
+        "count": len(shown),
+        "total_matches": len(matches),
+        "truncated": len(matches) > len(shown),
+    }
+    if result["truncated"]:
+        result["note"] = (
+            f"showing the {len(shown)} newest of {len(matches)} matching orders; older "
+            "matches are not shown. Ask for the order number, or narrow the search "
+            "with a more specific product_query."
+        )
+    return result
+
+
+def _order_data_issue(
+    order: db.Order, store_product_ids: set[int], as_of: date
+) -> tuple[str, str] | None:
+    """Return (code, detail) when the order record is too inconsistent to judge."""
+    if order.status == "delivered" and order.delivered_at is None:
+        return "missing_delivery_date", "status is delivered but no delivery date is recorded"
+    if order.delivered_at is not None and order.delivered_at > as_of:
+        return "future_delivery_date", f"delivery date {order.delivered_at} is after {as_of}"
+    dates = [
+        ("ordered", order.ordered_at),
+        ("shipped", order.shipped_at),
+        ("delivered", order.delivered_at),
+    ]
+    known = [(name, value) for name, value in dates if value is not None]
+    for (earlier, a), (later, b) in zip(known, known[1:]):
+        if a > b:
+            return "reversed_chronology", f"{later} on {b} is before {earlier} on {a}"
+    if order.product_id not in store_product_ids:
+        return "store_mismatch", "the product does not belong to the order's store"
+    return None
+
+
+_NOT_DELIVERED_REASONS = {
+    "placed": (
+        "has not shipped yet, so it cannot be returned; it can still be cancelled "
+        "(cw-cancellations)"
+    ),
+    "shipped": (
+        "has not been delivered yet; the return window starts on the delivery date "
+        "(cw-returns)"
+    ),
+    "cancelled": "was cancelled, so there is nothing to return",
+    "refunded": "has already been refunded",
+}
+
+
+def check_return_eligibility(ctx: AuthContext, order_id: int) -> dict[str, Any]:
+    """Explain whether an order can be returned for a refund, and why. Risk tier: read.
+
+    get_order reports only a refund_eligible flag. This tool computes the facts
+    behind the decision so the model can explain it and cite the policy that
+    applies: the return window (store override or platform default), the days
+    since delivery, and the policy id.
+
+    Eligibility is recomputed with seed.eligibility.is_refund_eligible on the
+    world date, so it reflects the order's current status. The refund_eligible
+    flag stamped at seed time (which issue_refund trusts) is not updated when
+    the status changes, so the two can disagree after a refund.
+
+    Access rules: the same as get_order (agent.auth.can_view_order). Scope is
+    checked before anything about the order is returned.
+
+    Returns:
+        {"ok": True, "order_id", "store_name", "status", "delivered_at",
+        "as_of", "days_since_delivery", "return_window_days", "window_source"
+        ("store_override" or "platform"), "window_closes_on", "eligible",
+        "policy_id", "reason"}. Dates are YYYY-MM-DD; delivery fields are None
+        for undelivered orders.
+        When the record is inconsistent (missing or future delivery date,
+        dates out of order, product not sold by the order's store), no window
+        is computed: {"ok": True, "order_id", "store_name", "status",
+        "eligible": None, "data_issue": <code>, "reason"} with a reason telling
+        the model to escalate (seed data_quality_cases expected handling).
+        Errors: not_found for an unknown order; permission_denied for an order
+        outside the caller's scope.
+    """
+    with db.connection() as conn:
+        order = db.get_order(conn, order_id)
+        if order is None:
+            return {"ok": False, "error": "not_found", "reason": f"no order #{order_id}"}
+        if not can_view_order(ctx, order.user_id, order.store_id):
+            return permission_denied(
+                f"role '{ctx.role}' (user {ctx.user_id}) may not view order #{order_id}"
+            )
+        store = db.get_store(conn, order.store_id)
+        as_of = db.world_asof(conn)
+        store_product_ids = {p.id for p in db.list_products(conn, order.store_id)}
+
+    data_issue = _order_data_issue(order, store_product_ids, as_of)
+    if data_issue is not None:
+        code, detail = data_issue
+        return {
+            "ok": True,
+            "order_id": order_id,
+            "store_name": store.name if store else None,
+            "status": order.status,
+            "eligible": None,
+            "data_issue": code,
+            "reason": (
+                f"Order #{order_id} has an inconsistent record ({detail}), so return "
+                "eligibility cannot be determined. Do not state a return deadline; "
+                "escalate to a human."
+            ),
+        }
+
+    platform_days = load_facts()["return_window_days"]
+    override = store.return_window_days_override if store else None
+    window = effective_return_window_days(platform_days, override)
+    if override is None:
+        window_source, policy_id = "platform", "cw-returns"
+        rule = f"Cartwheel accepts returns within {window} days of delivery"
+    else:
+        window_source = "store_override"
+        store_doc = f"store-{store.slug}-policy"
+        known = {doc.policy_id for doc in load_policy_docs()}
+        policy_id = store_doc if store_doc in known else "cw-store-overrides"
+        rule = (
+            f"{store.name} accepts returns within {window} days of delivery, "
+            f"instead of the Cartwheel platform default of {platform_days} days"
+        )
+
+    delivered = order.delivered_at
+    days = (as_of - delivered).days if delivered else None
+    closes = delivered + timedelta(days=window) if delivered else None
+    eligible = is_refund_eligible(
+        status=order.status, delivered_at=delivered, as_of=as_of, return_window_days=window
+    )
+
+    if order.status != "delivered":
+        why = _NOT_DELIVERED_REASONS.get(order.status, f"has status '{order.status}'")
+        reason = f"Order #{order_id} {why}."
+    elif eligible:
+        reason = (
+            f"Delivered {delivered} ({days} days ago). {rule} ({policy_id}), "
+            f"so the return window is open until {closes}."
+        )
+    else:
+        reason = (
+            f"Delivered {delivered} ({days} days ago). {rule} ({policy_id}), "
+            f"so the return window closed on {closes}."
+        )
+
+    return {
+        "ok": True,
+        "order_id": order_id,
+        "store_name": store.name if store else None,
+        "status": order.status,
+        "delivered_at": delivered.isoformat() if delivered else None,
+        "as_of": as_of.isoformat(),
+        "days_since_delivery": days,
+        "return_window_days": window,
+        "window_source": window_source,
+        "window_closes_on": closes.isoformat() if closes else None,
+        "eligible": eligible,
+        "policy_id": policy_id,
+        "reason": reason,
+    }
