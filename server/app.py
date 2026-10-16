@@ -54,6 +54,10 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     load_env()
     setup_tracing()  # no-op with a warning if LANGFUSE_PUBLIC_KEY is unset
     yield
+    # Spans are exported in batches; send the last batch before the process exits.
+    provider = trace.get_tracer_provider()
+    if hasattr(provider, "force_flush"):
+        provider.force_flush()
 
 
 app = FastAPI(title="Cartwheel support agent", lifespan=lifespan)
@@ -123,8 +127,27 @@ def create_session(body: SessionCreate) -> dict[str, Any]:
     session id and a signed token. The token payload must contain session_id,
     user_id, role, store_id, and issued_at.
     """
-    ### YOUR CODE HERE (HW2)
-    raise NotImplementedError("HW2: implement POST /sessions")
+    if body.role not in ROLES:
+        raise HTTPException(status_code=400, detail=f"unknown role: {body.role!r}")
+    with db.connection() as conn:
+        user = db.get_user(conn, body.user_id)
+    if user is None:
+        raise HTTPException(status_code=404, detail=f"unknown user: {body.user_id}")
+    if user.role != body.role:
+        raise HTTPException(status_code=403, detail="role does not match this user")
+    ctx = AuthContext(user_id=user.id, role=user.role, store_id=user.store_id)
+    session_id = uuid.uuid4().hex
+    _SESSIONS[session_id] = (ctx, SQLiteSession(session_id, str(SESSIONS_DB)))
+    token = create_token(
+        {
+            "session_id": session_id,
+            "user_id": ctx.user_id,
+            "role": ctx.role,
+            "store_id": ctx.store_id,
+            "issued_at": int(time.time()),
+        }
+    )
+    return {"session_id": session_id, "token": token}
 
 
 def _authorize(session_id: str, authorization: str | None) -> AuthContext:
@@ -158,8 +181,37 @@ async def post_message(
     gen_ai.output.messages on the root span as JSON arrays of OTel GenAI
     messages with role and parts fields.
     """
-    ### YOUR CODE HERE (HW2)
-    raise NotImplementedError("HW2: implement the traced message endpoint")
+    ctx = _authorize(session_id, authorization)
+    _, session = _SESSIONS[session_id]
+    version = prompt_version()
+    agent = build_agent(ctx, model=body.model)
+    capture = os.environ.get("TRACELOOP_TRACE_CONTENT", "").lower() == "true"
+    with _tracer.start_as_current_span("cartwheel.session_message") as span:
+        span.set_attribute("cartwheel.session_id", session_id)
+        span.set_attribute("cartwheel.user_role", ctx.role)
+        span.set_attribute("cartwheel.user_id", str(ctx.user_id))
+        span.set_attribute("cartwheel.prompt_version", version)
+        if body.scenario_id:
+            span.set_attribute("cartwheel.scenario_id", body.scenario_id)
+        if capture:
+            span.set_attribute(
+                "gen_ai.input.messages",
+                json.dumps(
+                    [{"role": "user", "parts": [{"type": "text", "content": body.message}]}]
+                ),
+            )
+        result = await Runner.run(
+            agent, body.message, session=session, context=ctx, max_turns=MAX_TURNS
+        )
+        reply = str(result.final_output)
+        if capture:
+            span.set_attribute(
+                "gen_ai.output.messages",
+                json.dumps(
+                    [{"role": "assistant", "parts": [{"type": "text", "content": reply}]}]
+                ),
+            )
+    return {"session_id": session_id, "reply": reply, "prompt_version": version}
 
 
 @app.get("/health")
