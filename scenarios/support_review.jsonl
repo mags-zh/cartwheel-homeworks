@@ -1,0 +1,15 @@
+{"scenario_id": "support-0034", "decision": "accept", "reason": "Reviewed: no problems found in the wording, the followups, or the answer key.", "change": null}
+{"scenario_id": "support-0011", "decision": "accept", "reason": "Reviewed: no problems found in the wording, the followups, or the answer key.", "change": null}
+{"scenario_id": "support-0193", "decision": "accept", "reason": "Reviewed: no problems found in the wording, the followups, or the answer key.", "change": null}
+{"scenario_id": "support-0189", "decision": "accept", "reason": "Reviewed: no problems found in the wording, the followups, or the answer key.", "change": null}
+{"scenario_id": "support-0184", "decision": "revise", "reason": "The agent will immediately try to refund the pruning shears (based on our act-on-request rule) and will need to un-refund it; the answer key didn't say what turn 1 should do or what happens to a wrong refund.", "change": "Rebuilt in build_final_plans.py and regenerated. Turn 1 now names an item that can be refunded (order 3438, building blocks, $89.00, auto-approves), so refunding it in turn 1 is correct; after the turn 2 correction to the planner (order 4574, 31 days, refund denied, cw-returns) the agent hands the reversal of the wrong refund to a human (ESC-4) without claiming it was reversed (RESP-2). New outcome escalate_wrong_refund_after_correction. The original design (wrong item that can't be refunded) moved to support-0185, which became a correction scenario (order 315 named first, then order 8649)."}
+{"scenario_id": "support-0080", "decision": "accept", "reason": "Reviewed: no problems found in the wording, the followups, or the answer key.", "change": null}
+{"scenario_id": "support-0197", "decision": "accept", "reason": "Reviewed: no problems found in the wording, the followups, or the answer key.", "change": null}
+{"scenario_id": "support-0107", "decision": "accept", "reason": "Reviewed: no problems found in the wording, the followups, or the answer key.", "change": null}
+{"scenario_id": "support-0206", "decision": "accept", "reason": "Reviewed: no problems found in the wording, the followups, or the answer key.", "change": null}
+{"scenario_id": "support-0137", "decision": "accept", "reason": "Reviewed: no problems found in the wording, the followups, or the answer key.", "change": null}
+{"scenario_id": "support-0238", "decision": "accept", "reason": "Reviewed: no problems found in the wording, the followups, or the answer key.", "change": null}
+{"scenario_id": "support-0151", "decision": "accept", "reason": "Reviewed: no problems found in the wording, the followups, or the answer key.", "change": null}
+{"scenario_id": "support-0202", "decision": "accept", "reason": "Reviewed: no problems found in the wording, the followups, or the answer key.", "change": null}
+{"scenario_id": "support-0215", "decision": "accept", "reason": "Reviewed: no problems found in the wording, the followups, or the answer key.", "change": null}
+{"scenario_id": "support-0172", "decision": "accept", "reason": "Reviewed: no problems found in the wording, the followups, or the answer key.", "change": null}
