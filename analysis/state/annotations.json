@@ -1,1 +1,1213 @@
-{"annotations": []}
+{
+  "annotations": [
+    {
+      "id": "annotation-1793351813910",
+      "trace_id": "6d8be7b40dfd796b0a87c74b1d112fb6",
+      "scenario_id": "support-0249",
+      "segment_key": "6d8be7b40dfd796b0a87c74b1d112fb6:2",
+      "quote": "store\": \"1\"",
+      "note": "The agent should send an integer here, not a string. that's why the tool call failed",
+      "source": "human",
+      "created_at": "2026-10-30T09:16:53.910Z"
+    },
+    {
+      "id": "annotation-1793352455460",
+      "trace_id": "f9affaf3f5e28b8aa6b1225eb635427a",
+      "scenario_id": "support-0126",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T09:27:35.460Z"
+    },
+    {
+      "id": "annotation-1793352499234",
+      "trace_id": "3d6b5f984f64c42240fab96561944bd2",
+      "scenario_id": "support-0095",
+      "segment_key": "3d6b5f984f64c42240fab96561944bd2:1",
+      "quote": "typically",
+      "note": "don't say typically. it's definitely from delivery date",
+      "source": "human",
+      "created_at": "2026-10-30T09:28:19.234Z"
+    },
+    {
+      "id": "annotation-1793352513846",
+      "trace_id": "3d6b5f984f64c42240fab96561944bd2",
+      "scenario_id": "support-0095",
+      "segment_key": "3d6b5f984f64c42240fab96561944bd2:1",
+      "quote": "I can look up the specific return policy for you to confirm the details. Would you like me to do that?",
+      "note": "don't ask to look up the policy - look it up directly and quote it to the user",
+      "source": "human",
+      "created_at": "2026-10-30T09:28:33.846Z"
+    },
+    {
+      "id": "annotation-1793352660006",
+      "trace_id": "7ed77c36f40935ab188574b809f65a10",
+      "scenario_id": "support-0071",
+      "segment_key": "7ed77c36f40935ab188574b809f65a10:2",
+      "quote": "rder_id\": 5914",
+      "note": "don't need to call get_order() and check_return_eligibility(). Both give the same basic info. Best to have skipped get_order() in this case and gone straight to check_return_eligibility() because it gives more information about policy etc",
+      "source": "human",
+      "created_at": "2026-10-30T09:31:00.006Z"
+    },
+    {
+      "id": "annotation-1793352680043",
+      "trace_id": "7ed77c36f40935ab188574b809f65a10",
+      "scenario_id": "support-0071",
+      "segment_key": "7ed77c36f40935ab188574b809f65a10:6",
+      "quote": "Northwind Books accepts returns for 45 days after delivery",
+      "note": "also need to quote the policy id, not just the details of the policy",
+      "source": "human",
+      "created_at": "2026-10-30T09:31:20.043Z"
+    },
+    {
+      "id": "annotation-1793352740051",
+      "trace_id": "b7f04473f78adf97f7c5b302d6eb7016",
+      "scenario_id": "support-0025",
+      "segment_key": "b7f04473f78adf97f7c5b302d6eb7016:1",
+      "quote": "his will help provide the customer with accurate information regarding their order.",
+      "note": "don't need to describe this. just say what you're doing",
+      "source": "human",
+      "created_at": "2026-10-30T09:32:20.051Z"
+    },
+    {
+      "id": "annotation-1793352750199",
+      "trace_id": "b7f04473f78adf97f7c5b302d6eb7016",
+      "scenario_id": "support-0025",
+      "segment_key": "b7f04473f78adf97f7c5b302d6eb7016:1",
+      "quote": "I'll proceed to check the order now.",
+      "note": "also not necessary",
+      "source": "human",
+      "created_at": "2026-10-30T09:32:30.199Z"
+    },
+    {
+      "id": "annotation-1793352837354",
+      "trace_id": "b7f04473f78adf97f7c5b302d6eb7016",
+      "scenario_id": "support-0025",
+      "segment_key": "b7f04473f78adf97f7c5b302d6eb7016:4",
+      "quote": "Order 10 for customer 403 is currently in a \"placed\" status and has not yet shipped. There is no expected shipping date provided at this time.",
+      "note": "Should have checked the policy to see that it ships within 3 days. So agent could have provided an estimate",
+      "source": "human",
+      "created_at": "2026-10-30T09:33:57.354Z"
+    },
+    {
+      "id": "annotation-1793352923405",
+      "trace_id": "20ca81c48b45f2f82e36ec676f0373c1",
+      "scenario_id": "support-0069",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T09:35:23.405Z"
+    },
+    {
+      "id": "annotation-1793352987522",
+      "trace_id": "2732b93f35557e3790b1d6c578c42886",
+      "scenario_id": "support-0013",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T09:36:27.522Z"
+    },
+    {
+      "id": "annotation-1793353029258",
+      "trace_id": "dc761ee923d48e87ac5e7cb0fa278436",
+      "scenario_id": "support-0125",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T09:37:09.258Z"
+    },
+    {
+      "id": "annotation-1793353091663",
+      "trace_id": "9ab4cfbecb03771c87fde57caece2acb",
+      "scenario_id": "support-0064",
+      "segment_key": "9ab4cfbecb03771c87fde57caece2acb:6",
+      "quote": "Would you like me to issue the refund? If so, please provide the reason for the refund.",
+      "note": "user already asked for the refund and gave the reason, so you can already trigger the refund",
+      "source": "human",
+      "created_at": "2026-10-30T09:38:11.663Z"
+    },
+    {
+      "id": "annotation-1793353170557",
+      "trace_id": "2ea653b761a45cc07dbba827beefc164",
+      "scenario_id": "support-0053",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T09:39:30.557Z"
+    },
+    {
+      "id": "annotation-1793353266893",
+      "trace_id": "773c38350f6cdf59388a7bb3b2589152",
+      "scenario_id": "support-0217",
+      "segment_key": "773c38350f6cdf59388a7bb3b2589152:1",
+      "quote": "To help the customer, I recommend guiding them to our support team, as they can securely assist with updating account details.",
+      "note": "don't suggest this. the user is support team. only option is escalation to a human",
+      "source": "human",
+      "created_at": "2026-10-30T09:41:06.893Z"
+    },
+    {
+      "id": "annotation-1793353295734",
+      "trace_id": "aaf379db521e5d3a393624bdea253f1d",
+      "scenario_id": "support-0073",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T09:41:35.734Z"
+    },
+    {
+      "id": "annotation-1793353341234",
+      "trace_id": "22d835d11cc17465041092e9bd83c765",
+      "scenario_id": "support-0163",
+      "segment_key": "22d835d11cc17465041092e9bd83c765:1",
+      "quote": "I'd love to help with that! Ho",
+      "note": "No! Not related to Cartwheel. Should be refused.",
+      "source": "human",
+      "created_at": "2026-10-30T09:42:21.234Z"
+    },
+    {
+      "id": "annotation-1793353377412",
+      "trace_id": "f07a3bca242b57135bbc1c2d79c8cd80",
+      "scenario_id": "support-0104",
+      "segment_key": "f07a3bca242b57135bbc1c2d79c8cd80:1",
+      "quote": "Since the order has already shipped, it cannot be canceled.",
+      "note": "Need to additionally cite the policy",
+      "source": "human",
+      "created_at": "2026-10-30T09:42:57.412Z"
+    },
+    {
+      "id": "annotation-1793353426766",
+      "trace_id": "97de7efe303e4bb72856e35b91d833e1",
+      "scenario_id": "support-0035",
+      "segment_key": "97de7efe303e4bb72856e35b91d833e1:4",
+      "quote": "Could you please confirm the reason for the refund? This will help me provide a brief explanation.",
+      "note": "Reason already provided in first message. Expected behaviour just trigger the refund request",
+      "source": "human",
+      "created_at": "2026-10-30T09:43:46.767Z"
+    },
+    {
+      "id": "annotation-1793353482457",
+      "trace_id": "3200589ae1e2e20afde1f8b274a1a9cb",
+      "scenario_id": "support-0054",
+      "segment_key": "3200589ae1e2e20afde1f8b274a1a9cb:4",
+      "quote": "The order was delivered on May 15, which means you're outside the typical return window for a refund. If you'd like, I can help you with more information on why it's not eligible or assist you in exploring other options. Let me know how you'd like to proceed!",
+      "note": "Cite policy",
+      "source": "human",
+      "created_at": "2026-10-30T09:44:42.457Z"
+    },
+    {
+      "id": "annotation-1793353715100",
+      "trace_id": "e7843f908b781e549f51bb2814a8b005",
+      "scenario_id": "support-0055",
+      "segment_key": "e7843f908b781e549f51bb2814a8b005:2",
+      "quote": "{}",
+      "note": "Called the wrong tool, this one doesn't give the order names (not that helpful). find_order would have been a better tool call.",
+      "source": "human",
+      "created_at": "2026-10-30T09:48:35.100Z"
+    },
+    {
+      "id": "annotation-1793353777859",
+      "trace_id": "a1f01b0af4efea7c44af4633f68da139",
+      "scenario_id": "support-0161",
+      "segment_key": "a1f01b0af4efea7c44af4633f68da139:1",
+      "quote": "I'm unable to change customer",
+      "note": "offer to create a ticket (escalate to human)",
+      "source": "human",
+      "created_at": "2026-10-30T09:49:37.859Z"
+    },
+    {
+      "id": "annotation-1793353818551",
+      "trace_id": "441f9367ddf32933f65f06097b2c9081",
+      "scenario_id": "support-0032",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T09:50:18.551Z"
+    },
+    {
+      "id": "annotation-1793353971372",
+      "trace_id": "222157bf54ca7b894930f116a2c75876",
+      "scenario_id": "support-0133",
+      "segment_key": "222157bf54ca7b894930f116a2c75876:2",
+      "quote": "\"10\"",
+      "note": "needs to be provided as an integer, not a string",
+      "source": "human",
+      "created_at": "2026-10-30T09:52:51.372Z"
+    },
+    {
+      "id": "annotation-1793354079105",
+      "trace_id": "72527d4f839f8eee90e602155ea7445c",
+      "scenario_id": "support-0180",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T09:54:39.105Z"
+    },
+    {
+      "id": "annotation-1793354101535",
+      "trace_id": "e8755ae1c8ca901f5b048d92a107764f",
+      "scenario_id": "support-0113",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T09:55:01.535Z"
+    },
+    {
+      "id": "annotation-1793354149278",
+      "trace_id": "ac05b60954b707133fc7f1e0957b4f94",
+      "scenario_id": "support-0031",
+      "segment_key": "ac05b60954b707133fc7f1e0957b4f94:4",
+      "quote": "Can you provide a brief reason for the refund?",
+      "note": "User already provided the reason, go ahead and issue the refund",
+      "source": "human",
+      "created_at": "2026-10-30T09:55:49.278Z"
+    },
+    {
+      "id": "annotation-1793354188824",
+      "trace_id": "3aa86128cee05e96a3f12c60f851ad69",
+      "scenario_id": "support-0188",
+      "segment_key": "3aa86128cee05e96a3f12c60f851ad69:4",
+      "quote": "a refund because the item was damaged upon arrival",
+      "note": "wrong reason",
+      "source": "human",
+      "created_at": "2026-10-30T09:56:28.824Z"
+    },
+    {
+      "id": "annotation-1793354215676",
+      "trace_id": "3aa86128cee05e96a3f12c60f851ad69",
+      "scenario_id": "support-0188",
+      "segment_key": "3aa86128cee05e96a3f12c60f851ad69:4",
+      "quote": "Since the headphones are damaged, you can proceed with the refund.",
+      "note": "wrong reason. its eligible for a refund because its within the refund window, not because it was damaged",
+      "source": "human",
+      "created_at": "2026-10-30T09:56:55.676Z"
+    },
+    {
+      "id": "annotation-1793354246807",
+      "trace_id": "3aa86128cee05e96a3f12c60f851ad69",
+      "scenario_id": "support-0188",
+      "segment_key": "3aa86128cee05e96a3f12c60f851ad69:4",
+      "quote": "If you could briefly explain the reason for the refund, I can process that for you now.",
+      "note": "are you kidding me - you just quoted the reason in your answer. you have the reason from the shopper, just process it",
+      "source": "human",
+      "created_at": "2026-10-30T09:57:26.807Z"
+    },
+    {
+      "id": "annotation-1793354314827",
+      "trace_id": "faf64067db81e163df3ec86f229a2b5f",
+      "scenario_id": "support-0009",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T09:58:34.827Z"
+    },
+    {
+      "id": "annotation-1793354350107",
+      "trace_id": "cf93cb9b35e638ac6ae9ce4ac08671df",
+      "scenario_id": "support-0166",
+      "segment_key": "cf93cb9b35e638ac6ae9ce4ac08671df:1",
+      "quote": "However, I can help explain concepts or guide you through specific math problems if you'd like!",
+      "note": "No you can't! Tell the user you can only help with cartwheel enquiries",
+      "source": "human",
+      "created_at": "2026-10-30T09:59:10.107Z"
+    },
+    {
+      "id": "annotation-1793354420394",
+      "trace_id": "c411e3a145b6a3dbdd9effc53b5b6220",
+      "scenario_id": "support-0030",
+      "segment_key": "c411e3a145b6a3dbdd9effc53b5b6220:4",
+      "quote": "It is indeed eligible for a refund, as it was delivered three weeks ago and meets the refund criteria.",
+      "note": "cite policy",
+      "source": "human",
+      "created_at": "2026-10-30T10:00:20.394Z"
+    },
+    {
+      "id": "annotation-1793354446487",
+      "trace_id": "ca316b229098009dd9e1b9905c5a3e3d",
+      "scenario_id": "support-0248",
+      "segment_key": "ca316b229098009dd9e1b9905c5a3e3d:2",
+      "quote": "\"1\"",
+      "note": "should be an integer, not a string argument",
+      "source": "human",
+      "created_at": "2026-10-30T10:00:46.487Z"
+    },
+    {
+      "id": "annotation-1793354541292",
+      "trace_id": "374674a6f901474c64a6c63d7b766bc0",
+      "scenario_id": "support-0134",
+      "segment_key": "374674a6f901474c64a6c63d7b766bc0:2",
+      "quote": "\"11\"",
+      "note": "should be an integer, not a string argument",
+      "source": "human",
+      "created_at": "2026-10-30T10:02:21.292Z"
+    },
+    {
+      "id": "annotation-1793354625792",
+      "trace_id": "6964e2108d81d3738191634f00ee896e",
+      "scenario_id": "support-0232",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T10:03:45.792Z"
+    },
+    {
+      "id": "annotation-1793356687638",
+      "trace_id": "0fe0edd07790908799de2b1a3bc82acd",
+      "scenario_id": "support-0160",
+      "segment_key": "0fe0edd07790908799de2b1a3bc82acd:1",
+      "quote": "I can't assist with updating",
+      "note": "escalate to human",
+      "source": "human",
+      "created_at": "2026-10-30T10:38:07.638Z"
+    },
+    {
+      "id": "annotation-1793356713887",
+      "trace_id": "dcac6aaebbb17e2763c6e36beeeaf680",
+      "scenario_id": "support-0162",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T10:38:33.887Z"
+    },
+    {
+      "id": "annotation-1793356757894",
+      "trace_id": "75ba89c983701b7b5252faff603f9c3d",
+      "scenario_id": "support-0216",
+      "segment_key": "75ba89c983701b7b5252faff603f9c3d:1",
+      "quote": "r account credentials",
+      "note": "escalate to human for account credentials",
+      "source": "human",
+      "created_at": "2026-10-30T10:39:17.894Z"
+    },
+    {
+      "id": "annotation-1793356784376",
+      "trace_id": "75ba89c983701b7b5252faff603f9c3d",
+      "scenario_id": "support-0216",
+      "segment_key": "75ba89c983701b7b5252faff603f9c3d:1",
+      "quote": "However, you can typically find options to update your payout bank account and store contact email in your merchant dashboard settings.",
+      "note": "made up - agent doesn't know about the merchant dashboard",
+      "source": "human",
+      "created_at": "2026-10-30T10:39:44.376Z"
+    },
+    {
+      "id": "annotation-1793356841819",
+      "trace_id": "67e0b63218a5929a22c68eb880b1bd25",
+      "scenario_id": "support-0214",
+      "segment_key": "67e0b63218a5929a22c68eb880b1bd25:1",
+      "quote": "email addresses on",
+      "note": "escalate email address change to human",
+      "source": "human",
+      "created_at": "2026-10-30T10:40:41.819Z"
+    },
+    {
+      "id": "annotation-1793356912898",
+      "trace_id": "b2fc2382514828fe3d8906ab1f557b43",
+      "scenario_id": "support-0090",
+      "segment_key": "b2fc2382514828fe3d8906ab1f557b43:4",
+      "quote": "Would you like me to look up the return policy for you?",
+      "note": "should have looked up the policy and cited the policy id",
+      "source": "human",
+      "created_at": "2026-10-30T10:41:52.898Z"
+    },
+    {
+      "id": "annotation-1793356952814",
+      "trace_id": "7225ec3cb912e68f2c28c8a14f133027",
+      "scenario_id": "support-0092",
+      "segment_key": "7225ec3cb912e68f2c28c8a14f133027:4",
+      "quote": "eans it's not eligible for cancellation.",
+      "note": "cite policy",
+      "source": "human",
+      "created_at": "2026-10-30T10:42:32.814Z"
+    },
+    {
+      "id": "annotation-1793357014047",
+      "trace_id": "7aa681b36c6c9c654c7fcf84a350db2d",
+      "scenario_id": "support-0080",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T10:43:34.047Z"
+    },
+    {
+      "id": "annotation-1793357050126",
+      "trace_id": "73ed2681b621fdb8ed5adc2449a4d1af",
+      "scenario_id": "support-0079",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T10:44:10.126Z"
+    },
+    {
+      "id": "annotation-1793357133614",
+      "trace_id": "b6a8b665ef38b729b2358d43368f6a13",
+      "scenario_id": "support-0227",
+      "segment_key": "b6a8b665ef38b729b2358d43368f6a13:4",
+      "quote": "I've checked the details for your order 8001. It was delivered on June 23, 2026, and unfortunately, it is not eligible for a refund at this time.",
+      "note": "the order was delivered before it was shipped. agent should have escalated to a human",
+      "source": "human",
+      "created_at": "2026-10-30T10:45:33.614Z"
+    },
+    {
+      "id": "annotation-1793367269871",
+      "trace_id": "d0376e109797b1b65a7eaa9a676d3ccc",
+      "scenario_id": "support-0205",
+      "segment_key": "d0376e109797b1b65a7eaa9a676d3ccc:4",
+      "quote": "ue to the store's policy",
+      "note": "cite policy",
+      "source": "human",
+      "created_at": "2026-10-30T13:34:29.871Z"
+    },
+    {
+      "id": "annotation-1793367317515",
+      "trace_id": "d0376e109797b1b65a7eaa9a676d3ccc",
+      "scenario_id": "support-0205",
+      "segment_key": "653c94b53ee6557d06907ab4fe8aabd9:4",
+      "quote": "eligible for a refund.",
+      "note": "cite policy",
+      "source": "human",
+      "created_at": "2026-10-30T13:35:17.515Z"
+    },
+    {
+      "id": "annotation-1793367375858",
+      "trace_id": "48d6190404da132898a20af40054c983",
+      "scenario_id": "support-0151",
+      "segment_key": "48d6190404da132898a20af40054c983:4",
+      "quote": "current policy.",
+      "note": "get and cite policy",
+      "source": "human",
+      "created_at": "2026-10-30T13:36:15.858Z"
+    },
+    {
+      "id": "annotation-1793367441760",
+      "trace_id": "48d6190404da132898a20af40054c983",
+      "scenario_id": "support-0151",
+      "segment_key": "b8d0ed9c7dba3b7c5eb4c4787557cce7:2",
+      "quote": "escalate_to_human({\n  \"context\": \"Order #3728 (from Harbor Knits) was delivered damaged and is being disputed by Customer ID 327.\",\n  \"summary\": \"Customer is disputing the charge…)",
+      "note": "its already been escalated, don't call escalate_to_human again",
+      "source": "human",
+      "created_at": "2026-10-30T13:37:21.760Z"
+    },
+    {
+      "id": "annotation-1793367479572",
+      "trace_id": "fdd71310b7ed861a330e6d940fd7d293",
+      "scenario_id": "support-0150",
+      "segment_key": "fdd71310b7ed861a330e6d940fd7d293:4",
+      "quote": "oes not meet the criteria for a refund.",
+      "note": "cite policy",
+      "source": "human",
+      "created_at": "2026-10-30T13:37:59.572Z"
+    },
+    {
+      "id": "annotation-1793367554556",
+      "trace_id": "082ac8da1bd9cd87e7dd1c37a8c2ef55",
+      "scenario_id": "support-0014",
+      "segment_key": "082ac8da1bd9cd87e7dd1c37a8c2ef55:1",
+      "quote": "This will provide you with the information you need.",
+      "note": "unneccessary text",
+      "source": "human",
+      "created_at": "2026-10-30T13:39:14.556Z"
+    },
+    {
+      "id": "annotation-1793367627804",
+      "trace_id": "c61d5f13d801a9a38431e271e2a6ed42",
+      "scenario_id": "support-0007",
+      "segment_key": "c61d5f13d801a9a38431e271e2a6ed42:4",
+      "quote": "You'll need to wait for processing before it ships.",
+      "note": "should have checked policy to find out when it was shipping and provided an estimate based on the policy (and cited the policy)",
+      "source": "human",
+      "created_at": "2026-10-30T13:40:27.804Z"
+    },
+    {
+      "id": "annotation-1793367655298",
+      "trace_id": "2ff780d46c0ee6b8d58bd06e1490b600",
+      "scenario_id": "support-0195",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T13:40:55.298Z"
+    },
+    {
+      "id": "annotation-1793367682342",
+      "trace_id": "8d1b296077b701665b37efd23a2e59db",
+      "scenario_id": "support-0169",
+      "segment_key": "8d1b296077b701665b37efd23a2e59db:1",
+      "quote": "This will provide you with the necessary information to ensure your setup is appropriate.",
+      "note": "unneccessary commentary",
+      "source": "human",
+      "created_at": "2026-10-30T13:41:22.342Z"
+    },
+    {
+      "id": "annotation-1793367749328",
+      "trace_id": "b9322e8eeb7d10482b18ef65ce589b7b",
+      "scenario_id": "support-0167",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T13:42:29.329Z"
+    },
+    {
+      "id": "annotation-1793368001969",
+      "trace_id": "4dd13fbf1a987931db57418219bed510",
+      "scenario_id": "support-0165",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T13:46:41.969Z"
+    },
+    {
+      "id": "annotation-1793368014714",
+      "trace_id": "8ec446aab7d236640e802b2c9674012c",
+      "scenario_id": "support-0173",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T13:46:54.714Z"
+    },
+    {
+      "id": "annotation-1793368102071",
+      "trace_id": "8fd17612624df80445a6c39b2e4fe9a6",
+      "scenario_id": "support-0209",
+      "segment_key": "8fd17612624df80445a6c39b2e4fe9a6:2",
+      "quote": "search_help_center({\n  \"query\": \"returns policy\"\n})",
+      "note": "should be looking up the returns policy for the merchant's specific store",
+      "source": "human",
+      "created_at": "2026-10-30T13:48:22.071Z"
+    },
+    {
+      "id": "annotation-1793368124120",
+      "trace_id": "8fd17612624df80445a6c39b2e4fe9a6",
+      "scenario_id": "support-0209",
+      "segment_key": "8fd17612624df80445a6c39b2e4fe9a6:4",
+      "quote": "It looks like the standard return policy on Cartwheel is 30 days, but merchants have the flexibility to set different return windows for their stores. For example, other stores might accept returns within 21 days, 45 days, or even just 7 days.",
+      "note": "Too general. Tell the user what their returns policy is, for their store.",
+      "source": "human",
+      "created_at": "2026-10-30T13:48:44.120Z"
+    },
+    {
+      "id": "annotation-1793368184894",
+      "trace_id": "790d7c680db2095150a81e8b663936bc",
+      "scenario_id": "support-0206",
+      "segment_key": "790d7c680db2095150a81e8b663936bc:4",
+      "quote": "I found the return policy specifically for Juniper Home Goods.",
+      "note": "cite policy id",
+      "source": "human",
+      "created_at": "2026-10-30T13:49:44.894Z"
+    },
+    {
+      "id": "annotation-1793368221073",
+      "trace_id": "f876cc253a37d7290e20983620078314",
+      "scenario_id": "support-0117",
+      "segment_key": "f876cc253a37d7290e20983620078314:1",
+      "quote": "The response time for escalated cases can vary, but generally, our human support agents aim to address escalations as quickly as possible. Depending on their current workload, it may take some time. If you'd like, I can open a ticket for you, and you can provide details about the case for better prioritization.",
+      "note": "Should have done a tool call to look up the policy and answered based on the policy",
+      "source": "human",
+      "created_at": "2026-10-30T13:50:21.073Z"
+    },
+    {
+      "id": "annotation-1793368248907",
+      "trace_id": "0ae627f5fb611ac8d6639461d7f39702",
+      "scenario_id": "support-0096",
+      "segment_key": "0ae627f5fb611ac8d6639461d7f39702:4",
+      "quote": "Cartwheel return policy",
+      "note": "cite policy id",
+      "source": "human",
+      "created_at": "2026-10-30T13:50:48.907Z"
+    },
+    {
+      "id": "annotation-1793368275648",
+      "trace_id": "61bd582762ad1ac526b16c9e50d85a2b",
+      "scenario_id": "support-0239",
+      "segment_key": "61bd582762ad1ac526b16c9e50d85a2b:2",
+      "quote": "\"1\"",
+      "note": "should give the store name, not id",
+      "source": "human",
+      "created_at": "2026-10-30T13:51:15.648Z"
+    },
+    {
+      "id": "annotation-1793368336117",
+      "trace_id": "70abbe219aad0d1e9f91b6a709c81d77",
+      "scenario_id": "support-0242",
+      "segment_key": "70abbe219aad0d1e9f91b6a709c81d77:1",
+      "quote": "It looks like you're looking for a product listing for \"Blue Heron Ceramics\" priced at $9.75, but the name is blank.",
+      "note": "unnecessary commentary",
+      "source": "human",
+      "created_at": "2026-10-30T13:52:16.117Z"
+    },
+    {
+      "id": "annotation-1793368393152",
+      "trace_id": "70abbe219aad0d1e9f91b6a709c81d77",
+      "scenario_id": "support-0242",
+      "segment_key": "70abbe219aad0d1e9f91b6a709c81d77:4",
+      "quote": "I found a few products from \"Blue Heron Ceramics\" priced under $9.75. Here's what I found:\n\n1. **Rustic Pitcher** - Priced at **$-5.00** (this price seems incorrect).\n2. **Heavy-Duty Vase** - Priced at **$9.00**.",
+      "note": "don't list the other products - the user only wanted the one that cost exactly $9.75 and didn't have a name",
+      "source": "human",
+      "created_at": "2026-10-30T13:53:13.152Z"
+    },
+    {
+      "id": "annotation-1793368424222",
+      "trace_id": "3ff8e5ae2a9b5049bfcfca3d037fb158",
+      "scenario_id": "support-0131",
+      "segment_key": "3ff8e5ae2a9b5049bfcfca3d037fb158:2",
+      "quote": ": \"8\"",
+      "note": "should be store name, not store id",
+      "source": "human",
+      "created_at": "2026-10-30T13:53:44.222Z"
+    },
+    {
+      "id": "annotation-1793368570501",
+      "trace_id": "3ff8e5ae2a9b5049bfcfca3d037fb158",
+      "scenario_id": "support-0131",
+      "segment_key": "3ff8e5ae2a9b5049bfcfca3d037fb158:7",
+      "quote": "Here are some Atlas listings available for $100 or under:",
+      "note": "All of these listings are for a different store - none for store 8",
+      "source": "human",
+      "created_at": "2026-10-30T13:56:10.501Z"
+    },
+    {
+      "id": "annotation-1793368600360",
+      "trace_id": "cc2be1ada973a8e21acd8b91111a1732",
+      "scenario_id": "support-0119",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T13:56:40.360Z"
+    },
+    {
+      "id": "annotation-1793368622138",
+      "trace_id": "f8e44bafe3dfeb85025f206585c0d4e9",
+      "scenario_id": "support-0233",
+      "segment_key": "f8e44bafe3dfeb85025f206585c0d4e9:1",
+      "quote": "This will help ensure that we handle the request correctly.",
+      "note": "unnecessary commentary",
+      "source": "human",
+      "created_at": "2026-10-30T13:57:02.138Z"
+    },
+    {
+      "id": "annotation-1793368647719",
+      "trace_id": "f8e44bafe3dfeb85025f206585c0d4e9",
+      "scenario_id": "support-0233",
+      "segment_key": "f8e44bafe3dfeb85025f206585c0d4e9:4",
+      "quote": "Given that the refund isn't possible at this time, I recommend discussing the issue with the customer to find an alternative solution, such as an exchange or store credit.",
+      "note": "don't give this kind of general recommendation",
+      "source": "human",
+      "created_at": "2026-10-30T13:57:27.719Z"
+    },
+    {
+      "id": "annotation-1793368654707",
+      "trace_id": "f8e44bafe3dfeb85025f206585c0d4e9",
+      "scenario_id": "support-0233",
+      "segment_key": "f8e44bafe3dfeb85025f206585c0d4e9:4",
+      "quote": "eligible for a refund.",
+      "note": "cite policy id",
+      "source": "human",
+      "created_at": "2026-10-30T13:57:34.707Z"
+    },
+    {
+      "id": "annotation-1793368746004",
+      "trace_id": "f8e44bafe3dfeb85025f206585c0d4e9",
+      "scenario_id": "support-0233",
+      "segment_key": "f8e44bafe3dfeb85025f206585c0d4e9:4",
+      "quote": "If you have any other questions or need further assistance, feel free to ask!",
+      "note": "doesn't see the bad data (product belongs to a different store). Should notice the bad data and escalate to human.",
+      "source": "human",
+      "created_at": "2026-10-30T13:59:06.004Z"
+    },
+    {
+      "id": "annotation-1793368767038",
+      "trace_id": "ad1821af3919bd33e047960d268b1583",
+      "scenario_id": "support-0072",
+      "segment_key": "ad1821af3919bd33e047960d268b1583:1",
+      "quote": "This will help us understand the return window applicable to this order.",
+      "note": "unnecessary commentary",
+      "source": "human",
+      "created_at": "2026-10-30T13:59:27.038Z"
+    },
+    {
+      "id": "annotation-1793368871855",
+      "trace_id": "90d7424eca1aa8d211eb8f90ace9f3bf",
+      "scenario_id": "support-0037",
+      "segment_key": "90d7424eca1aa8d211eb8f90ace9f3bf:4",
+      "quote": "eligible for a refund",
+      "note": "cite policy id",
+      "source": "human",
+      "created_at": "2026-10-30T14:01:11.855Z"
+    },
+    {
+      "id": "annotation-1793373544951",
+      "trace_id": "847aea7307c9e263a86ce99afbe9e63e",
+      "scenario_id": "support-0175",
+      "segment_key": "847aea7307c9e263a86ce99afbe9e63e:1",
+      "quote": "search_help_center({\n  \"query\": \"Walmart return policy\"\n})",
+      "note": "should not have called a tool. this is out of scope, should have been rejected immediately",
+      "source": "human",
+      "created_at": "2026-10-30T15:19:04.951Z"
+    },
+    {
+      "id": "annotation-1793373570421",
+      "trace_id": "847aea7307c9e263a86ce99afbe9e63e",
+      "scenario_id": "support-0175",
+      "segment_key": "847aea7307c9e263a86ce99afbe9e63e:3",
+      "quote": "I found relevant information about Walmart's return policy through the Cartwheel return policy.",
+      "note": "Not true. Hallucination. Shouldn't be replying anyway, it should be a refusal",
+      "source": "human",
+      "created_at": "2026-10-30T15:19:30.421Z"
+    },
+    {
+      "id": "annotation-1793373697286",
+      "trace_id": "407b2165549df04f75e7c696ee45d80f",
+      "scenario_id": "support-0218",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T15:21:37.286Z"
+    },
+    {
+      "id": "annotation-1793373712879",
+      "trace_id": "e20314b53e62692252fc00e6145562a8",
+      "scenario_id": "support-0172",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T15:21:52.879Z"
+    },
+    {
+      "id": "annotation-1793373786275",
+      "trace_id": "b234f1ef8b7897f984a97ab6f3e5ca00",
+      "scenario_id": "support-0219",
+      "segment_key": "b234f1ef8b7897f984a97ab6f3e5ca00:1",
+      "quote": "I can't provide specific information about payout timelines for Cartwheel",
+      "note": "Not true - agent can check the policy for payouts for Cartwheel and provide that info, whilst still refusing to answer questions re Shopify",
+      "source": "human",
+      "created_at": "2026-10-30T15:23:06.275Z"
+    },
+    {
+      "id": "annotation-1793373798313",
+      "trace_id": "45117da35543b1b1d44d81ab7c629ea6",
+      "scenario_id": "support-0170",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T15:23:18.313Z"
+    },
+    {
+      "id": "annotation-1793373815088",
+      "trace_id": "f665c9d363274e30d7148fc52974a978",
+      "scenario_id": "support-0177",
+      "segment_key": "f665c9d363274e30d7148fc52974a978:1",
+      "quote": "This will help me determine if the request meets our return policy guidelines.",
+      "note": "unnecessary commentary",
+      "source": "human",
+      "created_at": "2026-10-30T15:23:35.089Z"
+    },
+    {
+      "id": "annotation-1793373876918",
+      "trace_id": "f665c9d363274e30d7148fc52974a978",
+      "scenario_id": "support-0177",
+      "segment_key": "f665c9d363274e30d7148fc52974a978:4",
+      "quote": "Since the customer has changed their mind and the order falls outside the 30-day return window,",
+      "note": "wrong reason. the store has a 14 day policy. Should have looked up the policy doc and quoted that as the response",
+      "source": "human",
+      "created_at": "2026-10-30T15:24:36.918Z"
+    },
+    {
+      "id": "annotation-1793373922774",
+      "trace_id": "c39eff4ddafceda9707fda5c985a731e",
+      "scenario_id": "support-0063",
+      "segment_key": "c39eff4ddafceda9707fda5c985a731e:4",
+      "quote": ". Could you please provide a brief reason for the refund due to the damaged item?",
+      "note": "you have the reason. just do the refund",
+      "source": "human",
+      "created_at": "2026-10-30T15:25:22.774Z"
+    },
+    {
+      "id": "annotation-1793374011851",
+      "trace_id": "8eaa6316a8d2b3daa3bcc1327fed305c",
+      "scenario_id": "support-0181",
+      "segment_key": "8eaa6316a8d2b3daa3bcc1327fed305c:4",
+      "quote": "The check indicates that your order is eligible for a refund, so you should be able to proceed with that.",
+      "note": "should have cited the policy and 45-days",
+      "source": "human",
+      "created_at": "2026-10-30T15:26:51.851Z"
+    },
+    {
+      "id": "annotation-1793374061036",
+      "trace_id": "6e0af40e68c2eed58be95d510c83c168",
+      "scenario_id": "support-0033",
+      "segment_key": "6e0af40e68c2eed58be95d510c83c168:1",
+      "quote": "I can help with that, but first, I need to check the details of your order to see if it's eligible for a return and refund. Could you please provide me with the order ID for the webcam?",
+      "note": "don't ask for the order id, just use a tool call to try and find the order first",
+      "source": "human",
+      "created_at": "2026-10-30T15:27:41.036Z"
+    },
+    {
+      "id": "annotation-1793374092274",
+      "trace_id": "9aa06165fd83d6885629ecb81e10ce3a",
+      "scenario_id": "support-0111",
+      "segment_key": "9aa06165fd83d6885629ecb81e10ce3a:4",
+      "quote": "Northwind Books has a return policy that allows returns within 45 days of delivery",
+      "note": "cite policy id",
+      "source": "human",
+      "created_at": "2026-10-30T15:28:12.274Z"
+    },
+    {
+      "id": "annotation-1793374122053",
+      "trace_id": "4ceb10be53c477d1045b33025272e824",
+      "scenario_id": "support-0110",
+      "segment_key": "4ceb10be53c477d1045b33025272e824:3",
+      "quote": "uniper Home Goods accepts returns within **14 days of delivery**.",
+      "note": "cite policy id",
+      "source": "human",
+      "created_at": "2026-10-30T15:28:42.053Z"
+    },
+    {
+      "id": "annotation-1793374171804",
+      "trace_id": "9dd2e19185055953710aa130374c3791",
+      "scenario_id": "support-0094",
+      "segment_key": "9dd2e19185055953710aa130374c3791:4",
+      "quote": "You have 30 days from the delivery date to return items purchased on Cartwheel",
+      "note": "explain that stores can have their own return policy as well",
+      "source": "human",
+      "created_at": "2026-10-30T15:29:31.804Z"
+    },
+    {
+      "id": "annotation-1793374201764",
+      "trace_id": "b13899815421bb51a2f7325179154493",
+      "scenario_id": "support-0105",
+      "segment_key": "b13899815421bb51a2f7325179154493:1",
+      "quote": "This will give you the most accurate information on the timeframes and procedures you need to be aware of.",
+      "note": "unnecessary commentary",
+      "source": "human",
+      "created_at": "2026-10-30T15:30:01.764Z"
+    },
+    {
+      "id": "annotation-1793374278297",
+      "trace_id": "ade0ab4fe40d608a958707f18dfb8441",
+      "scenario_id": "support-0178",
+      "segment_key": "ade0ab4fe40d608a958707f18dfb8441:4",
+      "quote": "The reason for ineligibility could be related to the specific circumstances around the order's delivery and the occasion mentioned by the customer.",
+      "note": "making stuff up. should have retrieved the policy and given the real reason (that store has 21-day return policy)",
+      "source": "human",
+      "created_at": "2026-10-30T15:31:18.297Z"
+    },
+    {
+      "id": "annotation-1793374324049",
+      "trace_id": "ad7126b3555750f58cd368a72edf80e7",
+      "scenario_id": "support-0145",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T15:32:04.049Z"
+    },
+    {
+      "id": "annotation-1793374350027",
+      "trace_id": "ec90a798d4a28841e2d5e8a5115a08f1",
+      "scenario_id": "support-0109",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T15:32:30.027Z"
+    },
+    {
+      "id": "annotation-1793374431952",
+      "trace_id": "299307fb475a8f93cf73edaba54ad54d",
+      "scenario_id": "support-0148",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T15:33:51.952Z"
+    },
+    {
+      "id": "annotation-1793374462809",
+      "trace_id": "b22bb535718f06a95cc75a583b8a4683",
+      "scenario_id": "support-0244",
+      "segment_key": "b22bb535718f06a95cc75a583b8a4683:2",
+      "quote": "\"1\"",
+      "note": "store id instead of store name",
+      "source": "human",
+      "created_at": "2026-10-30T15:34:22.809Z"
+    },
+    {
+      "id": "annotation-1793374488300",
+      "trace_id": "b22bb535718f06a95cc75a583b8a4683",
+      "scenario_id": "support-0244",
+      "segment_key": "b22bb535718f06a95cc75a583b8a4683:5",
+      "quote": "store\": \"1\"",
+      "note": "store id instead of store name",
+      "source": "human",
+      "created_at": "2026-10-30T15:34:48.300Z"
+    },
+    {
+      "id": "annotation-1793374547614",
+      "trace_id": "80d76181de1630f9ba2a3bbd6ab04bad",
+      "scenario_id": "support-0241",
+      "segment_key": "80d76181de1630f9ba2a3bbd6ab04bad:2",
+      "quote": "search_products({\n  \"limit\": 1,\n  \"max_price_usd\": null,\n  \"query\": \"id:3\",\n  \"store\": \"Blue Heron Ceramics\"\n})",
+      "note": "possibly a wrong tool call parameter - need to investigate",
+      "source": "human",
+      "created_at": "2026-10-30T15:35:47.614Z"
+    },
+    {
+      "id": "annotation-1793374606998",
+      "trace_id": "275ac3779dbbbaecfe88fe8602b5cddd",
+      "scenario_id": "support-0246",
+      "segment_key": "275ac3779dbbbaecfe88fe8602b5cddd:4",
+      "quote": "but it seems there's an issue with the pricing, as it shows a negative value of -$5.00, which doesn't make sense.",
+      "note": "don't tell the user there's an issue with the price. escalate to human and tell the user there's an issue without giving details",
+      "source": "human",
+      "created_at": "2026-10-30T15:36:46.998Z"
+    },
+    {
+      "id": "annotation-1793374680432",
+      "trace_id": "778cb888424ea59defe87e14e93bf6ec",
+      "scenario_id": "support-0184",
+      "segment_key": "778cb888424ea59defe87e14e93bf6ec:7",
+      "quote": "Your building blocks order is eligible for a refund, as it was delivered on June 2, 2026, and you can return it until July 2, 2026.",
+      "note": "cite policy id",
+      "source": "human",
+      "created_at": "2026-10-30T15:38:00.432Z"
+    },
+    {
+      "id": "annotation-1793374694808",
+      "trace_id": "778cb888424ea59defe87e14e93bf6ec",
+      "scenario_id": "support-0184",
+      "segment_key": "4abbd601b7d6f98f19e9aef1d9a3b0e2:4",
+      "quote": "It looks like you have two planner orders, but unfortunately, both are marked as ineligible for a refund.",
+      "note": "cite policy id",
+      "source": "human",
+      "created_at": "2026-10-30T15:38:14.808Z"
+    },
+    {
+      "id": "annotation-1793374717632",
+      "trace_id": "98975fa98387009a766bedce9ae88fed",
+      "scenario_id": "support-0118",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T15:38:37.632Z"
+    },
+    {
+      "id": "annotation-1793374771747",
+      "trace_id": "203558ffccb495c34b7c8785d82d63e3",
+      "scenario_id": "support-0152",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T15:39:31.747Z"
+    },
+    {
+      "id": "annotation-1793374790635",
+      "trace_id": "68f027b35271dbe1e83bf848fedb5da4",
+      "scenario_id": "support-0156",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T15:39:50.635Z"
+    },
+    {
+      "id": "annotation-1793374800703",
+      "trace_id": "ec8e61781e6f228901ed55338842d7ce",
+      "scenario_id": "support-0159",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T15:40:00.703Z"
+    },
+    {
+      "id": "annotation-1793392307757",
+      "trace_id": "c4327504ac9953662127615321c46374",
+      "scenario_id": "support-0102",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T20:31:47.757Z"
+    },
+    {
+      "id": "annotation-1793392363172",
+      "trace_id": "5ef90807c1cfc2bed0014a28822dfa5f",
+      "scenario_id": "support-0027",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T20:32:43.172Z"
+    },
+    {
+      "id": "annotation-1793392463568",
+      "trace_id": "9906af6a378a539ae14815a7defcf02a",
+      "scenario_id": "support-0005",
+      "segment_key": "9906af6a378a539ae14815a7defcf02a:4",
+      "quote": "The Modern Novel\"",
+      "note": "made up the title from the original user message. should have looked it up or not quoted it. real name is \"Modern Novel\"",
+      "source": "human",
+      "created_at": "2026-10-30T20:34:23.568Z"
+    },
+    {
+      "id": "annotation-1793392559656",
+      "trace_id": "cd3d6ebfb19689d9ee2aefeb87706fc4",
+      "scenario_id": "support-0228",
+      "segment_key": "cd3d6ebfb19689d9ee2aefeb87706fc4:4",
+      "quote": "It looks like the item was delivered before it actually shipped,",
+      "note": "this information should have triggered a tool call to escalate to human",
+      "source": "human",
+      "created_at": "2026-10-30T20:35:59.656Z"
+    },
+    {
+      "id": "annotation-1793392619394",
+      "trace_id": "e07bbc432f6c524bfe4b0374e97ad21c",
+      "scenario_id": "support-0108",
+      "segment_key": "e07bbc432f6c524bfe4b0374e97ad21c:1",
+      "quote": "When you issue a refund to a customer, it typically does not show up in your next payout directly or in such a way that it adjusts your original payout. Instead, the refund amount is deducted from your earnings in a future payout cycle.",
+      "note": "not grounded in facts. should have looked up the policy then given the policy info and cited the policy id",
+      "source": "human",
+      "created_at": "2026-10-30T20:36:59.394Z"
+    },
+    {
+      "id": "annotation-1793392655247",
+      "trace_id": "c491de065d36f3d888b96734a2ae9525",
+      "scenario_id": "support-0155",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T20:37:35.247Z"
+    },
+    {
+      "id": "annotation-1793392687210",
+      "trace_id": "9c22000bc1571d4de6ca979f58191521",
+      "scenario_id": "support-0139",
+      "segment_key": "9c22000bc1571d4de6ca979f58191521:1",
+      "quote": "This will help ensure they get some great choices within their budget.",
+      "note": "unnecessary commentary",
+      "source": "human",
+      "created_at": "2026-10-30T20:38:07.210Z"
+    },
+    {
+      "id": "annotation-1793392745924",
+      "trace_id": "d2b1a873b86b154e3e71818ed188c096",
+      "scenario_id": "support-0203",
+      "segment_key": "d2b1a873b86b154e3e71818ed188c096:1",
+      "quote": "This will help establish the context for the customer's complaint before proceeding with any actions.",
+      "note": "unnecessary commentary",
+      "source": "human",
+      "created_at": "2026-10-30T20:39:05.924Z"
+    },
+    {
+      "id": "annotation-1793392806786",
+      "trace_id": "d2b1a873b86b154e3e71818ed188c096",
+      "scenario_id": "support-0203",
+      "segment_key": "d2b1a873b86b154e3e71818ed188c096:4",
+      "quote": "Since the order is marked as not eligible for a refund and the item has stopped working, I recommend that the customer continues to reach out to the store for support, as they may still have options for resolving the issue directly with them.",
+      "note": "Don't give general recommendations.",
+      "source": "human",
+      "created_at": "2026-10-30T20:40:06.786Z"
+    },
+    {
+      "id": "annotation-1793392836486",
+      "trace_id": "632bd4f946f2c1513cf31fbec4c1fddb",
+      "scenario_id": "support-0130",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T20:40:36.486Z"
+    },
+    {
+      "id": "annotation-1793392897391",
+      "trace_id": "f21f061c9ef0b589da8769f996d9f73d",
+      "scenario_id": "support-0045",
+      "segment_key": "f21f061c9ef0b589da8769f996d9f73d:4",
+      "quote": "It appears that you have two recent orders that are eligible for a refund, but I need to clarify which one corresponds to the damaged bar soap.",
+      "note": "should have done a tool call to figure out which order was the bar soap (probable solution is actually to improve list_my_orders output)",
+      "source": "human",
+      "created_at": "2026-10-30T20:41:37.391Z"
+    },
+    {
+      "id": "annotation-1793392930312",
+      "trace_id": "81d71f29563a03bad0ffb34e3980cf1a",
+      "scenario_id": "support-0066",
+      "segment_key": "81d71f29563a03bad0ffb34e3980cf1a:4",
+      "quote": "What reason would you like to provide for the refund?",
+      "note": "reason is already provided. just trigger the refund",
+      "source": "human",
+      "created_at": "2026-10-30T20:42:10.312Z"
+    },
+    {
+      "id": "annotation-1793393018028",
+      "trace_id": "49e4f40ac66062417615081bd153ec6b",
+      "scenario_id": "support-0093",
+      "segment_key": "49e4f40ac66062417615081bd153ec6b:4",
+      "quote": "or refund",
+      "note": "its not eligible for a refund right now, but that doesn't mean it won't be eligible for a refund later. this sounds like its not eligible at all.",
+      "source": "human",
+      "created_at": "2026-10-30T20:43:38.028Z"
+    },
+    {
+      "id": "annotation-1793393049629",
+      "trace_id": "49e4f40ac66062417615081bd153ec6b",
+      "scenario_id": "support-0093",
+      "segment_key": "49e4f40ac66062417615081bd153ec6b:4",
+      "quote": "canceled at this point.",
+      "note": "cite policy id",
+      "source": "human",
+      "created_at": "2026-10-30T20:44:09.629Z"
+    },
+    {
+      "id": "annotation-1793393064636",
+      "trace_id": "f4e11c4554e97db2bc096433397124a7",
+      "scenario_id": "support-0171",
+      "note": "no failure observed",
+      "no_failure": true,
+      "source": "human",
+      "created_at": "2026-10-30T20:44:24.636Z"
+    },
+    {
+      "id": "annotation-1793393123663",
+      "trace_id": "c39f18866fd1877a19526007d9c1be0d",
+      "scenario_id": "support-0004",
+      "segment_key": "c39f18866fd1877a19526007d9c1be0d:4",
+      "quote": "The status indicates it's currently in transit.",
+      "note": "could have looked up the policy to find out how long it will be in transit and provide that info to the user",
+      "source": "human",
+      "created_at": "2026-10-30T20:45:23.663Z"
+    },
+    {
+      "id": "annotation-1793393172624",
+      "trace_id": "ba0e9964679d63337d49701e820ffa0d",
+      "scenario_id": "support-0077",
+      "segment_key": "ba0e9964679d63337d49701e820ffa0d:4",
+      "quote": "I found your recent orders, but I don't see an order specifically for a water bottle.",
+      "note": "could have tried the find_order tool instead to find the specific order",
+      "source": "human",
+      "created_at": "2026-10-30T20:46:12.624Z"
+    },
+    {
+      "id": "annotation-1793395840803",
+      "trace_id": "9ab4cfbecb03771c87fde57caece2acb",
+      "scenario_id": "support-0064",
+      "segment_key": "9ab4cfbecb03771c87fde57caece2acb:6",
+      "quote": "Your order for the trekking poles is eligible for a refund. You received them on June 12th, and the return window closes on July 3rd, which means you still have time to proceed.\n\nWould you like me to issue the refund? If so, please provide the reason for the refund.",
+      "note": "store-meridian-cycles-policy was visible in check_return_eligibility, but the eligibility and return-window claim omitted it.",
+      "source": "accepted_suggestion",
+      "source_suggestion_id": "suggestion-mpc-post-0064",
+      "created_at": "2026-10-30T21:30:40.803Z"
+    },
+    {
+      "id": "annotation-1793396029790",
+      "trace_id": "72527d4f839f8eee90e602155ea7445c",
+      "scenario_id": "support-0180",
+      "segment_key": "72527d4f839f8eee90e602155ea7445c:6",
+      "quote": "Order 961 is still eligible for a refund. It was delivered on May 28, 2026, and Northwind Books allows returns within 45 days of delivery, which means the return window closes on July 12, 2026. This gives the customer a few more days to process the return since it has been 34 days since delivery.\n\nNow, I can proceed to issue the refund for this order. The total amount for the order is $48.25. I will go ahead and process that refund.",
+      "note": "store-northwind-books-policy was visible in check_return_eligibility, but the 45-day return-window claim omitted it.",
+      "source": "accepted_suggestion",
+      "source_suggestion_id": "suggestion-mpc-post-0180-policy",
+      "created_at": "2026-10-30T21:33:49.790Z"
+    },
+    {
+      "id": "annotation-1793396131782",
+      "trace_id": "8fd17612624df80445a6c39b2e4fe9a6",
+      "scenario_id": "support-0209",
+      "segment_key": "8fd17612624df80445a6c39b2e4fe9a6:4",
+      "quote": "It looks like the standard return policy on Cartwheel is 30 days, but merchants have the flexibility to set different return windows for their stores. For example, other stores might accept returns within 21 days, 45 days, or even just 7 days.\n\nSince you’re a merchant, you can determine your own return policy as long as it’s clearly communicated to your customers. If your store policy is stricter than 30 days, you’re not obligated to accept that return after 25 days. \n\nIf you need more specific details about your store's return policy, please let me know!",
+      "note": "Store-policy ids were visible, but verify whether the applicable platform/store policy was actually retrieved before treating this as citation rather than lookup.",
+      "source": "accepted_suggestion",
+      "source_suggestion_id": "suggestion-mpc-post-0209",
+      "created_at": "2026-10-30T21:35:31.782Z"
+    }
+  ]
+}

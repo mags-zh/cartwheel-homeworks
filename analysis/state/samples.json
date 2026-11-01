@@ -1,0 +1,602 @@
+[
+  {
+    "trace_id": "6d8be7b40dfd796b0a87c74b1d112fb6",
+    "scenario_id": "support-0249",
+    "reason": "uniform random pick",
+    "batch": "batch-1-random"
+  },
+  {
+    "trace_id": "f9affaf3f5e28b8aa6b1225eb635427a",
+    "scenario_id": "support-0126",
+    "reason": "uniform random pick",
+    "batch": "batch-1-random"
+  },
+  {
+    "trace_id": "3d6b5f984f64c42240fab96561944bd2",
+    "scenario_id": "support-0095",
+    "reason": "uniform random pick",
+    "batch": "batch-1-random"
+  },
+  {
+    "trace_id": "7ed77c36f40935ab188574b809f65a10",
+    "scenario_id": "support-0071",
+    "reason": "uniform random pick",
+    "batch": "batch-1-random"
+  },
+  {
+    "trace_id": "b7f04473f78adf97f7c5b302d6eb7016",
+    "scenario_id": "support-0025",
+    "reason": "uniform random pick",
+    "batch": "batch-1-random"
+  },
+  {
+    "trace_id": "20ca81c48b45f2f82e36ec676f0373c1",
+    "scenario_id": "support-0069",
+    "reason": "uniform random pick",
+    "batch": "batch-1-random"
+  },
+  {
+    "trace_id": "2732b93f35557e3790b1d6c578c42886",
+    "scenario_id": "support-0013",
+    "reason": "uniform random pick",
+    "batch": "batch-1-random"
+  },
+  {
+    "trace_id": "dc761ee923d48e87ac5e7cb0fa278436",
+    "scenario_id": "support-0125",
+    "reason": "uniform random pick",
+    "batch": "batch-1-random"
+  },
+  {
+    "trace_id": "9ab4cfbecb03771c87fde57caece2acb",
+    "scenario_id": "support-0064",
+    "reason": "uniform random pick",
+    "batch": "batch-1-random"
+  },
+  {
+    "trace_id": "2ea653b761a45cc07dbba827beefc164",
+    "scenario_id": "support-0053",
+    "reason": "uniform random pick",
+    "batch": "batch-1-random"
+  },
+  {
+    "trace_id": "773c38350f6cdf59388a7bb3b2589152",
+    "scenario_id": "support-0217",
+    "reason": "uniform random pick",
+    "batch": "batch-1-random"
+  },
+  {
+    "trace_id": "aaf379db521e5d3a393624bdea253f1d",
+    "scenario_id": "support-0073",
+    "reason": "uniform random pick",
+    "batch": "batch-1-random"
+  },
+  {
+    "trace_id": "22d835d11cc17465041092e9bd83c765",
+    "scenario_id": "support-0163",
+    "reason": "uniform random pick",
+    "batch": "batch-1-random"
+  },
+  {
+    "trace_id": "f07a3bca242b57135bbc1c2d79c8cd80",
+    "scenario_id": "support-0104",
+    "reason": "uniform random pick",
+    "batch": "batch-1-random"
+  },
+  {
+    "trace_id": "97de7efe303e4bb72856e35b91d833e1",
+    "scenario_id": "support-0035",
+    "reason": "uniform random pick",
+    "batch": "batch-1-random"
+  },
+  {
+    "trace_id": "3200589ae1e2e20afde1f8b274a1a9cb",
+    "scenario_id": "support-0054",
+    "reason": "cluster 0 representative (rank 1)",
+    "batch": "batch-1-cluster"
+  },
+  {
+    "trace_id": "e7843f908b781e549f51bb2814a8b005",
+    "scenario_id": "support-0055",
+    "reason": "cluster 1 representative (rank 1)",
+    "batch": "batch-1-cluster"
+  },
+  {
+    "trace_id": "a1f01b0af4efea7c44af4633f68da139",
+    "scenario_id": "support-0161",
+    "reason": "cluster 2 representative (rank 1)",
+    "batch": "batch-1-cluster"
+  },
+  {
+    "trace_id": "441f9367ddf32933f65f06097b2c9081",
+    "scenario_id": "support-0032",
+    "reason": "cluster 3 representative (rank 1)",
+    "batch": "batch-1-cluster"
+  },
+  {
+    "trace_id": "222157bf54ca7b894930f116a2c75876",
+    "scenario_id": "support-0133",
+    "reason": "cluster 4 representative (rank 1)",
+    "batch": "batch-1-cluster"
+  },
+  {
+    "trace_id": "72527d4f839f8eee90e602155ea7445c",
+    "scenario_id": "support-0180",
+    "reason": "cluster 5 representative (rank 1)",
+    "batch": "batch-1-cluster"
+  },
+  {
+    "trace_id": "e8755ae1c8ca901f5b048d92a107764f",
+    "scenario_id": "support-0113",
+    "reason": "cluster 6 representative (rank 1)",
+    "batch": "batch-1-cluster"
+  },
+  {
+    "trace_id": "ac05b60954b707133fc7f1e0957b4f94",
+    "scenario_id": "support-0031",
+    "reason": "cluster 7 representative (rank 1)",
+    "batch": "batch-1-cluster"
+  },
+  {
+    "trace_id": "3aa86128cee05e96a3f12c60f851ad69",
+    "scenario_id": "support-0188",
+    "reason": "cluster 0 representative (rank 2)",
+    "batch": "batch-1-cluster"
+  },
+  {
+    "trace_id": "faf64067db81e163df3ec86f229a2b5f",
+    "scenario_id": "support-0009",
+    "reason": "cluster 1 representative (rank 2)",
+    "batch": "batch-1-cluster"
+  },
+  {
+    "trace_id": "cf93cb9b35e638ac6ae9ce4ac08671df",
+    "scenario_id": "support-0166",
+    "reason": "cluster 2 representative (rank 2)",
+    "batch": "batch-1-cluster"
+  },
+  {
+    "trace_id": "c411e3a145b6a3dbdd9effc53b5b6220",
+    "scenario_id": "support-0030",
+    "reason": "cluster 3 representative (rank 2)",
+    "batch": "batch-1-cluster"
+  },
+  {
+    "trace_id": "ca316b229098009dd9e1b9905c5a3e3d",
+    "scenario_id": "support-0248",
+    "reason": "cluster 4 representative (rank 2)",
+    "batch": "batch-1-cluster"
+  },
+  {
+    "trace_id": "374674a6f901474c64a6c63d7b766bc0",
+    "scenario_id": "support-0134",
+    "reason": "cluster 5 representative (rank 2)",
+    "batch": "batch-1-cluster"
+  },
+  {
+    "trace_id": "6964e2108d81d3738191634f00ee896e",
+    "scenario_id": "support-0232",
+    "reason": "cluster 6 representative (rank 2)",
+    "batch": "batch-1-cluster"
+  },
+  {
+    "trace_id": "0fe0edd07790908799de2b1a3bc82acd",
+    "scenario_id": "support-0160",
+    "reason": "intent-balanced random pick: account_change",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "dcac6aaebbb17e2763c6e36beeeaf680",
+    "scenario_id": "support-0162",
+    "reason": "intent-balanced random pick: account_change",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "75ba89c983701b7b5252faff603f9c3d",
+    "scenario_id": "support-0216",
+    "reason": "intent-balanced random pick: account_change",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "67e0b63218a5929a22c68eb880b1bd25",
+    "scenario_id": "support-0214",
+    "reason": "intent-balanced random pick: account_change",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "b2fc2382514828fe3d8906ab1f557b43",
+    "scenario_id": "support-0090",
+    "reason": "intent-balanced random pick: cancellation",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "7225ec3cb912e68f2c28c8a14f133027",
+    "scenario_id": "support-0092",
+    "reason": "intent-balanced random pick: cancellation",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "7aa681b36c6c9c654c7fcf84a350db2d",
+    "scenario_id": "support-0080",
+    "reason": "intent-balanced random pick: cancellation",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "73ed2681b621fdb8ed5adc2449a4d1af",
+    "scenario_id": "support-0079",
+    "reason": "intent-balanced random pick: cancellation",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "b6a8b665ef38b729b2358d43368f6a13",
+    "scenario_id": "support-0227",
+    "reason": "intent-balanced random pick: dispute",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "d0376e109797b1b65a7eaa9a676d3ccc",
+    "scenario_id": "support-0205",
+    "reason": "intent-balanced random pick: dispute",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "48d6190404da132898a20af40054c983",
+    "scenario_id": "support-0151",
+    "reason": "intent-balanced random pick: dispute",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "fdd71310b7ed861a330e6d940fd7d293",
+    "scenario_id": "support-0150",
+    "reason": "intent-balanced random pick: dispute",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "082ac8da1bd9cd87e7dd1c37a8c2ef55",
+    "scenario_id": "support-0014",
+    "reason": "intent-balanced random pick: order_status",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "c61d5f13d801a9a38431e271e2a6ed42",
+    "scenario_id": "support-0007",
+    "reason": "intent-balanced random pick: order_status",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "2ff780d46c0ee6b8d58bd06e1490b600",
+    "scenario_id": "support-0195",
+    "reason": "intent-balanced random pick: order_status",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "8d1b296077b701665b37efd23a2e59db",
+    "scenario_id": "support-0169",
+    "reason": "intent-balanced random pick: out_of_scope",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "b9322e8eeb7d10482b18ef65ce589b7b",
+    "scenario_id": "support-0167",
+    "reason": "intent-balanced random pick: out_of_scope",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "4dd13fbf1a987931db57418219bed510",
+    "scenario_id": "support-0165",
+    "reason": "intent-balanced random pick: out_of_scope",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "8ec446aab7d236640e802b2c9674012c",
+    "scenario_id": "support-0173",
+    "reason": "intent-balanced random pick: out_of_scope",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "8fd17612624df80445a6c39b2e4fe9a6",
+    "scenario_id": "support-0209",
+    "reason": "intent-balanced random pick: policy_question",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "790d7c680db2095150a81e8b663936bc",
+    "scenario_id": "support-0206",
+    "reason": "intent-balanced random pick: policy_question",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "f876cc253a37d7290e20983620078314",
+    "scenario_id": "support-0117",
+    "reason": "intent-balanced random pick: policy_question",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "0ae627f5fb611ac8d6639461d7f39702",
+    "scenario_id": "support-0096",
+    "reason": "intent-balanced random pick: policy_question",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "61bd582762ad1ac526b16c9e50d85a2b",
+    "scenario_id": "support-0239",
+    "reason": "intent-balanced random pick: product_search",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "70abbe219aad0d1e9f91b6a709c81d77",
+    "scenario_id": "support-0242",
+    "reason": "intent-balanced random pick: product_search",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "3ff8e5ae2a9b5049bfcfca3d037fb158",
+    "scenario_id": "support-0131",
+    "reason": "intent-balanced random pick: product_search",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "cc2be1ada973a8e21acd8b91111a1732",
+    "scenario_id": "support-0119",
+    "reason": "intent-balanced random pick: product_search",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "f8e44bafe3dfeb85025f206585c0d4e9",
+    "scenario_id": "support-0233",
+    "reason": "intent-balanced random pick: return_refund",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "ad1821af3919bd33e047960d268b1583",
+    "scenario_id": "support-0072",
+    "reason": "intent-balanced random pick: return_refund",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "90d7424eca1aa8d211eb8f90ace9f3bf",
+    "scenario_id": "support-0037",
+    "reason": "intent-balanced random pick: return_refund",
+    "batch": "batch-2-intent"
+  },
+  {
+    "trace_id": "847aea7307c9e263a86ce99afbe9e63e",
+    "scenario_id": "support-0175",
+    "reason": "depth retrieval suggestion for out_of_scope_not_refused: out-of-scope intent with no clear refusal and engagement cues; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "407b2165549df04f75e7c696ee45d80f",
+    "scenario_id": "support-0218",
+    "reason": "depth retrieval suggestion for out_of_scope_not_refused: out-of-scope intent with no clear refusal and engagement cues; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "e20314b53e62692252fc00e6145562a8",
+    "scenario_id": "support-0172",
+    "reason": "depth retrieval suggestion for out_of_scope_not_refused: out-of-scope intent with no clear refusal and engagement cues; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "b234f1ef8b7897f984a97ab6f3e5ca00",
+    "scenario_id": "support-0219",
+    "reason": "depth retrieval suggestion for out_of_scope_not_refused: out-of-scope intent with a clear refusal or Cartwheel-only boundary; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "45117da35543b1b1d44d81ab7c629ea6",
+    "scenario_id": "support-0170",
+    "reason": "depth retrieval suggestion for out_of_scope_not_refused: out-of-scope intent with a clear refusal or Cartwheel-only boundary; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "f665c9d363274e30d7148fc52974a978",
+    "scenario_id": "support-0177",
+    "reason": "depth retrieval suggestion for asks_instead_of_acting: refund or cancellation conversation with a re-ask and no write tool; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "c39eff4ddafceda9707fda5c985a731e",
+    "scenario_id": "support-0063",
+    "reason": "depth retrieval suggestion for asks_instead_of_acting: refund or cancellation conversation with a re-ask and no write tool; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "8eaa6316a8d2b3daa3bcc1327fed305c",
+    "scenario_id": "support-0181",
+    "reason": "depth retrieval suggestion for asks_instead_of_acting: similar action intent where the write tool ran; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "6e0af40e68c2eed58be95d510c83c168",
+    "scenario_id": "support-0033",
+    "reason": "depth retrieval suggestion for asks_instead_of_acting: vague-reference action request with a clarification question; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "9aa06165fd83d6885629ecb81e10ce3a",
+    "scenario_id": "support-0111",
+    "reason": "depth retrieval suggestion for missing_policy_citation: policy-relevant claim without a policy identifier in the reply; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "4ceb10be53c477d1045b33025272e824",
+    "scenario_id": "support-0110",
+    "reason": "depth retrieval suggestion for missing_policy_citation: policy-relevant claim without a policy identifier in the reply; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "9dd2e19185055953710aa130374c3791",
+    "scenario_id": "support-0094",
+    "reason": "depth retrieval suggestion for missing_policy_citation: policy-relevant claim with a policy identifier in the reply; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "b13899815421bb51a2f7325179154493",
+    "scenario_id": "support-0105",
+    "reason": "depth retrieval suggestion for missing_policy_citation: policy-relevant claim with a policy identifier in the reply; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "ade0ab4fe40d608a958707f18dfb8441",
+    "scenario_id": "support-0178",
+    "reason": "depth retrieval suggestion for missing_policy_lookup: policy-relevant claim or lookup offer without a policy retrieval tool; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "ad7126b3555750f58cd368a72edf80e7",
+    "scenario_id": "support-0145",
+    "reason": "depth retrieval suggestion for missing_policy_lookup: policy-relevant claim or lookup offer without a policy retrieval tool; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "ec90a798d4a28841e2d5e8a5115a08f1",
+    "scenario_id": "support-0109",
+    "reason": "depth retrieval suggestion for missing_policy_lookup: policy-relevant conversation where a policy retrieval tool ran; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "299307fb475a8f93cf73edaba54ad54d",
+    "scenario_id": "support-0148",
+    "reason": "depth retrieval suggestion for missing_policy_lookup: order or eligibility facts available without a separate policy retrieval; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "b22bb535718f06a95cc75a583b8a4683",
+    "scenario_id": "support-0244",
+    "reason": "depth retrieval suggestion for store_identifier_mismatch: search_products call with a numeric store argument; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "80d76181de1630f9ba2a3bbd6ab04bad",
+    "scenario_id": "support-0241",
+    "reason": "depth retrieval suggestion for store_identifier_mismatch: search_products call with a nonnumeric store name or slug; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "275ac3779dbbbaecfe88fe8602b5cddd",
+    "scenario_id": "support-0246",
+    "reason": "depth retrieval suggestion for store_identifier_mismatch: shopper product search with no store restriction; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "778cb888424ea59defe87e14e93bf6ec",
+    "scenario_id": "support-0184",
+    "reason": "depth retrieval suggestion for unnecessary_process_narration: tool-using conversation with repeated process-narration cues; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "98975fa98387009a766bedce9ae88fed",
+    "scenario_id": "support-0118",
+    "reason": "depth retrieval suggestion for unnecessary_process_narration: tool-using conversation with at most one process-status cue; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "203558ffccb495c34b7c8785d82d63e3",
+    "scenario_id": "support-0152",
+    "reason": "depth retrieval suggestion for unnecessary_process_narration: tool-using conversation with at most one process-status cue; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "68f027b35271dbe1e83bf848fedb5da4",
+    "scenario_id": "support-0156",
+    "reason": "depth retrieval suggestion for missing_required_account_escalation: account-change intent without an escalate_to_human call; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "ec8e61781e6f228901ed55338842d7ce",
+    "scenario_id": "support-0159",
+    "reason": "depth retrieval suggestion for missing_required_account_escalation: account-change intent without an escalate_to_human call; human review required",
+    "batch": "batch-3-depth-accepted-modes"
+  },
+  {
+    "trace_id": "c4327504ac9953662127615321c46374",
+    "scenario_id": "support-0102",
+    "reason": "uniform random pick for final taxonomy saturation check",
+    "batch": "batch-4-uniform-random"
+  },
+  {
+    "trace_id": "5ef90807c1cfc2bed0014a28822dfa5f",
+    "scenario_id": "support-0027",
+    "reason": "uniform random pick for final taxonomy saturation check",
+    "batch": "batch-4-uniform-random"
+  },
+  {
+    "trace_id": "9906af6a378a539ae14815a7defcf02a",
+    "scenario_id": "support-0005",
+    "reason": "uniform random pick for final taxonomy saturation check",
+    "batch": "batch-4-uniform-random"
+  },
+  {
+    "trace_id": "cd3d6ebfb19689d9ee2aefeb87706fc4",
+    "scenario_id": "support-0228",
+    "reason": "uniform random pick for final taxonomy saturation check",
+    "batch": "batch-4-uniform-random"
+  },
+  {
+    "trace_id": "e07bbc432f6c524bfe4b0374e97ad21c",
+    "scenario_id": "support-0108",
+    "reason": "uniform random pick for final taxonomy saturation check",
+    "batch": "batch-4-uniform-random"
+  },
+  {
+    "trace_id": "c491de065d36f3d888b96734a2ae9525",
+    "scenario_id": "support-0155",
+    "reason": "uniform random pick for final taxonomy saturation check",
+    "batch": "batch-4-uniform-random"
+  },
+  {
+    "trace_id": "9c22000bc1571d4de6ca979f58191521",
+    "scenario_id": "support-0139",
+    "reason": "uniform random pick for final taxonomy saturation check",
+    "batch": "batch-4-uniform-random"
+  },
+  {
+    "trace_id": "d2b1a873b86b154e3e71818ed188c096",
+    "scenario_id": "support-0203",
+    "reason": "uniform random pick for final taxonomy saturation check",
+    "batch": "batch-4-uniform-random"
+  },
+  {
+    "trace_id": "632bd4f946f2c1513cf31fbec4c1fddb",
+    "scenario_id": "support-0130",
+    "reason": "uniform random pick for final taxonomy saturation check",
+    "batch": "batch-4-uniform-random"
+  },
+  {
+    "trace_id": "f21f061c9ef0b589da8769f996d9f73d",
+    "scenario_id": "support-0045",
+    "reason": "uniform random pick for final taxonomy saturation check",
+    "batch": "batch-4-uniform-random"
+  },
+  {
+    "trace_id": "81d71f29563a03bad0ffb34e3980cf1a",
+    "scenario_id": "support-0066",
+    "reason": "uniform random pick for final taxonomy saturation check",
+    "batch": "batch-4-uniform-random"
+  },
+  {
+    "trace_id": "49e4f40ac66062417615081bd153ec6b",
+    "scenario_id": "support-0093",
+    "reason": "uniform random pick for final taxonomy saturation check",
+    "batch": "batch-4-uniform-random"
+  },
+  {
+    "trace_id": "f4e11c4554e97db2bc096433397124a7",
+    "scenario_id": "support-0171",
+    "reason": "uniform random pick for final taxonomy saturation check",
+    "batch": "batch-4-uniform-random"
+  },
+  {
+    "trace_id": "c39f18866fd1877a19526007d9c1be0d",
+    "scenario_id": "support-0004",
+    "reason": "uniform random pick for final taxonomy saturation check",
+    "batch": "batch-4-uniform-random"
+  },
+  {
+    "trace_id": "ba0e9964679d63337d49701e820ffa0d",
+    "scenario_id": "support-0077",
+    "reason": "uniform random pick for final taxonomy saturation check",
+    "batch": "batch-4-uniform-random"
+  }
+]

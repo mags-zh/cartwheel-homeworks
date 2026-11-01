@@ -1,1 +1,1523 @@
-{"modes": []}
+{
+  "modes": [
+    {
+      "name": "store_identifier_mismatch",
+      "definition": "The agent supplies a numeric store identifier to search_products even though the tool's store argument expects a store name or slug, causing or risking a failed or mis-scoped product search.",
+      "status": "accepted_candidate",
+      "annotation_count": 8,
+      "conversation_count": 7,
+      "example_trace_ids": [
+        "6d8be7b40dfd796b0a87c74b1d112fb6",
+        "222157bf54ca7b894930f116a2c75876",
+        "ca316b229098009dd9e1b9905c5a3e3d",
+        "374674a6f901474c64a6c63d7b766bc0",
+        "61bd582762ad1ac526b16c9e50d85a2b",
+        "3ff8e5ae2a9b5049bfcfca3d037fb158",
+        "b22bb535718f06a95cc75a583b8a4683"
+      ],
+      "example_quotes": [
+        "The agent should send an integer here, not a string. that's why the tool call failed",
+        "needs to be provided as an integer, not a string",
+        "should be an integer, not a string argument"
+      ],
+      "created_from": [
+        "annotation-1793351813910",
+        "annotation-1793353971372",
+        "annotation-1793354446487",
+        "annotation-1793354541292",
+        "annotation-1793368275648",
+        "annotation-1793368424222",
+        "annotation-1793374462809",
+        "annotation-1793374488300"
+      ],
+      "boundary": "Not every rejected product search qualifies. The store argument must contain a numeric id where the current tool contract requires a name or slug.",
+      "likely_evaluator": "code",
+      "requirement_source": "TOOL-3; store identifier semantics need specification clarification",
+      "problem_source": "tool (primary): the prompt supplies a numeric store id while the exposed tool schema says only store: str; the hidden implementation requires a name or slug",
+      "decision_note": "Sarah kept this candidate and chose the tool interface as the primary problem source on 2026-10-30.",
+      "human_updated_at": "2026-10-30T10:30:37.433Z",
+      "final_selected": true,
+      "final_selection_updated_at": "2026-10-30T21:19:33.812419Z",
+      "final_selection_history": [
+        {
+          "selected": true,
+          "decided_at": "2026-10-30T21:19:33.812419Z",
+          "source": "human_decision",
+          "reason": "Included in Sarah’s current final eight-mode taxonomy."
+        }
+      ],
+      "close_negative_trace_ids": [
+        "80d76181de1630f9ba2a3bbd6ab04bad",
+        "275ac3779dbbbaecfe88fe8602b5cddd",
+        "f9affaf3f5e28b8aa6b1225eb635427a"
+      ],
+      "close_negative_examples": [
+        {
+          "trace_id": "80d76181de1630f9ba2a3bbd6ab04bad",
+          "scenario_id": "support-0241",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Uses a nonnumeric store name in search_products, matching the current name-or-slug contract."
+        },
+        {
+          "trace_id": "275ac3779dbbbaecfe88fe8602b5cddd",
+          "scenario_id": "support-0246",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Leaves the optional store restriction unset, so no numeric-store mismatch occurs."
+        },
+        {
+          "trace_id": "f9affaf3f5e28b8aa6b1225eb635427a",
+          "scenario_id": "support-0126",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Runs a successful product search with the optional store restriction unset."
+        }
+      ],
+      "structured_labeling": {
+        "sample_size": 100,
+        "present_count": 7,
+        "absent_count": 93,
+        "sample_fraction": 0.07,
+        "source": "human_confirmed_labels",
+        "completed_at": "2026-10-31T20:44:50.276441+00:00"
+      }
+    },
+    {
+      "name": "missing_policy_citation",
+      "definition": "The reply makes a policy-derived claim without naming the applicable policy identifier even though that identifier is already present in the model-visible conversation or tool results.",
+      "status": "accepted_candidate",
+      "annotation_count": 9,
+      "conversation_count": 9,
+      "example_trace_ids": [
+        "7ed77c36f40935ab188574b809f65a10",
+        "790d7c680db2095150a81e8b663936bc",
+        "0ae627f5fb611ac8d6639461d7f39702",
+        "9aa06165fd83d6885629ecb81e10ce3a",
+        "4ceb10be53c477d1045b33025272e824",
+        "778cb888424ea59defe87e14e93bf6ec",
+        "9ab4cfbecb03771c87fde57caece2acb",
+        "72527d4f839f8eee90e602155ea7445c",
+        "8fd17612624df80445a6c39b2e4fe9a6"
+      ],
+      "example_quotes": [
+        "also need to quote the policy id, not just the details of the policy",
+        "cite policy id",
+        "cite policy id"
+      ],
+      "created_from": [
+        "annotation-1793352680043",
+        "annotation-1793368184894",
+        "annotation-1793368248907",
+        "annotation-1793374092274",
+        "annotation-1793374122053",
+        "annotation-1793374680432",
+        "annotation-1793395840803",
+        "annotation-1793396029790",
+        "annotation-1793396131782"
+      ],
+      "boundary": "If the identifier is absent because the agent did not retrieve the needed policy, the failure belongs in missing_policy_lookup. If the identifier is available and the claim is correct but uncited, it belongs here; a wrong claim belongs in incorrect_decision_reason.",
+      "likely_evaluator": "code_or_llm",
+      "requirement_source": "RESP-1",
+      "decision_note": "Sarah kept this as a separate candidate from ungrounded_decision_explanation on 2026-10-30 because correctness and citation are distinct judgments. On 2026-10-30 Sarah restricted this mode to cases where the policy identifier was model-visible and moved 12 no-retrieval notes to missing_policy_lookup. This state was restored after a stale UI overwrite. Post-revision search on 2026-10-30 yielded 3 accepted and 3 rejected suggestions; accepted suggestions retain agent provenance.",
+      "classification_history": [
+        {
+          "annotation_ids": [
+            "annotation-1793353377412",
+            "annotation-1793353482457",
+            "annotation-1793354420394",
+            "annotation-1793356952814",
+            "annotation-1793367269871",
+            "annotation-1793367317515",
+            "annotation-1793367479572",
+            "annotation-1793368654707",
+            "annotation-1793368871855",
+            "annotation-1793374011851",
+            "annotation-1793374694808",
+            "annotation-1793393049629"
+          ],
+          "scenario_ids": [
+            "support-0104",
+            "support-0054",
+            "support-0030",
+            "support-0092",
+            "support-0205",
+            "support-0150",
+            "support-0233",
+            "support-0037",
+            "support-0181",
+            "support-0184",
+            "support-0093"
+          ],
+          "from": "missing_policy_citation",
+          "to": "missing_policy_lookup",
+          "changed_at": "2026-10-30T21:13:09.803284Z",
+          "source": "human_decision",
+          "reason": "Restored agreed classification: the applicable policy identifier was absent from model-visible context because the relevant policy was never retrieved."
+        }
+      ],
+      "revision_history": [
+        {
+          "changed_at": "2026-10-30T21:13:09.803284Z",
+          "source": "human_decision",
+          "reason": "Sarah reviewed all supporting conversations and restricted this mode to cases where the policy identifier was available to the agent.",
+          "from_definition": "The reply makes a claim derived from return, refund, cancellation, or store policy without naming the applicable policy identifier.",
+          "to_definition": "The reply makes a policy-derived claim without naming the applicable policy identifier even though that identifier is already present in the model-visible conversation or tool results.",
+          "from_boundary": "A correct, evidence-grounded policy claim without its identifier belongs here. A wrong or unsupported explanation belongs in ungrounded_decision_explanation even if it also lacks a citation.",
+          "to_boundary": "If the identifier is absent because the agent did not retrieve the needed policy, the failure belongs in missing_policy_lookup. If the identifier is available and the claim is correct but uncited, it belongs here; a wrong claim belongs in incorrect_decision_reason."
+        }
+      ],
+      "final_selected": true,
+      "final_selection_updated_at": "2026-10-30T21:19:33.812419Z",
+      "final_selection_history": [
+        {
+          "selected": true,
+          "decided_at": "2026-10-30T21:19:33.812419Z",
+          "source": "human_decision",
+          "reason": "Included in Sarah’s current final eight-mode taxonomy."
+        }
+      ],
+      "search_history": [
+        {
+          "mode": "missing_policy_citation",
+          "pre_revision_search": {
+            "source": "Batch 3 depth retrieval",
+            "suggestions_reviewed": 4
+          },
+          "revision": "Restricted the mode to policy identifiers already visible in model context.",
+          "post_revision_search": {
+            "method": "Deterministic scan of 100 reviewed conversations for tool-result policy ids followed by policy-like replies omitting those ids.",
+            "accepted_suggestion_ids": [
+              "suggestion-mpc-post-0064",
+              "suggestion-mpc-post-0180-policy",
+              "suggestion-mpc-post-0209"
+            ],
+            "rejected_suggestion_ids": [
+              "suggestion-mpc-post-0180-status",
+              "suggestion-mpc-post-0169",
+              "suggestion-mpc-post-0175"
+            ],
+            "completed_at": "2026-10-30T21:36:19.380315Z"
+          }
+        }
+      ],
+      "close_negative_trace_ids": [
+        "9dd2e19185055953710aa130374c3791",
+        "b13899815421bb51a2f7325179154493",
+        "ec90a798d4a28841e2d5e8a5115a08f1"
+      ],
+      "close_negative_examples": [
+        {
+          "trace_id": "9dd2e19185055953710aa130374c3791",
+          "scenario_id": "support-0094",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Makes the policy claim after retrieval and names the retrieved cw-returns identifier."
+        },
+        {
+          "trace_id": "b13899815421bb51a2f7325179154493",
+          "scenario_id": "support-0105",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Names cw-disputes while explaining the retrieved dispute policy."
+        },
+        {
+          "trace_id": "ec90a798d4a28841e2d5e8a5115a08f1",
+          "scenario_id": "support-0109",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Names cw-payouts while explaining the retrieved payout schedule."
+        }
+      ],
+      "structured_labeling": {
+        "sample_size": 100,
+        "present_count": 9,
+        "absent_count": 91,
+        "sample_fraction": 0.09,
+        "source": "human_confirmed_labels",
+        "completed_at": "2026-10-31T20:44:50.276441+00:00",
+        "revision_history": [
+          {
+            "changed_at": "2026-11-01T16:55:26.957473+00:00",
+            "source": "human_label_correction",
+            "from": {
+              "present_count": 8,
+              "absent_count": 92,
+              "sample_fraction": 0.08
+            },
+            "to": {
+              "present_count": 9,
+              "absent_count": 91,
+              "sample_fraction": 0.09
+            },
+            "reason": "Sarah relabelled support-0184 from Absent to Present on 2026-11-01, matching her turn-1 open code; the earlier Absent judgment is retained in the label file."
+          }
+        ],
+        "updated_at": "2026-11-01T16:55:26.957473+00:00"
+      }
+    },
+    {
+      "name": "asks_instead_of_acting",
+      "definition": "The user has already explicitly requested the action and supplied the required reason or consent, but the agent asks again instead of performing the available action.",
+      "status": "accepted_candidate",
+      "annotation_count": 7,
+      "conversation_count": 7,
+      "example_trace_ids": [
+        "9ab4cfbecb03771c87fde57caece2acb",
+        "97de7efe303e4bb72856e35b91d833e1",
+        "ac05b60954b707133fc7f1e0957b4f94",
+        "3aa86128cee05e96a3f12c60f851ad69",
+        "c39eff4ddafceda9707fda5c985a731e",
+        "6e0af40e68c2eed58be95d510c83c168",
+        "81d71f29563a03bad0ffb34e3980cf1a"
+      ],
+      "example_quotes": [
+        "user already asked for the refund and gave the reason, so you can already trigger the refund",
+        "Reason already provided in first message. Expected behaviour just trigger the refund request",
+        "User already provided the reason, go ahead and issue the refund"
+      ],
+      "created_from": [
+        "annotation-1793353091663",
+        "annotation-1793353426766",
+        "annotation-1793354149278",
+        "annotation-1793354246807",
+        "annotation-1793373922774",
+        "annotation-1793374061036",
+        "annotation-1793392930312"
+      ],
+      "boundary": "Asking is allowed when genuinely required information is absent. This mode requires that the conversation or record already contains what the write tool needs.",
+      "likely_evaluator": "llm",
+      "requirement_source": "RESP-6",
+      "decision_note": "Sarah approved RESP-6 on 2026-10-30: act without re-asking when the request is explicit, the target unambiguous, and all required inputs are already available.",
+      "final_selected": true,
+      "final_selection_updated_at": "2026-10-30T21:19:33.812419Z",
+      "final_selection_history": [
+        {
+          "selected": true,
+          "decided_at": "2026-10-30T21:19:33.812419Z",
+          "source": "human_decision",
+          "reason": "Included in Sarah’s current final eight-mode taxonomy."
+        }
+      ],
+      "close_negative_trace_ids": [
+        "8eaa6316a8d2b3daa3bcc1327fed305c",
+        "441f9367ddf32933f65f06097b2c9081",
+        "73ed2681b621fdb8ed5adc2449a4d1af"
+      ],
+      "close_negative_examples": [
+        {
+          "trace_id": "8eaa6316a8d2b3daa3bcc1327fed305c",
+          "scenario_id": "support-0181",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Performs the requested refund with issue_refund instead of stopping to re-ask."
+        },
+        {
+          "trace_id": "441f9367ddf32933f65f06097b2c9081",
+          "scenario_id": "support-0032",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Performs the requested refund after resolving the authorized order."
+        },
+        {
+          "trace_id": "73ed2681b621fdb8ed5adc2449a4d1af",
+          "scenario_id": "support-0079",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Performs the requested cancellation after checking the order."
+        }
+      ],
+      "structured_labeling": {
+        "sample_size": 100,
+        "present_count": 8,
+        "absent_count": 92,
+        "sample_fraction": 0.08,
+        "source": "human_confirmed_labels",
+        "completed_at": "2026-10-31T20:44:50.276441+00:00"
+      }
+    },
+    {
+      "name": "missing_required_account_escalation",
+      "definition": "For an account-change request (ESC-2), the agent neither calls escalate_to_human nor offers to escalate the request to a human. Declining and pointing the user to account settings, the help center or \"contact customer support\" does not count as escalation.",
+      "status": "accepted_candidate",
+      "annotation_count": 5,
+      "conversation_count": 5,
+      "example_trace_ids": [
+        "773c38350f6cdf59388a7bb3b2589152",
+        "a1f01b0af4efea7c44af4633f68da139",
+        "0fe0edd07790908799de2b1a3bc82acd",
+        "75ba89c983701b7b5252faff603f9c3d",
+        "67e0b63218a5929a22c68eb880b1bd25"
+      ],
+      "example_quotes": [
+        "don't suggest this. the user is support team. only option is escalation to a human",
+        "offer to create a ticket (escalate to human)",
+        "escalate to human"
+      ],
+      "created_from": [
+        "annotation-1793353266893",
+        "annotation-1793353777859",
+        "annotation-1793356687638",
+        "annotation-1793356757894",
+        "annotation-1793356841819"
+      ],
+      "boundary": "This applies to ESC-2 account changes. A correctly refused non-Cartwheel request does not require escalation and belongs outside this mode (out_of_scope_not_refused covers failing to refuse it).",
+      "likely_evaluator": "code_or_llm",
+      "requirement_source": "ESC-2",
+      "decision_note": "Sarah kept this account-specific on 2026-10-30. It needs a depth search for a third positive before considering a broader missing_required_escalation mode.",
+      "final_selected": true,
+      "final_selection_updated_at": "2026-10-30T21:19:33.812419Z",
+      "final_selection_history": [
+        {
+          "selected": true,
+          "decided_at": "2026-10-30T21:19:33.812419Z",
+          "source": "human_decision",
+          "reason": "Included in Sarah’s current final eight-mode taxonomy."
+        }
+      ],
+      "close_negative_trace_ids": [
+        "45117da35543b1b1d44d81ab7c629ea6",
+        "b9322e8eeb7d10482b18ef65ce589b7b",
+        "8ec446aab7d236640e802b2c9674012c"
+      ],
+      "close_negative_examples": [
+        {
+          "trace_id": "45117da35543b1b1d44d81ab7c629ea6",
+          "scenario_id": "support-0170",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "merchant asks for help setting up Shopify; the agent declines because it is not Cartwheel support and redirects to Cartwheel topics without escalating."
+        },
+        {
+          "trace_id": "b9322e8eeb7d10482b18ef65ce589b7b",
+          "scenario_id": "support-0167",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "shopper asks whether they can sue a store; the agent declines legal advice and redirects to Cartwheel order help without escalating."
+        },
+        {
+          "trace_id": "8ec446aab7d236640e802b2c9674012c",
+          "scenario_id": "support-0173",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "support agent asks for consumer-law wording; the agent declines legal advice and offers Cartwheel return and refund policies without escalating."
+        }
+      ],
+      "structured_labeling": {
+        "sample_size": 100,
+        "present_count": 9,
+        "absent_count": 91,
+        "sample_fraction": 0.09,
+        "source": "human_confirmed_labels",
+        "completed_at": "2026-10-31T20:44:50.276441+00:00",
+        "revision_history": [
+          {
+            "changed_at": "2026-11-01T17:40:25.589394+00:00",
+            "source": "human_label_correction",
+            "from": {
+              "present_count": 1,
+              "absent_count": 99,
+              "sample_fraction": 0.01
+            },
+            "to": {
+              "present_count": 9,
+              "absent_count": 91,
+              "sample_fraction": 0.09
+            },
+            "reason": "Sarah re-checked Part E labels on 2026-11-01 against open codes that contradicted them; earlier judgments are retained in the label file."
+          }
+        ],
+        "updated_at": "2026-11-01T17:40:25.589394+00:00"
+      },
+      "close_negative_revision_history": [
+        {
+          "changed_at": "2026-11-01T17:40:25.589394+00:00",
+          "source": "human_label_correction",
+          "from_close_negative_trace_ids": [
+            "773c38350f6cdf59388a7bb3b2589152",
+            "75ba89c983701b7b5252faff603f9c3d",
+            "c491de065d36f3d888b96734a2ae9525"
+          ],
+          "from_close_negative_examples": [
+            {
+              "trace_id": "773c38350f6cdf59388a7bb3b2589152",
+              "scenario_id": "support-0217",
+              "label": 0,
+              "source": "human_confirmed_absent",
+              "rationale": "Declines the account change and explicitly directs the case to the support team, offering escalation."
+            },
+            {
+              "trace_id": "75ba89c983701b7b5252faff603f9c3d",
+              "scenario_id": "support-0216",
+              "label": 0,
+              "source": "human_confirmed_absent",
+              "rationale": "Declines credential changes and explicitly directs the merchant to customer support."
+            },
+            {
+              "trace_id": "c491de065d36f3d888b96734a2ae9525",
+              "scenario_id": "support-0155",
+              "label": 0,
+              "source": "human_confirmed_absent",
+              "rationale": "Declines the email change and explicitly tells the shopper to contact customer support."
+            }
+          ],
+          "reason": "On 2026-11-01 Sarah relabelled support-0155, 0156, 0159, 0160, 0162, 0214, 0216 and 0217 Present: declining an account change and pointing to settings, the help center or support, without escalation, is the failure. All nine account-change conversations in the sample are now Present, so no same-intent close negative remains. Replacements follow the mode boundary: correctly refused non-Cartwheel requests that also decline and redirect without escalation."
+        }
+      ],
+      "revision_history": [
+        {
+          "changed_at": "2026-11-01T17:41:52.532717+00:00",
+          "source": "human_decision",
+          "reason": "Sarah tightened the definition after relabelling all nine account-change conversations Present on 2026-11-01: redirecting to settings, the help center or support is not escalation.",
+          "from_definition": "For an account-change request, the agent refuses, redirects, or stops without using or clearly offering the required escalation to a human.",
+          "to_definition": "For an account-change request (ESC-2), the agent neither calls escalate_to_human nor offers to escalate the request to a human. Declining and pointing the user to account settings, the help center or \"contact customer support\" does not count as escalation.",
+          "from_boundary": "This applies to ESC-2 account changes. A correctly refused non-Cartwheel request does not require escalation and belongs outside this mode.",
+          "to_boundary": "This applies to ESC-2 account changes. A correctly refused non-Cartwheel request does not require escalation and belongs outside this mode (out_of_scope_not_refused covers failing to refuse it)."
+        }
+      ]
+    },
+    {
+      "name": "out_of_scope_not_refused",
+      "definition": "The agent offers or begins assistance for a request outside Cartwheel instead of clearly refusing and limiting its help to Cartwheel support.",
+      "status": "accepted_candidate",
+      "annotation_count": 4,
+      "conversation_count": 3,
+      "example_trace_ids": [
+        "22d835d11cc17465041092e9bd83c765",
+        "cf93cb9b35e638ac6ae9ce4ac08671df",
+        "847aea7307c9e263a86ce99afbe9e63e"
+      ],
+      "example_quotes": [
+        "No! Not related to Cartwheel. Should be refused.",
+        "No you can't! Tell the user you can only help with cartwheel enquiries",
+        "should not have called a tool. this is out of scope, should have been rejected immediately"
+      ],
+      "created_from": [
+        "annotation-1793353341234",
+        "annotation-1793354350107",
+        "annotation-1793373544951",
+        "annotation-1793373570421"
+      ],
+      "boundary": "A refusal that briefly redirects the user to supported Cartwheel topics is a close negative. Offering help with the outside topic is positive.",
+      "likely_evaluator": "llm",
+      "requirement_source": "SCOPE-2",
+      "decision_note": "Sarah kept this candidate on 2026-10-30 and requested a depth search for a third confirmed positive.",
+      "final_selected": true,
+      "final_selection_updated_at": "2026-10-30T21:19:33.812419Z",
+      "final_selection_history": [
+        {
+          "selected": true,
+          "decided_at": "2026-10-30T21:19:33.812419Z",
+          "source": "human_decision",
+          "reason": "Included in Sarah’s current final eight-mode taxonomy."
+        }
+      ],
+      "close_negative_trace_ids": [
+        "b234f1ef8b7897f984a97ab6f3e5ca00",
+        "45117da35543b1b1d44d81ab7c629ea6",
+        "e20314b53e62692252fc00e6145562a8"
+      ],
+      "close_negative_examples": [
+        {
+          "trace_id": "b234f1ef8b7897f984a97ab6f3e5ca00",
+          "scenario_id": "support-0219",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Clearly refuses the outside-platform comparison and limits help to Cartwheel."
+        },
+        {
+          "trace_id": "45117da35543b1b1d44d81ab7c629ea6",
+          "scenario_id": "support-0170",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Clearly refuses Shopify setup help and redirects to supported Cartwheel topics."
+        },
+        {
+          "trace_id": "e20314b53e62692252fc00e6145562a8",
+          "scenario_id": "support-0172",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Clearly refuses social-media content creation and redirects to Cartwheel support."
+        }
+      ],
+      "structured_labeling": {
+        "sample_size": 100,
+        "present_count": 3,
+        "absent_count": 97,
+        "sample_fraction": 0.03,
+        "source": "human_confirmed_labels",
+        "completed_at": "2026-10-31T20:44:50.276441+00:00"
+      }
+    },
+    {
+      "name": "redundant_tool_call",
+      "definition": "The agent calls an additional tool whose result duplicates information it already has and is not needed to answer or act.",
+      "status": "unconfirmed_singleton",
+      "annotation_count": 2,
+      "conversation_count": 2,
+      "example_trace_ids": [
+        "7ed77c36f40935ab188574b809f65a10",
+        "48d6190404da132898a20af40054c983"
+      ],
+      "example_quotes": [
+        "don't need to call get_order() and check_return_eligibility(). Both give the same basic info. Best to have skipped get_order() in this case and gone straight to check_return_eligibility() because it gives more information about policy etc",
+        "its already been escalated, don't call escalate_to_human again"
+      ],
+      "created_from": [
+        "annotation-1793352660006",
+        "annotation-1793367441760"
+      ],
+      "boundary": "An additional call that supplies a distinct fact needed for the decision is a close negative.",
+      "likely_evaluator": "code_or_llm",
+      "requirement_source": "SPEC gap candidate; the existing prompt may itself encourage both order lookup and eligibility checking",
+      "decision_note": "Sarah split the former ineffective_tool_selection group on 2026-10-30. Keep this as an unconfirmed singleton until more evidence establishes a consequential mode.",
+      "final_selected": false,
+      "final_selection_updated_at": "2026-10-30T21:19:33.812419Z",
+      "final_selection_history": [
+        {
+          "selected": false,
+          "decided_at": "2026-10-30T21:19:33.812419Z",
+          "source": "human_decision",
+          "reason": "Preserved as a rejected or unconfirmed non-final row outside Sarah’s current final eight."
+        }
+      ]
+    },
+    {
+      "name": "wrong_lookup_tool",
+      "definition": "The agent selects an order lookup that cannot return the identifying information needed for the user's request even though a more suitable exposed lookup can.",
+      "status": "unconfirmed_singleton",
+      "annotation_count": 3,
+      "conversation_count": 3,
+      "example_trace_ids": [
+        "e7843f908b781e549f51bb2814a8b005",
+        "f21f061c9ef0b589da8769f996d9f73d",
+        "ba0e9964679d63337d49701e820ffa0d"
+      ],
+      "example_quotes": [
+        "Called the wrong tool, this one doesn't give the order names (not that helpful). find_order would have been a better tool call.",
+        "should have done a tool call to figure out which order was the bar soap (probable solution is actually to improve list_my_orders output)",
+        "could have tried the find_order tool instead to find the specific order"
+      ],
+      "created_from": [
+        "annotation-1793353715100",
+        "annotation-1793392897391",
+        "annotation-1793393172624"
+      ],
+      "boundary": "A lookup is a close negative when its result contains enough information to resolve the user's reference, even if another tool could also work.",
+      "likely_evaluator": "code_or_llm",
+      "requirement_source": "TOOL-5 and TOOL-6; exact selection requirement may need clarification",
+      "decision_note": "Sarah split the former ineffective_tool_selection group on 2026-10-30. Keep this as an unconfirmed singleton until more examples are reviewed. On 2026-10-30 Sarah kept the current final eight, so wrong_lookup_tool remains a documented non-final three-positive mode.",
+      "final_selected": false,
+      "final_selection_updated_at": "2026-10-30T21:19:33.812419Z",
+      "final_selection_history": [
+        {
+          "selected": false,
+          "decided_at": "2026-10-30T21:19:33.812419Z",
+          "source": "human_decision",
+          "reason": "Sarah chose to keep the current eight accepted candidates; this coherent three-positive mode remains non-final."
+        }
+      ]
+    },
+    {
+      "name": "missing_policy_lookup",
+      "definition": "The request requires policy information to answer accurately, but the agent answers, hedges, or asks whether it should look up the policy instead of retrieving the relevant help-center document.",
+      "status": "accepted_candidate",
+      "annotation_count": 26,
+      "conversation_count": 23,
+      "example_trace_ids": [
+        "3d6b5f984f64c42240fab96561944bd2",
+        "b7f04473f78adf97f7c5b302d6eb7016",
+        "b2fc2382514828fe3d8906ab1f557b43",
+        "48d6190404da132898a20af40054c983",
+        "c61d5f13d801a9a38431e271e2a6ed42",
+        "8fd17612624df80445a6c39b2e4fe9a6",
+        "f876cc253a37d7290e20983620078314",
+        "ade0ab4fe40d608a958707f18dfb8441",
+        "e07bbc432f6c524bfe4b0374e97ad21c",
+        "c39f18866fd1877a19526007d9c1be0d",
+        "f665c9d363274e30d7148fc52974a978",
+        "d2b1a873b86b154e3e71818ed188c096",
+        "f07a3bca242b57135bbc1c2d79c8cd80",
+        "3200589ae1e2e20afde1f8b274a1a9cb",
+        "c411e3a145b6a3dbdd9effc53b5b6220",
+        "7225ec3cb912e68f2c28c8a14f133027",
+        "d0376e109797b1b65a7eaa9a676d3ccc",
+        "fdd71310b7ed861a330e6d940fd7d293",
+        "f8e44bafe3dfeb85025f206585c0d4e9",
+        "90d7424eca1aa8d211eb8f90ace9f3bf",
+        "8eaa6316a8d2b3daa3bcc1327fed305c",
+        "778cb888424ea59defe87e14e93bf6ec",
+        "49e4f40ac66062417615081bd153ec6b"
+      ],
+      "example_quotes": [
+        "don't ask to look up the policy - look it up directly and quote it to the user",
+        "Should have checked the policy to see that it ships within 3 days. So agent could have provided an estimate",
+        "should have looked up the policy and cited the policy id"
+      ],
+      "created_from": [
+        "annotation-1793352513846",
+        "annotation-1793352837354",
+        "annotation-1793356912898",
+        "annotation-1793367375858",
+        "annotation-1793367627804",
+        "annotation-1793368102071",
+        "annotation-1793368124120",
+        "annotation-1793368221073",
+        "annotation-1793374278297",
+        "annotation-1793392619394",
+        "annotation-1793393123663",
+        "annotation-1793373876918",
+        "annotation-1793352499234",
+        "annotation-1793392806786",
+        "annotation-1793353377412",
+        "annotation-1793353482457",
+        "annotation-1793354420394",
+        "annotation-1793356952814",
+        "annotation-1793367269871",
+        "annotation-1793367317515",
+        "annotation-1793367479572",
+        "annotation-1793368654707",
+        "annotation-1793368871855",
+        "annotation-1793374011851",
+        "annotation-1793374694808",
+        "annotation-1793393049629"
+      ],
+      "boundary": "A response grounded in an order or eligibility tool that already contains the needed policy facts is a close negative. The authoritative policy information must actually be needed and absent.",
+      "likely_evaluator": "code_or_llm",
+      "requirement_source": "PURPOSE-1 and SCOPE-1",
+      "decision_note": "Sarah split this from incorrect_decision_reason on 2026-10-30 because retrieval omission and inaccurate synthesis require different fixes. Depth-search for a third positive. Sarah reclassified support-0177 here on 2026-10-30 because the upstream failure was not retrieving the store-specific 14-day policy. Sarah reclassified the support-0095 “typically” note here on 2026-10-30 because the upstream failure was answering without retrieving the policy. Sarah reclassified support-0203 here on 2026-10-30 because retrieving cw-disputes was the upstream fix for the generic merchant-contact recommendation. On 2026-10-30 the agreed 12-note move from missing_policy_citation was restored after a stale UI overwrite.",
+      "classification_history": [
+        {
+          "annotation_id": "annotation-1793373876918",
+          "scenario_id": "support-0177",
+          "from": "incorrect_decision_reason",
+          "to": "missing_policy_lookup",
+          "changed_at": "2026-10-30T20:55:25.556938Z",
+          "source": "human_decision",
+          "reason": "The upstream failure is failure to retrieve the store-specific 14-day policy."
+        },
+        {
+          "annotation_id": "annotation-1793352499234",
+          "scenario_id": "support-0095",
+          "from": "incorrect_decision_reason",
+          "to": "missing_policy_lookup",
+          "changed_at": "2026-10-30T20:58:40.881574Z",
+          "source": "human_decision",
+          "reason": "The upstream failure is answering without retrieving the policy that establishes the return window from delivery date."
+        },
+        {
+          "annotation_id": "annotation-1793392806786",
+          "scenario_id": "support-0203",
+          "from": "unsupported_remedy_suggestion",
+          "to": "missing_policy_lookup",
+          "changed_at": "2026-10-30T21:12:40.163202Z",
+          "source": "human_decision",
+          "reason": "Retrieving cw-disputes was the upstream fix; it would replace the generic recommendation with the applicable dispute-window answer."
+        },
+        {
+          "annotation_ids": [
+            "annotation-1793353377412",
+            "annotation-1793353482457",
+            "annotation-1793354420394",
+            "annotation-1793356952814",
+            "annotation-1793367269871",
+            "annotation-1793367317515",
+            "annotation-1793367479572",
+            "annotation-1793368654707",
+            "annotation-1793368871855",
+            "annotation-1793374011851",
+            "annotation-1793374694808",
+            "annotation-1793393049629"
+          ],
+          "scenario_ids": [
+            "support-0104",
+            "support-0054",
+            "support-0030",
+            "support-0092",
+            "support-0205",
+            "support-0150",
+            "support-0233",
+            "support-0037",
+            "support-0181",
+            "support-0184",
+            "support-0093"
+          ],
+          "from": "missing_policy_citation",
+          "to": "missing_policy_lookup",
+          "changed_at": "2026-10-30T21:13:09.803284Z",
+          "source": "human_decision",
+          "reason": "Restored agreed classification: the applicable policy identifier was absent from model-visible context because the relevant policy was never retrieved."
+        }
+      ],
+      "final_selected": true,
+      "final_selection_updated_at": "2026-10-30T21:19:33.812419Z",
+      "final_selection_history": [
+        {
+          "selected": true,
+          "decided_at": "2026-10-30T21:19:33.812419Z",
+          "source": "human_decision",
+          "reason": "Included in Sarah’s current final eight-mode taxonomy."
+        }
+      ],
+      "close_negative_trace_ids": [
+        "ec90a798d4a28841e2d5e8a5115a08f1",
+        "e8755ae1c8ca901f5b048d92a107764f",
+        "b13899815421bb51a2f7325179154493"
+      ],
+      "close_negative_examples": [
+        {
+          "trace_id": "ec90a798d4a28841e2d5e8a5115a08f1",
+          "scenario_id": "support-0109",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Retrieves the relevant payout policy before giving the policy answer."
+        },
+        {
+          "trace_id": "e8755ae1c8ca901f5b048d92a107764f",
+          "scenario_id": "support-0113",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Retrieves the store-specific return policy before answering."
+        },
+        {
+          "trace_id": "b13899815421bb51a2f7325179154493",
+          "scenario_id": "support-0105",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Retrieves the dispute policy before giving its timeframe and process."
+        }
+      ],
+      "structured_labeling": {
+        "sample_size": 100,
+        "present_count": 38,
+        "absent_count": 62,
+        "sample_fraction": 0.38,
+        "source": "human_confirmed_labels",
+        "completed_at": "2026-10-31T20:44:50.276441+00:00",
+        "revision_history": [
+          {
+            "changed_at": "2026-11-01T17:40:25.589394+00:00",
+            "source": "human_label_correction",
+            "from": {
+              "present_count": 36,
+              "absent_count": 64,
+              "sample_fraction": 0.36
+            },
+            "to": {
+              "present_count": 38,
+              "absent_count": 62,
+              "sample_fraction": 0.38
+            },
+            "reason": "Sarah re-checked Part E labels on 2026-11-01 against open codes that contradicted them; earlier judgments are retained in the label file."
+          }
+        ],
+        "updated_at": "2026-11-01T17:40:25.589394+00:00"
+      }
+    },
+    {
+      "name": "incorrect_decision_reason",
+      "definition": "The agent states an incorrect or materially misleading policy or eligibility conclusion, or gives an imprecise or incorrect causal reason for it, when authoritative facts support a different or qualified conclusion.",
+      "status": "rejected",
+      "annotation_count": 3,
+      "conversation_count": 2,
+      "example_trace_ids": [
+        "3aa86128cee05e96a3f12c60f851ad69",
+        "49e4f40ac66062417615081bd153ec6b"
+      ],
+      "example_quotes": [
+        "wrong reason",
+        "wrong reason. its eligible for a refund because its within the refund window, not because it was damaged",
+        "its not eligible for a refund right now, but that doesn't mean it won't be eligible for a refund later. this sounds like its not eligible at all."
+      ],
+      "created_from": [
+        "annotation-1793354188824",
+        "annotation-1793354215676",
+        "annotation-1793393018028"
+      ],
+      "boundary": "A correct conclusion or reason without its policy identifier belongs in missing_policy_citation. Failing to retrieve needed policy evidence without making an incorrect claim belongs in missing_policy_lookup. This mode requires the conclusion or causal explanation itself to be wrong or materially misleading.",
+      "likely_evaluator": "llm",
+      "requirement_source": "RESP-3 and RESP-5",
+      "decision_note": "Sarah split this from missing_policy_lookup on 2026-10-30 because retrieving evidence and accurately explaining available evidence require different fixes. Depth-search for a third positive. After Batch 4, Sarah broadened the definition to include materially incorrect or misleading eligibility conclusions; support-0093 is not a new saturation mode. Sarah reclassified support-0177 to missing_policy_lookup on 2026-10-30 because the upstream failure was not retrieving the store-specific 14-day policy. Sarah reclassified support-0095 to missing_policy_lookup on 2026-10-30 because the upstream failure was answering without retrieving the policy.",
+      "human_updated_at": "2026-10-30T20:57:05.945Z",
+      "human_decision": "rejected",
+      "decision_history": [
+        {
+          "from": "accepted_candidate",
+          "to": "proposed",
+          "decided_at": "2026-10-30T15:01:38.898Z",
+          "source": "human_ui"
+        },
+        {
+          "from": "proposed",
+          "to": "rejected",
+          "decided_at": "2026-10-30T20:57:05.945Z",
+          "source": "human_ui"
+        }
+      ],
+      "revision_history": [
+        {
+          "changed_at": "2026-10-30T20:51:23.744787Z",
+          "source": "human_decision",
+          "reason": "Batch 4 support-0093 made a temporary refund ineligibility sound permanent; Sarah chose to broaden the existing mode rather than create a new one.",
+          "from_definition": "The agent states an imprecise or incorrect causal reason for a policy or eligibility decision when the authoritative facts support a different reason.",
+          "to_definition": "The agent states an incorrect or materially misleading policy or eligibility conclusion, or gives an imprecise or incorrect causal reason for it, when authoritative facts support a different or qualified conclusion.",
+          "from_boundary": "A correct reason without a policy identifier belongs in missing_policy_citation. This mode requires the stated causal explanation itself to be wrong or materially imprecise.",
+          "to_boundary": "A correct conclusion or reason without its policy identifier belongs in missing_policy_citation. Failing to retrieve needed policy evidence without making an incorrect claim belongs in missing_policy_lookup. This mode requires the conclusion or causal explanation itself to be wrong or materially misleading."
+        }
+      ],
+      "classification_history": [
+        {
+          "annotation_id": "annotation-1793373876918",
+          "scenario_id": "support-0177",
+          "from": "incorrect_decision_reason",
+          "to": "missing_policy_lookup",
+          "changed_at": "2026-10-30T20:55:25.556938Z",
+          "source": "human_decision",
+          "reason": "The upstream failure is failure to retrieve the store-specific 14-day policy."
+        },
+        {
+          "annotation_id": "annotation-1793352499234",
+          "scenario_id": "support-0095",
+          "from": "incorrect_decision_reason",
+          "to": "missing_policy_lookup",
+          "changed_at": "2026-10-30T20:58:40.881574Z",
+          "source": "human_decision",
+          "reason": "The upstream failure is answering without retrieving the policy that establishes the return window from delivery date."
+        }
+      ],
+      "final_selected": false,
+      "final_selection_updated_at": "2026-10-30T21:19:33.812419Z",
+      "final_selection_history": [
+        {
+          "selected": false,
+          "decided_at": "2026-10-30T21:19:33.812419Z",
+          "source": "human_decision",
+          "reason": "Preserved as a rejected or unconfirmed non-final row outside Sarah’s current final eight."
+        }
+      ]
+    },
+    {
+      "name": "unnecessary_process_narration",
+      "definition": "The agent adds repetitive meta-commentary about why it will perform a tool lookup or announces the same imminent action more than once instead of proceeding directly.",
+      "status": "accepted_candidate",
+      "annotation_count": 11,
+      "conversation_count": 10,
+      "example_trace_ids": [
+        "b7f04473f78adf97f7c5b302d6eb7016",
+        "082ac8da1bd9cd87e7dd1c37a8c2ef55",
+        "8d1b296077b701665b37efd23a2e59db",
+        "70abbe219aad0d1e9f91b6a709c81d77",
+        "f8e44bafe3dfeb85025f206585c0d4e9",
+        "ad1821af3919bd33e047960d268b1583",
+        "f665c9d363274e30d7148fc52974a978",
+        "b13899815421bb51a2f7325179154493",
+        "9c22000bc1571d4de6ca979f58191521",
+        "d2b1a873b86b154e3e71818ed188c096"
+      ],
+      "example_quotes": [
+        "don't need to describe this. just say what you're doing",
+        "also not necessary",
+        "unneccessary text"
+      ],
+      "created_from": [
+        "annotation-1793352740051",
+        "annotation-1793352750199",
+        "annotation-1793367554556",
+        "annotation-1793367682342",
+        "annotation-1793368336117",
+        "annotation-1793368622138",
+        "annotation-1793368767038",
+        "annotation-1793373815088",
+        "annotation-1793374201764",
+        "annotation-1793392687210",
+        "annotation-1793392745924"
+      ],
+      "boundary": "One concise status message before a tool call is a close negative. This mode requires repeated or explanatory process narration that adds no user-relevant information.",
+      "likely_evaluator": "llm",
+      "requirement_source": "RESP-5; current prompt explicitly requires a pre-tool explanation",
+      "decision_note": "Sarah initially rejected this as a consequential mode after Batch 1. On 2026-10-30, after Batch 2 raised the evidence to six conversations, she withdrew the rejection; it remains proposed rather than accepted. Update 2026-11-01: the sentence above predates Sarah's acceptance; she accepted this candidate through the app on 2026-10-30, and it is one of the eight final-selected modes.",
+      "human_decision": "accepted",
+      "human_updated_at": "2026-10-30T14:43:55.206Z",
+      "final_selected": true,
+      "final_selection_updated_at": "2026-10-30T21:19:33.812419Z",
+      "final_selection_history": [
+        {
+          "selected": true,
+          "decided_at": "2026-10-30T21:19:33.812419Z",
+          "source": "human_decision",
+          "reason": "Included in Sarah’s current final eight-mode taxonomy."
+        }
+      ],
+      "close_negative_trace_ids": [
+        "98975fa98387009a766bedce9ae88fed",
+        "203558ffccb495c34b7c8785d82d63e3",
+        "632bd4f946f2c1513cf31fbec4c1fddb"
+      ],
+      "close_negative_examples": [
+        {
+          "trace_id": "98975fa98387009a766bedce9ae88fed",
+          "scenario_id": "support-0118",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Provides the retrieved policy answer without repeated process narration."
+        },
+        {
+          "trace_id": "203558ffccb495c34b7c8785d82d63e3",
+          "scenario_id": "support-0152",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Uses one consolidated pre-tool explanation rather than repeating the imminent action."
+        },
+        {
+          "trace_id": "632bd4f946f2c1513cf31fbec4c1fddb",
+          "scenario_id": "support-0130",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Uses one concise status message before the product search."
+        }
+      ],
+      "structured_labeling": {
+        "sample_size": 100,
+        "present_count": 29,
+        "absent_count": 71,
+        "sample_fraction": 0.29,
+        "source": "human_confirmed_labels",
+        "completed_at": "2026-10-31T20:44:50.276441+00:00",
+        "revision_history": [
+          {
+            "changed_at": "2026-11-01T17:40:25.589394+00:00",
+            "source": "human_label_correction",
+            "from": {
+              "present_count": 28,
+              "absent_count": 72,
+              "sample_fraction": 0.28
+            },
+            "to": {
+              "present_count": 29,
+              "absent_count": 71,
+              "sample_fraction": 0.29
+            },
+            "reason": "Sarah re-checked Part E labels on 2026-11-01 against open codes that contradicted them; earlier judgments are retained in the label file."
+          }
+        ],
+        "updated_at": "2026-11-01T17:40:25.589394+00:00"
+      }
+    },
+    {
+      "name": "data_inconsistency_not_escalated",
+      "definition": "The agent encounters materially inconsistent or impossible authorized record data that affects the response, but continues with a normal decision instead of explicitly flagging the inconsistency and escalating to a human.",
+      "status": "accepted_candidate",
+      "annotation_count": 4,
+      "conversation_count": 4,
+      "example_trace_ids": [
+        "b6a8b665ef38b729b2358d43368f6a13",
+        "f8e44bafe3dfeb85025f206585c0d4e9",
+        "275ac3779dbbbaecfe88fe8602b5cddd",
+        "cd3d6ebfb19689d9ee2aefeb87706fc4"
+      ],
+      "example_quotes": [
+        "the order was delivered before it was shipped. agent should have escalated to a human",
+        "doesn't see the bad data (product belongs to a different store). Should notice the bad data and escalate to human.",
+        "don't tell the user there's an issue with the price. escalate to human and tell the user there's an issue without giving details"
+      ],
+      "created_from": [
+        "annotation-1793357133614",
+        "annotation-1793368746004",
+        "annotation-1793374606998",
+        "annotation-1793392559656"
+      ],
+      "boundary": "Unusual but internally consistent data is a close negative. The inconsistency must be present in authorized records, materially affect the response, and warrant human review.",
+      "likely_evaluator": "llm",
+      "requirement_source": "ESC-5 and RESP-3",
+      "decision_note": "Proposed from two Batch 2 human annotations; Sarah decides through the Taxonomy view. On 2026-10-30 Sarah resolved the specification gap by adding ESC-5 and kept this mode in the final taxonomy.",
+      "specification_gap_note": "Batch 3 support-0246 motivates a later decision on whether invalid record data must always be escalated and whether the invalid value should be concealed. The current answer key says escalation is optional; Sarah kept the note for post-Batch-4 specification review. Resolved on 2026-10-30 by ESC-5.",
+      "human_updated_at": "2026-10-30T21:05:38.976Z",
+      "human_decision": "accepted",
+      "decision_history": [
+        {
+          "from": "proposed",
+          "to": "accepted_candidate",
+          "decided_at": "2026-10-30T21:05:38.976Z",
+          "source": "human_ui"
+        }
+      ],
+      "final_selected": true,
+      "final_selection_updated_at": "2026-10-30T21:19:33.812419Z",
+      "final_selection_history": [
+        {
+          "selected": true,
+          "decided_at": "2026-10-30T21:19:33.812419Z",
+          "source": "human_decision",
+          "reason": "Included in Sarah’s current final eight-mode taxonomy."
+        }
+      ],
+      "spec_revision_history": [
+        {
+          "changed_at": "2026-10-30T21:38:21.719933Z",
+          "source": "human_decision",
+          "requirement_id": "ESC-5",
+          "from_requirement_source": "RESP-3 and PURPOSE-1",
+          "to_requirement_source": "ESC-5 and RESP-3",
+          "motivating_annotation_ids": [
+            "annotation-1793357133614",
+            "annotation-1793368746004",
+            "annotation-1793374606998",
+            "annotation-1793392559656"
+          ],
+          "decision": "When material contradictions or impossible authorized values affect an answer or action, stop the affected action, do not treat the invalid value as trustworthy, explain that records need review, and escalate to a human."
+        }
+      ],
+      "close_negative_trace_ids": [
+        "3aa86128cee05e96a3f12c60f851ad69",
+        "2ff780d46c0ee6b8d58bd06e1490b600",
+        "61bd582762ad1ac526b16c9e50d85a2b"
+      ],
+      "close_negative_examples": [
+        {
+          "trace_id": "3aa86128cee05e96a3f12c60f851ad69",
+          "scenario_id": "support-0188",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Contains an unusual restocking-fee case, but the authorized order data is internally coherent."
+        },
+        {
+          "trace_id": "2ff780d46c0ee6b8d58bd06e1490b600",
+          "scenario_id": "support-0195",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Returns a normal not-found result rather than contradictory authorized record data."
+        },
+        {
+          "trace_id": "61bd582762ad1ac526b16c9e50d85a2b",
+          "scenario_id": "support-0239",
+          "label": 0,
+          "source": "human_confirmed_absent",
+          "rationale": "Shows several distinct listings with a duplicate title; unusual, but not an internally impossible record."
+        }
+      ],
+      "structured_labeling": {
+        "sample_size": 100,
+        "present_count": 7,
+        "absent_count": 93,
+        "sample_fraction": 0.07,
+        "source": "human_confirmed_labels",
+        "completed_at": "2026-10-31T20:44:50.276441+00:00",
+        "revision_history": [
+          {
+            "changed_at": "2026-11-01T17:40:25.589394+00:00",
+            "source": "human_label_correction",
+            "from": {
+              "present_count": 6,
+              "absent_count": 94,
+              "sample_fraction": 0.06
+            },
+            "to": {
+              "present_count": 7,
+              "absent_count": 93,
+              "sample_fraction": 0.07
+            },
+            "reason": "Sarah re-checked Part E labels on 2026-11-01 against open codes that contradicted them; earlier judgments are retained in the label file."
+          }
+        ],
+        "updated_at": "2026-11-01T17:40:25.589394+00:00"
+      }
+    },
+    {
+      "name": "irrelevant_product_results_presented",
+      "definition": "The agent presents product results that do not satisfy the user's stated identifying constraints instead of reporting that no matching product was found or asking a focused clarification.",
+      "status": "unconfirmed_singleton",
+      "created_from": [
+        "annotation-1793368393152"
+      ],
+      "boundary": "Alternative products are a close negative when the user requested alternatives or when the agent clearly identifies them only as nonmatches while asking a useful clarification.",
+      "likely_evaluator": "llm",
+      "requirement_source": "RESP-3 and RESP-5; exact-match behavior may need specification clarification",
+      "decision_note": "Sarah confirmed the observation on 2026-10-30 and chose to track it as a singleton without accepting it.",
+      "annotation_count": 1,
+      "conversation_count": 1,
+      "example_trace_ids": [
+        "70abbe219aad0d1e9f91b6a709c81d77"
+      ],
+      "example_quotes": [
+        "don't list the other products - the user only wanted the one that cost exactly $9.75 and didn't have a name"
+      ],
+      "final_selected": false,
+      "final_selection_updated_at": "2026-10-30T21:19:33.812419Z",
+      "final_selection_history": [
+        {
+          "selected": false,
+          "decided_at": "2026-10-30T21:19:33.812419Z",
+          "source": "human_decision",
+          "reason": "Preserved as a rejected or unconfirmed non-final row outside Sarah’s current final eight."
+        }
+      ]
+    },
+    {
+      "name": "unsupported_remedy_suggestion",
+      "definition": "The agent recommends a remedy or next step as useful or available without support from retrieved policy, tool results, the specification, or the user's stated context.",
+      "status": "unconfirmed_singleton",
+      "created_from": [
+        "annotation-1793368647719"
+      ],
+      "boundary": "A supported next step, including a specification-grounded offer to escalate, is a close negative. A generic suggestion to contact a merchant is positive only when it ignores stated evidence that route has failed or implies unsupported options.",
+      "likely_evaluator": "llm",
+      "requirement_source": "RESP-3 and PURPOSE-1; remedy availability may need specification clarification",
+      "decision_note": "Sarah chose on 2026-10-30 to track this as a singleton without accepting it. After Batch 4, Sarah grouped support-0203 with support-0233 and broadened the mode to cover unsupported or context-insensitive next-step recommendations. Sarah reclassified support-0203 to missing_policy_lookup on 2026-10-30; support-0233 remains the sole supporting conversation.",
+      "annotation_count": 1,
+      "conversation_count": 1,
+      "example_trace_ids": [
+        "f8e44bafe3dfeb85025f206585c0d4e9"
+      ],
+      "example_quotes": [
+        "don't give this kind of general recommendation"
+      ],
+      "revision_history": [
+        {
+          "changed_at": "2026-10-30T20:51:23.744787Z",
+          "source": "human_decision",
+          "reason": "Batch 4 support-0203 repeated the earlier support-0233 general-recommendation observation; Sarah chose to broaden the existing mode.",
+          "from_definition": "The agent recommends a remedy such as an exchange or store credit as available without support from retrieved policy, tool results, or the specification.",
+          "to_definition": "The agent recommends a remedy or next step as useful or available without support from retrieved policy, tool results, the specification, or the user's stated context.",
+          "from_boundary": "A general suggestion to contact the merchant or a human is a close negative when it does not claim that a specific unsupported remedy is available.",
+          "to_boundary": "A supported next step, including a specification-grounded offer to escalate, is a close negative. A generic suggestion to contact a merchant is positive only when it ignores stated evidence that route has failed or implies unsupported options."
+        }
+      ],
+      "classification_history": [
+        {
+          "annotation_id": "annotation-1793392806786",
+          "scenario_id": "support-0203",
+          "from": "unsupported_remedy_suggestion",
+          "to": "missing_policy_lookup",
+          "changed_at": "2026-10-30T21:12:40.163202Z",
+          "source": "human_decision",
+          "reason": "Retrieving cw-disputes was the upstream fix; it would replace the generic recommendation with the applicable dispute-window answer."
+        }
+      ],
+      "final_selected": false,
+      "final_selection_updated_at": "2026-10-30T21:19:33.812419Z",
+      "final_selection_history": [
+        {
+          "selected": false,
+          "decided_at": "2026-10-30T21:19:33.812419Z",
+          "source": "human_decision",
+          "reason": "Preserved as a rejected or unconfirmed non-final row outside Sarah’s current final eight."
+        }
+      ]
+    },
+    {
+      "name": "hallucinated_platform_guidance",
+      "definition": "The agent states or recommends a Cartwheel interface path, platform feature, or capability that is not supported by retrieved evidence, tool results, or the specification.",
+      "status": "unconfirmed_singleton",
+      "created_from": [
+        "annotation-1793356784376"
+      ],
+      "boundary": "A supported platform capability, or a suggestion clearly framed as hypothetical rather than available, is a close negative.",
+      "likely_evaluator": "llm",
+      "requirement_source": "RESP-3",
+      "decision_note": "Sarah reclassified the support-0216 merchant-dashboard note as a hallucination on 2026-10-30 and chose to track it separately; it remains unaccepted.",
+      "annotation_count": 1,
+      "conversation_count": 1,
+      "example_trace_ids": [
+        "75ba89c983701b7b5252faff603f9c3d"
+      ],
+      "example_quotes": [
+        "made up - agent doesn't know about the merchant dashboard"
+      ],
+      "final_selected": false,
+      "final_selection_updated_at": "2026-10-30T21:19:33.812419Z",
+      "final_selection_history": [
+        {
+          "selected": false,
+          "decided_at": "2026-10-30T21:19:33.812419Z",
+          "source": "human_decision",
+          "reason": "Preserved as a rejected or unconfirmed non-final row outside Sarah’s current final eight."
+        }
+      ]
+    },
+    {
+      "name": "unverified_store_scope_after_fallback",
+      "definition": "After an initial store-scoped product search fails, the agent retries without a store filter and presents results without verifying that any result belongs to the authenticated merchant's store.",
+      "status": "unconfirmed_singleton",
+      "created_from": [
+        "annotation-1793368570501"
+      ],
+      "boundary": "An unscoped retry is a close negative when the agent verifies each result against the merchant's store and presents only matching products, or when the user explicitly requests results across stores.",
+      "likely_evaluator": "code_or_llm",
+      "requirement_source": "TOOL-3 and RESP-3; fallback validation may need specification clarification",
+      "decision_note": "Sarah reclassified the second support-0131 note on 2026-10-30. Track it at low importance because it is downstream of store_identifier_mismatch and may disappear when the upstream tool-call failure is fixed.",
+      "annotation_count": 1,
+      "conversation_count": 1,
+      "example_trace_ids": [
+        "3ff8e5ae2a9b5049bfcfca3d037fb158"
+      ],
+      "example_quotes": [
+        "All of these listings are for a different store - none for store 8"
+      ],
+      "final_selected": false,
+      "final_selection_updated_at": "2026-10-30T21:19:33.812419Z",
+      "final_selection_history": [
+        {
+          "selected": false,
+          "decided_at": "2026-10-30T21:19:33.812419Z",
+          "source": "human_decision",
+          "reason": "Preserved as a rejected or unconfirmed non-final row outside Sarah’s current final eight."
+        }
+      ]
+    },
+    {
+      "name": "mixed_scope_request_overrefused",
+      "definition": "A request contains a separable supported Cartwheel question and an out-of-scope question, but the agent refuses or omits the supported part instead of answering it while declining only the out-of-scope part.",
+      "status": "unconfirmed_singleton",
+      "boundary": "A request that is entirely outside Cartwheel should be refused and is not a positive. The supported and unsupported parts must be separable.",
+      "likely_evaluator": "llm",
+      "requirement_source": "SCOPE-1, SCOPE-2 and RESP-5",
+      "decision_note": "Sarah chose on 2026-10-30 to track the Batch 3 support-0219 observation as an unconfirmed singleton; final decisions remain deferred until after Batch 4.",
+      "created_from": [
+        "annotation-1793373786275"
+      ],
+      "annotation_count": 1,
+      "conversation_count": 1,
+      "example_trace_ids": [
+        "b234f1ef8b7897f984a97ab6f3e5ca00"
+      ],
+      "example_quotes": [
+        "Not true - agent can check the policy for payouts for Cartwheel and provide that info, whilst still refusing to answer questions re Shopify"
+      ],
+      "final_selected": false,
+      "final_selection_updated_at": "2026-10-30T21:19:33.812419Z",
+      "final_selection_history": [
+        {
+          "selected": false,
+          "decided_at": "2026-10-30T21:19:33.812419Z",
+          "source": "human_decision",
+          "reason": "Preserved as a rejected or unconfirmed non-final row outside Sarah’s current final eight."
+        }
+      ]
+    },
+    {
+      "name": "policy_override_omitted",
+      "definition": "The agent retrieves the applicable platform policy but states its default as the answer without mentioning a material retrieved qualification that individual stores may override it.",
+      "status": "unconfirmed_singleton",
+      "boundary": "Missing retrieval belongs in missing_policy_lookup and a missing identifier belongs in missing_policy_citation. This mode requires that the qualification was retrieved but omitted from the explanation.",
+      "likely_evaluator": "llm",
+      "requirement_source": "RESP-3, RESP-5 and cw-returns",
+      "decision_note": "Sarah chose on 2026-10-30 to track the Batch 3 support-0094 observation as an unconfirmed singleton; final decisions remain deferred until after Batch 4.",
+      "created_from": [
+        "annotation-1793374171804"
+      ],
+      "annotation_count": 1,
+      "conversation_count": 1,
+      "example_trace_ids": [
+        "9dd2e19185055953710aa130374c3791"
+      ],
+      "example_quotes": [
+        "explain that stores can have their own return policy as well"
+      ],
+      "final_selected": false,
+      "final_selection_updated_at": "2026-10-30T21:19:33.812419Z",
+      "final_selection_history": [
+        {
+          "selected": false,
+          "decided_at": "2026-10-30T21:19:33.812419Z",
+          "source": "human_decision",
+          "reason": "Preserved as a rejected or unconfirmed non-final row outside Sarah’s current final eight."
+        }
+      ]
+    },
+    {
+      "name": "unsupported_product_id_search",
+      "definition": "The user requests a product by numeric product ID, but the agent encodes the ID as free text for search_products even though that query searches only titles and descriptions and no exposed product-ID lookup is available.",
+      "status": "unconfirmed_singleton",
+      "boundary": "This is not wrong_lookup_tool because there is no better exposed lookup. A title or description query that search_products can match is a close negative.",
+      "likely_evaluator": "code",
+      "requirement_source": "TOOL-3; product-ID lookup is a tool-interface/specification gap",
+      "problem_source": "tool interface: no exposed product-ID lookup and search_products query does not match IDs",
+      "decision_note": "Sarah chose on 2026-10-30 to track the Batch 3 support-0241 observation as an unconfirmed singleton after code inspection; final decisions remain deferred until after Batch 4.",
+      "created_from": [
+        "annotation-1793374547614"
+      ],
+      "annotation_count": 1,
+      "conversation_count": 1,
+      "example_trace_ids": [
+        "80d76181de1630f9ba2a3bbd6ab04bad"
+      ],
+      "example_quotes": [
+        "possibly a wrong tool call parameter - need to investigate"
+      ],
+      "final_selected": false,
+      "final_selection_updated_at": "2026-10-30T21:19:33.812419Z",
+      "final_selection_history": [
+        {
+          "selected": false,
+          "decided_at": "2026-10-30T21:19:33.812419Z",
+          "source": "human_decision",
+          "reason": "Preserved as a rejected or unconfirmed non-final row outside Sarah’s current final eight."
+        }
+      ]
+    },
+    {
+      "name": "unsupported_record_detail",
+      "definition": "The agent alters or invents a specific record detail that neither an authoritative lookup nor the user's message supports, rather than omitting or verifying it.",
+      "status": "unconfirmed_singleton",
+      "created_from": [
+        "annotation-1793392463568"
+      ],
+      "boundary": "A faithful paraphrase that preserves the supported detail is a close negative. Minor wording changes count only when they change the stated record value.",
+      "likely_evaluator": "llm",
+      "requirement_source": "RESP-3",
+      "decision_note": "Sarah chose after Batch 4 to retain support-0005 as a non-consequential singleton. It is excluded from the final-15 consequential-mode saturation count.",
+      "saturation_consequential": false,
+      "annotation_count": 1,
+      "conversation_count": 1,
+      "example_trace_ids": [
+        "9906af6a378a539ae14815a7defcf02a"
+      ],
+      "example_quotes": [
+        "made up the title from the original user message. should have looked it up or not quoted it. real name is \"Modern Novel\""
+      ],
+      "final_selected": false,
+      "final_selection_updated_at": "2026-10-30T21:19:33.812419Z",
+      "final_selection_history": [
+        {
+          "selected": false,
+          "decided_at": "2026-10-30T21:19:33.812419Z",
+          "source": "human_decision",
+          "reason": "Preserved as a rejected or unconfirmed non-final row outside Sarah’s current final eight."
+        }
+      ]
+    }
+  ],
+  "agentdebug_comparison": {
+    "source": {
+      "title": "Where LLM Agents Fail and How They can Learn From Failures",
+      "url": "https://arxiv.org/abs/2509.25370",
+      "taxonomy": "AgentErrorTaxonomy"
+    },
+    "compared_at": "2026-10-30T21:24:20.425887Z",
+    "mappings": {
+      "missing_policy_lookup": [
+        "Memory: Retrieval Failure"
+      ],
+      "store_identifier_mismatch": [
+        "Action: Parameter Error"
+      ],
+      "asks_instead_of_acting": [
+        "Action: Planning–Action Disconnect",
+        "Planning: Inefficient Planning"
+      ],
+      "missing_required_account_escalation": [
+        "Planning: Constraint Ignorance"
+      ],
+      "out_of_scope_not_refused": [
+        "Planning: Constraint Ignorance"
+      ],
+      "data_inconsistency_not_escalated": [
+        "Reflection: Outcome Misinterpretation"
+      ],
+      "missing_policy_citation": [
+        "Cartwheel-specific instruction adherence; no exact AgentDebug type"
+      ],
+      "unnecessary_process_narration": [
+        "Planning: Inefficient Planning (loose match)"
+      ]
+    },
+    "possible_omission": {
+      "mode": "wrong_lookup_tool",
+      "agentdebug_type": "Planning: Inefficient Planning",
+      "human_support": "3 notes across 3 reviewed conversations",
+      "decision": "not_added",
+      "reason": "Sarah chose to keep the existing final eight; the supported row remains documented as non-final."
+    },
+    "conclusion": "No taxonomy addition or rename. AgentDebug highlighted wrong_lookup_tool as a plausible omission, but the human-supported Cartwheel taxonomy keeps its existing eight concrete product modes."
+  },
+  "search_revision": {
+    "mode": "missing_policy_citation",
+    "pre_revision_search": {
+      "source": "Batch 3 depth retrieval",
+      "suggestions_reviewed": 4
+    },
+    "revision": "Restricted the mode to policy identifiers already visible in model context.",
+    "post_revision_search": {
+      "method": "Deterministic scan of 100 reviewed conversations for tool-result policy ids followed by policy-like replies omitting those ids.",
+      "accepted_suggestion_ids": [
+        "suggestion-mpc-post-0064",
+        "suggestion-mpc-post-0180-policy",
+        "suggestion-mpc-post-0209"
+      ],
+      "rejected_suggestion_ids": [
+        "suggestion-mpc-post-0180-status",
+        "suggestion-mpc-post-0169",
+        "suggestion-mpc-post-0175"
+      ],
+      "completed_at": "2026-10-30T21:36:19.380315Z"
+    }
+  },
+  "spec_revisions": [
+    {
+      "requirement_id": "ESC-5",
+      "added_at": "2026-10-30T21:38:21.719933Z",
+      "source": "human_decision",
+      "mode": "data_inconsistency_not_escalated",
+      "motivating_annotation_ids": [
+        "annotation-1793357133614",
+        "annotation-1793368746004",
+        "annotation-1793374606998",
+        "annotation-1793392559656"
+      ],
+      "summary": "Materially contradictory or impossible authorized data affecting an answer/action requires stopping the affected action, not treating the invalid value as trustworthy, explaining that records need review, and escalating to a human."
+    }
+  ],
+  "structured_labeling": {
+    "completed_at": "2026-10-31T20:44:50.276441+00:00",
+    "sample_size": 100,
+    "final_mode_count": 8,
+    "judgment_count": 800,
+    "unit": "conversation",
+    "source": "human_confirmed_labels",
+    "quantity_name": "sample_fraction",
+    "representativeness_note": "The reviewed sample combines random, cluster-representative, intent-stratified, and mode-targeted records; these fractions are not prevalence estimates.",
+    "mode_summary": {
+      "store_identifier_mismatch": {
+        "present_count": 7,
+        "absent_count": 93,
+        "sample_fraction": 0.07
+      },
+      "missing_policy_citation": {
+        "present_count": 9,
+        "absent_count": 91,
+        "sample_fraction": 0.09
+      },
+      "asks_instead_of_acting": {
+        "present_count": 8,
+        "absent_count": 92,
+        "sample_fraction": 0.08
+      },
+      "missing_required_account_escalation": {
+        "present_count": 9,
+        "absent_count": 91,
+        "sample_fraction": 0.09
+      },
+      "out_of_scope_not_refused": {
+        "present_count": 3,
+        "absent_count": 97,
+        "sample_fraction": 0.03
+      },
+      "missing_policy_lookup": {
+        "present_count": 38,
+        "absent_count": 62,
+        "sample_fraction": 0.38
+      },
+      "unnecessary_process_narration": {
+        "present_count": 29,
+        "absent_count": 71,
+        "sample_fraction": 0.29
+      },
+      "data_inconsistency_not_escalated": {
+        "present_count": 7,
+        "absent_count": 93,
+        "sample_fraction": 0.07
+      }
+    },
+    "updated_at": "2026-11-01T17:40:25.589394+00:00"
+  }
+}

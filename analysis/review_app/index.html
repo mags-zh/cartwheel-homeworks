@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cartwheel conversation review</title>
+<style>
+:root {
+  --bg:#f5f3ee; --panel:#fff; --ink:#23231f; --muted:#6f7068; --line:#dddcd4;
+  --user:#2563eb; --assistant:#138a62; --call:#b56310; --result:#7451b8;
+  --note:#fff2a8; --suggestion:#e9ddff; --danger:#b42318; --accent:#242c5a;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+code,pre,.mono{font-family:"SF Mono",ui-monospace,Menlo,monospace}
+.topbar{height:58px;display:flex;align-items:center;gap:20px;padding:0 18px;background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.brand{font-weight:800}.brand span{font-weight:400;color:var(--muted)}
+.tabs{display:flex;gap:5px}
+.tabs button{border:1px solid var(--line);background:#fafafa;padding:7px 12px;border-radius:7px}
+.tabs button.active{background:var(--accent);border-color:var(--accent);color:white}
+.top-counts{margin-left:auto;color:var(--muted);font-size:12px}
+.view{display:none}.view.active{display:block}
+.workspace{display:grid;grid-template-columns:260px minmax(520px,780px) 260px;gap:18px;max-width:1360px;margin:0 auto;padding:18px}
+.sidebar{position:sticky;top:76px;align-self:start;max-height:calc(100vh - 94px);overflow:auto}
+.notes-panel{position:relative;align-self:stretch;overflow:visible;min-height:240px}
+.sidebar,.card,.notes-panel,.mode-card,.label-card,.progress-card{background:var(--panel);border:1px solid var(--line);border-radius:10px}
+.sidebar-title{padding:12px 13px;border-bottom:1px solid var(--line);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.sample{width:100%;border:0;border-bottom:1px solid #eeede8;background:transparent;text-align:left;padding:10px 12px}
+.sample:hover{background:#faf9f6}.sample.active{background:#eef0ff}
+.sample .title{font-weight:700}.sample .sub{color:var(--muted);font-size:12px;margin-top:2px}
+.status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#c9c9c3;margin-right:7px}.status-dot.done{background:var(--assistant)}
+.empty{padding:28px;color:var(--muted);text-align:center}
+.conversation-header{padding:15px 17px}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+h1{font-size:22px;line-height:1.2;margin:3px 0 8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{font-size:12px;color:#4b4c47;background:#f2f1ed;border-radius:12px;padding:3px 8px}
+.header-links{margin-left:auto}.header-links a{color:var(--accent)}
+.answer-key{margin-top:12px;background:#f4f5ff;border-left:4px solid #6972b8;padding:11px 13px;border-radius:6px}
+.answer-key strong{display:block}.answer-key details{margin-top:6px}.answer-key summary{cursor:pointer;color:#4f568d}
+.timeline{margin-top:14px}
+.turn{margin-bottom:20px}.turn-title{display:flex;align-items:center;gap:10px;margin:0 0 8px;font-weight:800;color:#4f504a}
+.turn-title:after{content:"";height:1px;background:var(--line);flex:1}
+.message,.tool-step{background:var(--panel);border:1px solid var(--line);border-radius:9px;margin:7px 0;overflow:hidden}
+.message{border-left-width:5px;padding:11px 13px}.message.user{border-left-color:var(--user)}.message.assistant{border-left-color:var(--assistant)}
+.role{font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:800;margin-bottom:4px}.user .role{color:var(--user)}.assistant .role{color:var(--assistant)}
+.message-text{white-space:pre-wrap;overflow-wrap:anywhere}
+.tool-step{border-left:5px solid var(--call)}
+.tool-head{padding:9px 12px;background:#fffaf1;display:flex;gap:9px;align-items:center}.tool-name{font-weight:800;color:#8a4708}
+.tool-summary{font-size:12px;color:var(--muted)}
+.tool-note-button{margin-left:auto;border:1px solid #dfc49f;background:white;color:#7a430d;border-radius:6px;padding:4px 8px;font-size:11px;font-weight:700}
+.tool-note-button:hover{background:#fff4df}
+.tool-detail{border-top:1px solid var(--line);padding:0 12px;background:#fcfcfb}
+.tool-detail summary{padding:8px 0;cursor:pointer;color:var(--muted);font-size:12px;font-weight:700}
+pre{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f3f0;padding:9px;border-radius:6px;max-height:360px;overflow:auto}
+.technical{margin-top:14px;padding:0 14px}.technical summary{cursor:pointer;padding:11px 0;color:var(--muted)}
+.review-actions{display:flex;gap:8px;align-items:center;margin:14px 0 40px}
+.primary,.secondary,.danger{border-radius:7px;padding:7px 11px;border:1px solid var(--line);background:white}
+.primary{background:var(--accent);color:white;border-color:var(--accent)}.danger{color:var(--danger);border-color:#f0b7b1}
+.hint{color:var(--muted);font-size:12px}
+.notes-panel{padding-bottom:8px}#notes{position:relative;min-height:180px}.note{position:absolute;left:0;right:0;margin:9px;padding:9px;background:#fffbed;border-left:4px solid #e1bd32;border-radius:5px;font-size:12px;transition:top .15s ease,box-shadow .15s ease}
+.note.suggestion{background:#faf6ff;border-left-color:#8c63d6}
+.note .quote{font-style:italic;color:var(--muted);margin-bottom:4px}.note .meta{font-size:10px;text-transform:uppercase;color:var(--muted);font-weight:800}
+.note-actions{display:flex;gap:5px;margin-top:6px}.note-actions button{border:1px solid var(--line);background:white;border-radius:5px;font-size:11px}
+#popover{display:none;position:absolute;z-index:40;background:white;border:1px solid var(--line);box-shadow:0 8px 28px #0003;border-radius:8px;padding:8px}
+#popover textarea{width:310px;height:74px;border:1px solid var(--line);border-radius:6px;padding:7px;display:block}
+#popover .row{display:flex;justify-content:flex-end;gap:6px;margin-top:6px}
+.pending-highlight,.annotation-highlight{background:var(--note);border-radius:2px;box-shadow:0 0 0 1px #e1bd3277}.annotation-highlight.agent-suggestion-highlight{background:var(--suggestion);border-bottom:2px dashed #8c63d6;box-shadow:0 0 0 1px #8c63d655}.annotation-block-highlight{box-shadow:inset 0 0 0 2px #e1bd3299}.annotation-block-highlight.agent-suggestion-highlight{box-shadow:inset 0 0 0 2px #8c63d699}.annotation-anchor-marker{display:block;width:0;height:0}.annotation-active{outline:3px solid #e1bd32!important;outline-offset:2px}.note.linked-active{box-shadow:0 0 0 3px #e1bd3277}
+.page{max-width:1080px;margin:0 auto;padding:22px}
+.label-page{max-width:1680px}
+.page h2{margin:0 0 5px}.page-intro{color:var(--muted);margin-bottom:18px}
+.mode-grid{display:flex;flex-direction:column;gap:10px}.progress-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.mode-card,.progress-card{padding:14px}.mode-card{display:grid;grid-template-columns:minmax(210px,.8fr) minmax(320px,1.5fr) 180px;gap:16px;align-items:start;border-radius:7px}
+.mode-status{display:inline-block;font:11px Inter,sans-serif;background:#eee;padding:2px 7px;border-radius:10px;margin-bottom:8px}.mode-status.accepted_candidate,.mode-status.accepted{background:#dcfce7;color:#17623a}.mode-status.rejected{background:#fee4e2;color:#9c231b}.mode-status.unconfirmed_singleton{background:#fff4cc;color:#765b00}
+.mode-field{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:800}.mode-field input,.mode-field textarea{display:block;width:100%;margin-top:5px;border:1px solid var(--line);border-radius:6px;padding:8px;color:var(--ink);background:white;text-transform:none;letter-spacing:0;font-weight:400}.mode-field input{font-family:ui-monospace,monospace;font-weight:700}.mode-field textarea{min-height:88px;resize:vertical}
+.mode-name{margin:0;font:700 14px/1.35 ui-monospace,monospace;overflow-wrap:anywhere}.mode-definition{margin:0;white-space:pre-wrap}.mode-meta{font-size:12px;color:var(--muted);margin-top:9px}.mode-boundary{font-size:12px;color:var(--muted);margin-top:9px}.mode-controls{display:flex;gap:6px;justify-content:flex-end}.mode-controls button{width:32px;height:30px;padding:0;border-radius:6px;font-size:15px;line-height:1}.mode-controls .edit-mode{width:auto;padding:0 9px;font-size:12px}.mode-controls .accepted{background:#e9f9ef;border-color:#77bd91;color:#17623a}.mode-controls .rejected{background:#fff0ef;border-color:#e49b94;color:#9c231b}
+.supporting{list-style:none;margin:9px 0 0;padding:0;font-size:12px}.supporting li{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:start;margin-top:6px}.scenario-link{border:0;background:none;color:var(--accent);padding:0;font:700 11px/1.5 ui-monospace,monospace;text-decoration:underline}
+.label-layout{display:grid;grid-template-columns:220px minmax(460px,1fr) minmax(340px,400px);gap:16px;align-items:start}
+.label-list{position:sticky;top:76px;background:white;border:1px solid var(--line);border-radius:9px;max-height:calc(100vh - 98px);overflow:auto}
+.label-conversation{min-width:0}
+.label-modes-panel{position:sticky;top:76px;align-self:start;max-height:calc(100vh - 98px);overflow:auto;padding-right:4px}
+.label-modes-header{position:sticky;top:0;z-index:2;background:var(--bg);padding:0 0 9px}
+.label-modes-header .row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.label-modes-header h2{font-size:18px}
+.label-card{padding:14px;margin-bottom:9px}
+.label-card h3{margin:0;font-family:ui-monospace,monospace;font-size:14px}.label-card p{margin:8px 0 0;color:var(--muted);font-size:12px}
+.binary{display:flex;gap:5px;align-items:center;margin-top:8px}.binary button{padding:6px 10px;border:1px solid var(--line);background:white;border-radius:6px}.binary button.present.selected{background:#fee4e2;border-color:#e47970}.binary button.absent.selected{background:#dcfce7;border-color:#69b982}
+.all-absent{width:100%;margin:8px 0;border-color:#69b982;background:#f0fbf4;color:#17623a;font-weight:700}
+.label-note{display:flex;gap:6px;margin-top:10px}.label-note input{flex:1;border:1px solid var(--line);border-radius:6px;padding:6px}
+.metric{font-size:30px;font-weight:800}.metric-label{color:var(--muted)}
+.suggestion-row{background:white;border:1px solid var(--line);border-radius:8px;padding:10px;margin:7px 0;display:grid;grid-template-columns:1fr auto;gap:8px}
+.suggestion-row.accepted{opacity:.65}.suggestion-row.rejected{opacity:.55;text-decoration:line-through}
+.toast{position:fixed;right:18px;bottom:18px;background:var(--ink);color:white;padding:10px 14px;border-radius:8px;opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1}
+@media(max-width:1200px){.label-layout{grid-template-columns:minmax(0,1fr) minmax(340px,400px)}.label-list{position:static;grid-column:1/-1;display:flex;max-height:118px;overflow:auto}.label-list .sample{min-width:190px;border-right:1px solid #eeede8}}
+@media(max-width:1050px){.workspace{grid-template-columns:220px 1fr}.notes-panel{position:static;grid-column:2;min-height:0}.notes-panel #notes{min-height:0!important}.notes-panel .note{position:static!important;top:auto!important}.mode-card{grid-template-columns:1fr 1.4fr}.mode-controls{grid-column:1/-1;justify-content:flex-start}}
+@media(max-width:720px){.topbar{height:auto;flex-wrap:wrap;padding:10px}.top-counts{width:100%}.workspace{display:block;padding:10px}.sidebar{position:static;max-height:220px;margin-bottom:10px}.notes-panel{margin-top:10px}.tabs{overflow:auto}.page{padding:14px}.mode-card{grid-template-columns:1fr}.mode-controls{grid-column:auto;flex-wrap:wrap}.label-layout{grid-template-columns:1fr}.label-list{display:block;max-height:220px}.label-list .sample{min-width:0;border-right:0}.label-modes-panel{position:static;max-height:none}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand">Cartwheel <span>HW4 review</span></div>
+  <div class="tabs">
+    <button class="active" data-view="review">Open coding</button>
+    <button data-view="taxonomy">Failure modes</button>
+    <button data-view="labeling">Labeling</button>
+    <button data-view="progress">Progress</button>
+  </div>
+  <div class="top-counts" id="top-counts"></div>
+</div>
+
+<section id="review-view" class="view active">
+  <div class="workspace">
+    <aside class="sidebar"><div class="sidebar-title">Current batch</div><div id="sample-list"></div></aside>
+    <main id="conversation"></main>
+    <aside class="notes-panel"><div class="sidebar-title">Notes beside evidence</div><div id="notes"></div></aside>
+  </div>
+</section>
+
+<section id="taxonomy-view" class="view"><div class="page">
+  <h2>Failure modes</h2><div class="page-intro">Edit candidate names and definitions, then accept or reject them here. Human notes remain the source.</div>
+  <div id="mode-grid" class="mode-grid"></div>
+</div></section>
+
+<section id="labeling-view" class="view"><div class="page label-page">
+  <h2>Structured labeling</h2><div class="page-intro">Read the complete conversation, then make a separate present/absent judgment for each final mode.</div>
+  <div class="label-layout">
+    <aside id="label-samples" class="label-list"></aside>
+    <main id="label-conversation" class="label-conversation"></main>
+    <aside id="label-modes" class="label-modes-panel"></aside>
+  </div>
+</div></section>
+
+<section id="progress-view" class="view"><div class="page">
+  <h2>Progress</h2><div class="page-intro">Review coverage and incomplete structured judgments.</div>
+  <div id="progress-grid" class="progress-grid"></div>
+  <h2 style="margin-top:24px">Agent suggestions</h2>
+  <div class="page-intro">Suggestions are hypotheses until you explicitly accept them.</div>
+  <div id="suggestions"></div>
+</div></section>
+
+<div id="popover"><textarea id="note-input" placeholder="Describe the first failure in your own words"></textarea><div class="row"><button id="note-cancel" class="secondary">Cancel</button><button id="note-save" class="primary">Save note</button></div></div>
+<div id="toast" class="toast"></div>
+
+<script>
+const state={samples:[],annotations:[],patterns:{modes:[]},suggestions:[],labels:[],manifest:{},current:0,labelCurrent:0};
+const api={
+  async get(path){const r=await fetch(path);const body=await r.json();if(!r.ok)throw new Error(body.error||r.statusText);return body},
+  async post(path,value){const r=await fetch(path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(value)});const body=await r.json();if(!r.ok)throw new Error(body.error||r.statusText);return body}
+};
+const esc=value=>String(value??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const pretty=value=>typeof value==="string"?value:JSON.stringify(value,null,2);
+const clip=(value,n=100)=>{const s=String(value??"");return s.length>n?s.slice(0,n)+"…":s};
+const annotationList=value=>Array.isArray(value)?value:(value&&Array.isArray(value.annotations)?value.annotations:[]);
+const modes=()=>Array.isArray(state.patterns?.modes)?state.patterns.modes:Object.entries(state.patterns||{}).map(([name,value])=>({name,...value}));
+const modeRecordedNotes=mode=>{
+  const recorded=Number(mode.annotation_count);
+  return Number.isFinite(recorded)?recorded:(mode.created_from||[]).length;
+};
+const modeRecordedConversations=mode=>{
+  const recorded=Number(mode.conversation_count??mode.count);
+  if(Number.isFinite(recorded))return recorded;
+  const ids=new Set((mode.created_from||[]).map(id=>state.annotations.find(annotation=>annotation.id===id)?.trace_id).filter(Boolean));
+  return ids.size;
+};
+const orderModes=list=>[...list].sort((a,b)=>modeRecordedNotes(b)-modeRecordedNotes(a)||String(a.name||"").localeCompare(String(b.name||"")));
+const labelModes=()=>orderModes(modes().filter(mode=>["accepted_candidate","accepted","final"].includes(mode.status)));
+const reviewedIds=()=>new Set(state.annotations.map(a=>a.trace_id));
+const current=()=>state.samples[state.current];
+const currentLabel=()=>state.samples[state.labelCurrent];
+const segmentKey=(turn,index)=>`${turn.trace_id}:${index}`;
+let annotationRevision=0;
+let annotationSavePending=0;
+let annotationSaveChain=Promise.resolve();
+
+async function load(){
+  const samples=await api.get("/api/samples");
+  const annotations=await api.get("/api/annotations");
+  const patterns=await api.get("/api/patterns");
+  const suggestions=await api.get("/api/suggestions");
+  const labels=await api.get("/api/labels");
+  const manifest=await api.get("/api/manifest");
+  state.samples=samples;state.annotations=annotationList(annotations);state.patterns=patterns;
+  state.suggestions=suggestions;state.labels=labels;state.manifest=manifest;
+  const firstIncomplete=state.samples.findIndex(sample=>labelCount(sample.trace_id)<labelModes().length);
+  if(firstIncomplete>=0)state.labelCurrent=firstIncomplete;
+  renderAll();
+}
+
+function renderAll(){
+  renderSampleList();renderConversation();renderNotes();renderTaxonomy();
+  renderLabelSamples();renderLabelConversation();renderLabels();renderProgress();updateCounts();
+}
+
+function updateCounts(){
+  const reviewed=reviewedIds().size;
+  document.querySelector("#top-counts").textContent=`${reviewed}/${state.samples.length} conversations reviewed · ${state.annotations.length} notes · ${labelModes().length}/${modes().length} candidates accepted`;
+}
+
+function renderSampleList(){
+  const el=document.querySelector("#sample-list");
+  if(!state.samples.length){el.innerHTML='<div class="empty">No batch selected yet.</div>';return}
+  const reviewed=reviewedIds();
+  el.innerHTML=state.samples.map((sample,index)=>{
+    const t=sample.tuple||{};
+    return `<button class="sample ${index===state.current?"active":""}" data-index="${index}"><div class="title"><span class="status-dot ${reviewed.has(sample.trace_id)?"done":""}"></span>${esc(sample.scenario_id)}</div><div class="sub">${esc(t.role)} · ${esc(t.intent)} · ${sample.turns.length} turn${sample.turns.length===1?"":"s"}</div></button>`
+  }).join("");
+  el.querySelectorAll("[data-index]").forEach(button=>button.onclick=()=>{state.current=Number(button.dataset.index);renderSampleList();renderConversation();renderNotes()});
+}
+
+function resultSummary(value){
+  let parsed=value;
+  if(typeof value==="string"){try{parsed=JSON.parse(value)}catch{}}
+  if(parsed&&typeof parsed==="object"){
+    if(parsed.ok===false)return `error · ${parsed.error||"tool failed"}`;
+    if(parsed.status)return `status · ${parsed.status}`;
+    if(parsed.ok===true)return "ok";
+    if(Array.isArray(parsed.results))return `${parsed.results.length} results`;
+    if(Array.isArray(parsed.orders))return `${parsed.orders.length} orders`;
+    if(Array.isArray(parsed.products))return `${parsed.products.length} products`;
+  }
+  return `${pretty(value).length} characters`;
+}
+
+function renderMessage(message,turn,index,options={}){
+  const key=segmentKey(turn,index);
+  const annotatable=options.annotatable!==false;
+  const segmentId=`${options.idPrefix||""}segment-${key}`;
+  const annotationAttributes=annotatable?`id="${esc(segmentId)}" class="annotatable" data-key="${esc(key)}"`:`class=""`;
+  if(message.role==="tool_call"){
+    const toolName=message.name||"tool",toolQuote=`${toolName}(${clip(pretty(message.arguments),160)})`;
+    const noteButton=options.toolNotes===false?"":`<button type="button" class="tool-note-button" data-tool-note data-note-key="${esc(key)}" data-note-quote="${esc(toolQuote)}">Annotate tool</button>`;
+    return `<div class="tool-head"><span class="tool-name">${esc(toolName)}()</span><span class="tool-summary">input details collapsed</span>${noteButton}</div><details class="tool-detail"><summary>Show input arguments</summary><pre ${annotationAttributes}>${esc(pretty(message.arguments))}</pre></details>`;
+  }
+  if(message.role==="tool_result")return `<div class="tool-head" style="background:#faf7ff"><span class="tool-name" style="color:var(--result)">Result</span><span class="tool-summary">${esc(resultSummary(message.content??message.text))}</span></div><details class="tool-detail"><summary>Show full result</summary><pre ${annotationAttributes}>${esc(pretty(message.content??message.text))}</pre></details>`;
+  const role=message.role==="user"?"user":"assistant";
+  const label=role==="assistant"?(message.label||"Assistant"):"User";
+  return `<div class="message ${role}"><div class="role">${esc(label)}</div><div ${annotationAttributes.replace('class=""',`class="message-text"`).replace('class="annotatable"',`class="message-text annotatable"`)}>${esc(message.text??message.content??"")}</div></div>`;
+}
+
+function renderTurn(turn,options={}){
+  const parts=[];let i=0;
+  while(i<turn.messages.length){
+    const message=turn.messages[i];
+    if(message.role==="tool_call"){
+      let html=renderMessage(message,turn,i,options);
+      if(turn.messages[i+1]?.role==="tool_result"){html+=renderMessage(turn.messages[i+1],turn,i+1,options);i++}
+      parts.push(`<div class="tool-step">${html}</div>`);
+    }else parts.push(renderMessage(message,turn,i,options));
+    i++;
+  }
+  return `<section class="turn"><div class="turn-title">Turn ${turn.number}<a class="hint mono" href="${esc(turn.permalink||"#")}" target="_blank" rel="noreferrer" title="Open this turn in Langfuse">${esc(turn.trace_id.slice(0,8))} ↗</a></div>${parts.join("")}</section>`;
+}
+
+function renderConversation(){
+  const el=document.querySelector("#conversation"),sample=current();
+  if(!sample){el.innerHTML='<div class="card empty">Select a batch to begin.</div>';return}
+  const t=sample.tuple||{},exp=sample.expected||{};
+  const storeId=sample.store_id??t.store_id??sample.meta?.store_id??"—";
+  const tech={canonical_trace_id:sample.trace_id,session_id:sample.session_id,prompt_version:sample.meta?.prompt_version,models:sample.models,timestamp:sample.timestamp,scenario_group:sample.scenario_group,selection_reason:sample.reason,turns:sample.turns.map(turn=>({trace_id:turn.trace_id,timestamp:turn.timestamp,features:turn.features,observation_count:turn.observations.length}))};
+  el.innerHTML=`<div class="card conversation-header">
+    <div class="eyebrow">${esc(sample.scenario_group||"")} · ${esc(sample.batch||"current sample")}</div>
+    <h1>${esc(sample.scenario_id)}</h1>
+    <div class="chips"><span class="chip">${esc(t.role)}</span><span class="chip">${esc(t.intent)}</span><span class="chip">user ${esc(t.user_id)}</span><span class="chip">store ${esc(storeId)}</span><span class="chip">${sample.turns.length} turn${sample.turns.length===1?"":"s"}</span>${t.order_id?`<span class="chip">order ${esc(t.order_id)}</span>`:""}<a class="chip" href="${esc(sample.permalink||"#")}" target="_blank" rel="noreferrer">Canonical trace ↗</a></div>
+    <div class="answer-key"><strong>Expected outcome: ${esc(exp.outcome||"not supplied")}</strong><details><summary>Show full answer key and source</summary><p>${esc(exp.reason||"")}</p><pre>${esc(pretty(exp.source||{}))}</pre></details></div>
+  </div>
+  <div class="timeline">${sample.turns.map(renderTurn).join("")}</div>
+  <details class="card technical"><summary>Technical details</summary><pre>${esc(pretty(tech))}</pre></details>
+  <div class="review-actions"><button id="clean-button" class="secondary">No failure observed</button><span class="hint">Or select evidence in the conversation and add a free-text note.</span></div>`;
+  document.querySelector("#clean-button").onclick=markClean;
+  applyAnnotationHighlights();
+  bindSelection();
+  bindToolNotes();
+  document.querySelectorAll("#conversation details").forEach(details=>details.addEventListener("toggle",()=>requestAnimationFrame(layoutNotes)));
+}
+
+function wrapAnnotationQuote(element,quote,id,agentSuggestion=false){
+  if(!quote)return null;
+  const walker=document.createTreeWalker(element,NodeFilter.SHOW_TEXT);
+  let node;
+  while((node=walker.nextNode())){
+    const start=node.nodeValue.indexOf(quote);if(start<0)continue;
+    const range=document.createRange();range.setStart(node,start);range.setEnd(node,start+quote.length);
+    const span=document.createElement("span");span.className=`annotation-highlight${agentSuggestion?" agent-suggestion-highlight":""}`;span.dataset.annotationAnchor=id;
+    try{range.surroundContents(span);return span}catch{return null}
+  }
+  return null;
+}
+function fallbackAnnotationAnchor(element,id,agentSuggestion=false){
+  const details=element.closest("details");
+  const target=details&&!details.open?(details.previousElementSibling||details.parentElement):(element.closest(".tool-step,.message")||element);
+  target.classList.add("annotation-block-highlight");
+  if(agentSuggestion)target.classList.add("agent-suggestion-highlight");
+  const marker=document.createElement("span");marker.className="annotation-anchor-marker";marker.dataset.annotationAnchor=id;
+  target.prepend(marker);return marker;
+}
+function applyAnnotationHighlights(){
+  const sample=current();if(!sample)return;
+  state.annotations.filter(annotation=>annotation.trace_id===sample.trace_id&&annotation.segment_key).forEach(annotation=>{
+    const element=document.getElementById(`segment-${annotation.segment_key}`);if(!element)return;
+    const agentSuggestion=annotation.source==="accepted_suggestion";
+    const closedDetails=element.closest("details:not([open])");
+    if(closedDetails)fallbackAnnotationAnchor(element,annotation.id,agentSuggestion);
+    else wrapAnnotationQuote(element,annotation.quote,annotation.id,agentSuggestion)||fallbackAnnotationAnchor(element,annotation.id,agentSuggestion);
+  });
+}
+function annotationAnchor(id){
+  return [...document.querySelectorAll("[data-annotation-anchor]")].find(element=>element.dataset.annotationAnchor===id);
+}
+function layoutNotes(){
+  if(!document.querySelector("#review-view").classList.contains("active"))return;
+  const container=document.querySelector("#notes"),conversation=document.querySelector("#conversation");if(!container||!conversation)return;
+  const containerRect=container.getBoundingClientRect();
+  const positioned=[...container.querySelectorAll(".note")].map((note,index)=>{
+    const anchor=note.dataset.noteId?annotationAnchor(note.dataset.noteId):null;
+    const anchorRect=anchor?.getBoundingClientRect();
+    return {note,anchor,index,desired:anchorRect&&anchorRect.height>=0?anchorRect.top-containerRect.top:Number.POSITIVE_INFINITY};
+  }).sort((a,b)=>a.desired-b.desired||a.index-b.index);
+  let nextTop=8;
+  positioned.forEach(item=>{
+    const desired=Number.isFinite(item.desired)?Math.max(8,item.desired):nextTop;
+    const top=Math.max(desired,nextTop);item.note.style.top=`${top}px`;nextTop=top+item.note.offsetHeight+8;
+    const target=item.anchor?.closest(".message,.tool-step")||item.anchor;
+    if(target){
+      item.note.onmouseenter=()=>target.classList.add("annotation-active");
+      item.note.onmouseleave=()=>target.classList.remove("annotation-active");
+      target.onmouseenter=()=>item.note.classList.add("linked-active");
+      target.onmouseleave=()=>item.note.classList.remove("linked-active");
+    }
+  });
+  container.style.minHeight=`${Math.max(180,conversation.offsetHeight-container.offsetTop,nextTop+8)}px`;
+}
+
+function renderNotes(){
+  const el=document.querySelector("#notes"),sample=current();
+  if(!sample){el.innerHTML='<div class="empty">No conversation selected.</div>';return}
+  const notes=state.annotations.filter(a=>a.trace_id===sample.trace_id);
+  const suggestions=state.suggestions.filter(s=>s.trace_id===sample.trace_id&&(!s.status||s.status==="pending"));
+  if(!notes.length&&!suggestions.length){el.innerHTML='<div class="empty">Notes will stay visible here.</div>';return}
+  el.innerHTML=[
+    ...notes.map(note=>{
+      const acceptedSuggestion=note.source==="accepted_suggestion",sourceSuggestion=state.suggestions.find(s=>s.id===note.source_suggestion_id);
+      const meta=note.no_failure?"reviewed clean":acceptedSuggestion?`accepted agent suggestion${sourceSuggestion?.mode?` · ${sourceSuggestion.mode}`:""}`:"human note";
+      return `<div class="note ${acceptedSuggestion?"suggestion":""}" data-note-id="${esc(note.id)}"><div class="meta">${esc(meta)}</div>${note.quote?`<div class="quote">“${esc(clip(note.quote,130))}”</div>`:""}<div>${esc(note.note)}</div><div class="note-actions">${note.segment_key?`<button data-jump="${esc(note.segment_key)}">View evidence</button>`:""}<button data-delete="${esc(note.id)}">Delete</button></div></div>`
+    }),
+    ...suggestions.map(s=>`<div class="note suggestion"><div class="meta">Agent suggestion · ${esc(s.mode||"")}</div><div class="quote">“${esc(clip(s.quote,130))}”</div><div class="note-actions"><button data-accept="${esc(s.id)}">Accept</button><button data-reject="${esc(s.id)}">Reject</button></div></div>`)
+  ].join("");
+  el.querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>deleteAnnotation(b.dataset.delete));
+  el.querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>jumpEvidence(b.dataset.jump));
+  el.querySelectorAll("[data-accept]").forEach(b=>b.onclick=()=>decideSuggestion(b.dataset.accept,true));
+  el.querySelectorAll("[data-reject]").forEach(b=>b.onclick=()=>decideSuggestion(b.dataset.reject,false));
+  requestAnimationFrame(layoutNotes);
+}
+function jumpEvidence(key){
+  const element=document.getElementById(`segment-${key}`);if(!element)return;
+  const details=element.closest("details");if(details)details.open=true;
+  element.scrollIntoView({behavior:"smooth",block:"center"});
+  element.animate([{outline:"3px solid #e1bd32"},{outline:"0 solid transparent"}],{duration:1400});
+}
+
+let pending=null;
+const defaultNotePlaceholder="Describe the first failure in your own words";
+function openNotePopover(anchor,quote,key,highlight=null,placeholder=defaultNotePlaceholder){
+  pending={quote,segment_key:key,highlight};
+  const box=anchor.getBoundingClientRect(),popover=document.querySelector("#popover");
+  popover.style.display="block";popover.style.left=`${window.scrollX+Math.min(box.left,window.innerWidth-340)}px`;popover.style.top=`${window.scrollY+box.bottom+6}px`;
+  const input=document.querySelector("#note-input");input.value="";input.placeholder=placeholder;input.focus();
+}
+function bindSelection(){
+  document.querySelectorAll(".annotatable").forEach(el=>el.addEventListener("mouseup",event=>{
+    const selection=window.getSelection();if(!selection||selection.isCollapsed)return;
+    const quote=selection.toString().trim();if(!quote)return;
+    const range=selection.getRangeAt(0);const highlight=document.createElement("span");highlight.className="pending-highlight";
+    try{range.surroundContents(highlight)}catch{return}
+    selection.removeAllRanges();
+    openNotePopover(highlight,quote,el.dataset.key,highlight);
+  }));
+}
+function bindToolNotes(){
+  document.querySelectorAll("[data-tool-note]").forEach(button=>button.addEventListener("click",event=>{
+    event.preventDefault();event.stopPropagation();
+    openNotePopover(button,button.dataset.noteQuote,button.dataset.noteKey,null,"What is wrong with this tool call?");
+  }));
+}
+function clearPending(){
+  if(pending?.highlight?.parentNode){const parent=pending.highlight.parentNode;while(pending.highlight.firstChild)parent.insertBefore(pending.highlight.firstChild,pending.highlight);pending.highlight.remove();parent.normalize()}
+  pending=null;document.querySelector("#popover").style.display="none";document.querySelector("#note-input").placeholder=defaultNotePlaceholder;
+}
+document.querySelector("#note-cancel").onclick=clearPending;
+document.querySelector("#note-save").onclick=saveNote;
+document.querySelector("#note-input").addEventListener("keydown",event=>{if((event.metaKey||event.ctrlKey)&&event.key==="Enter")saveNote();if(event.key==="Escape")clearPending()});
+
+async function saveNote(){
+  const note=document.querySelector("#note-input").value.trim(),sample=current();if(!note||!pending||!sample)return;
+  state.annotations.push({id:`annotation-${Date.now()}`,trace_id:sample.trace_id,scenario_id:sample.scenario_id,segment_key:pending.segment_key,quote:pending.quote,note,source:"human",created_at:new Date().toISOString()});
+  annotationRevision++;
+  clearPending();await persistAnnotations();toast("Open code saved");renderAll();
+}
+async function markClean(){
+  const sample=current();if(!sample)return;
+  if(state.annotations.some(a=>a.trace_id===sample.trace_id&&!a.no_failure)){toast("This conversation already has an open code");return}
+  if(!state.annotations.some(a=>a.trace_id===sample.trace_id&&a.no_failure)){state.annotations.push({id:`annotation-${Date.now()}`,trace_id:sample.trace_id,scenario_id:sample.scenario_id,note:"no failure observed",no_failure:true,source:"human",created_at:new Date().toISOString()});annotationRevision++}
+  await persistAnnotations();renderAll();toast("Marked reviewed: no failure observed");
+}
+async function deleteAnnotation(id){state.annotations=state.annotations.filter(a=>a.id!==id);annotationRevision++;await persistAnnotations();renderAll()}
+async function persistAnnotations(){
+  const snapshot=JSON.parse(JSON.stringify(state.annotations));
+  localStorage.setItem("cartwheel_hw4_annotations",JSON.stringify(snapshot));
+  annotationSavePending++;
+  const request=annotationSaveChain.then(()=>api.post("/api/annotations",snapshot));
+  annotationSaveChain=request.catch(()=>{});
+  try{return await request}finally{annotationSavePending--}
+}
+
+function renderTaxonomy(){
+  const el=document.querySelector("#mode-grid"),all=modes();
+  if(!all.length){el.innerHTML='<div class="empty">No modes yet. They will be proposed only from your annotations.</div>';return}
+  const ordered=all.map((mode,index)=>{
+    const ids=mode.created_from||[];const support=ids.map(id=>state.annotations.find(a=>a.id===id)).filter(Boolean);
+    return {mode,index,support,noteCount:modeRecordedNotes(mode),conversationCount:modeRecordedConversations(mode)}
+  }).sort((a,b)=>b.noteCount-a.noteCount||String(a.mode.name||"").localeCompare(String(b.mode.name||"")));
+  el.innerHTML=ordered.map(({mode,index,support,noteCount,conversationCount})=>{
+    const status=mode.status||"proposed";
+    const accepted=status==="accepted_candidate"||status==="accepted",rejected=status==="rejected";
+    const acceptTitle=accepted?"Move accepted candidate back to proposed":"Accept candidate";
+    const rejectTitle=rejected?"Move rejected candidate back to proposed":"Reject candidate";
+    return `<article class="mode-card" data-mode-index="${index}">
+      <div><span class="mode-status ${esc(status)}">${esc(status)}</span><h3 class="mode-name" data-mode-name-display>${esc(mode.name)}</h3><label class="mode-field" data-mode-name-editor hidden>Name<input data-mode-name value="${esc(mode.name)}"></label><div class="mode-meta">${esc(conversationCount)} conversation${conversationCount===1?"":"s"} · ${esc(noteCount)} note${noteCount===1?"":"s"} · ${esc(mode.requirement_source||"requirement pending")}</div></div>
+      <div><p class="mode-definition" data-mode-definition-display>${esc(mode.definition||mode.description||"")}</p><label class="mode-field" data-mode-definition-editor hidden>Description / binary definition<textarea data-mode-definition>${esc(mode.definition||mode.description||"")}</textarea></label>${mode.boundary?`<div class="mode-boundary"><strong>Boundary:</strong> ${esc(mode.boundary)}</div>`:""}<details><summary>${support.length} supporting note${support.length===1?"":"s"}</summary><ul class="supporting">${support.map(a=>`<li><button class="scenario-link" data-support-annotation="${esc(a.id)}">${esc(a.scenario_id||a.trace_id?.slice(0,8)||"scenario")}</button><span>${a.source==="accepted_suggestion"?'<span class="mode-status">accepted agent suggestion</span> ':""}${esc(a.note)}</span></li>`).join("")||"<li>No linked annotation loaded</li>"}</ul></details></div>
+      <div class="mode-controls"><button class="secondary edit-mode" data-edit-mode title="Edit name and description" aria-label="Edit ${esc(mode.name)}">Edit</button><button class="secondary ${accepted?"accepted":""}" data-accept-mode title="${acceptTitle}" aria-label="${acceptTitle}: ${esc(mode.name)}">✓</button><button class="danger ${rejected?"rejected":""}" data-reject-mode title="${rejectTitle}" aria-label="${rejectTitle}: ${esc(mode.name)}">×</button></div>
+    </article>`
+  }).join("");
+  el.querySelectorAll("[data-support-annotation]").forEach(button=>button.onclick=()=>openSupportingAnnotation(button.dataset.supportAnnotation));
+  el.querySelectorAll(".mode-card").forEach(card=>{
+    const index=Number(card.dataset.modeIndex);
+    card.querySelector("[data-edit-mode]").onclick=()=>toggleModeEdit(index);
+    card.querySelector("[data-accept-mode]").onclick=()=>setModeStatus(index,"accepted_candidate");
+    card.querySelector("[data-reject-mode]").onclick=()=>setModeStatus(index,"rejected");
+  });
+}
+async function toggleModeEdit(index){
+  const all=modes(),mode=all[index],card=document.querySelector(`.mode-card[data-mode-index="${index}"]`);
+  if(!mode||!card)return;
+  if(card.dataset.editing!=="true"){
+    card.dataset.editing="true";
+    card.querySelector("[data-mode-name-display]").hidden=true;card.querySelector("[data-mode-definition-display]").hidden=true;
+    card.querySelector("[data-mode-name-editor]").hidden=false;card.querySelector("[data-mode-definition-editor]").hidden=false;
+    const editButton=card.querySelector("[data-edit-mode]");editButton.textContent="Done";editButton.title="Save name and description";
+    card.querySelector("[data-accept-mode]").disabled=true;card.querySelector("[data-reject-mode]").disabled=true;
+    const fields=card.querySelectorAll("[data-mode-name],[data-mode-definition]");
+    fields.forEach(field=>field.addEventListener("keydown",event=>{if((event.metaKey||event.ctrlKey)&&event.key==="Enter"){event.preventDefault();toggleModeEdit(index)}else if(event.key==="Escape")renderTaxonomy()}));
+    card.querySelector("[data-mode-name]").focus();
+    return;
+  }
+  const oldName=mode.name,name=card.querySelector("[data-mode-name]").value.trim(),definition=card.querySelector("[data-mode-definition]").value.trim();
+  if(!/^[a-z][a-z0-9_]*$/.test(name)){toast("Mode name must be snake_case");return}
+  if(all.some((candidate,candidateIndex)=>candidateIndex!==index&&candidate.name===name)){toast("That mode name already exists");return}
+  if(!definition){toast("Add a binary definition before saving");return}
+  if(name!==oldName&&state.labels.some(label=>label.mode===oldName)){toast("Rename blocked: this mode already has judgments");return}
+  mode.name=name;mode.definition=definition;
+  mode.human_updated_at=new Date().toISOString();
+  state.patterns={...state.patterns,modes:all};
+  try{await api.post("/api/patterns",state.patterns);renderTaxonomy();renderLabelSamples();renderLabels();renderProgress();updateCounts();toast("Candidate changes saved")}catch(error){toast(`Could not save: ${error.message}`)}
+}
+function nextModeStatus(current,requested){
+  const undoAccepted=requested==="accepted_candidate"&&(current==="accepted_candidate"||current==="accepted");
+  const undoRejected=requested==="rejected"&&current==="rejected";
+  return undoAccepted||undoRejected?"proposed":requested;
+}
+async function setModeStatus(index,requested){
+  const all=modes(),mode=all[index];if(!mode)return;
+  const previous=mode.status||"proposed",status=nextModeStatus(previous,requested),changedAt=new Date().toISOString();
+  mode.status=status;mode.human_updated_at=changedAt;
+  mode.human_decision=status==="rejected"?"rejected":status==="accepted_candidate"||status==="accepted"?"accepted":"pending";
+  mode.decision_history=[...(mode.decision_history||[]),{from:previous,to:status,decided_at:changedAt,source:"human_ui"}];
+  state.patterns={...state.patterns,modes:all};
+  const message=status==="proposed"?"Decision cleared; candidate is proposed again":status==="rejected"?"Candidate rejected":"Candidate accepted";
+  try{await api.post("/api/patterns",state.patterns);renderTaxonomy();renderLabelSamples();renderLabels();renderProgress();updateCounts();toast(message)}catch(error){toast(`Could not save: ${error.message}`)}
+}
+
+function renderLabelSamples(){
+  const el=document.querySelector("#label-samples");
+  if(!state.samples.length){el.innerHTML='<div class="empty">No samples.</div>';return}
+  el.innerHTML=state.samples.map((sample,index)=>{
+    const complete=labelCount(sample.trace_id)===labelModes().length;
+    return `<button class="sample ${index===state.labelCurrent?"active":""}" data-label-index="${index}"><div class="title"><span class="status-dot ${complete?"done":""}"></span>${esc(sample.scenario_id)}</div><div class="sub">${esc(sample.tuple?.role)} · ${labelCompletion(sample.trace_id)}</div></button>`;
+  }).join("");
+  el.querySelectorAll("[data-label-index]").forEach(b=>b.onclick=()=>selectLabelSample(Number(b.dataset.labelIndex)));
+}
+function labelCount(traceId){const all=labelModes();return state.labels.filter(l=>l.trace_id===traceId&&all.some(m=>m.name===l.mode)).length}
+function labelCompletion(traceId){return `${labelCount(traceId)}/${labelModes().length} judgments`}
+function selectLabelSample(index){
+  state.labelCurrent=index;renderLabelSamples();renderLabelConversation();renderLabels(true);
+  document.querySelector("#labeling-view")?.scrollIntoView({block:"start"});
+}
+function nextIncompleteLabelIndex(){
+  const total=state.samples.length,needed=labelModes().length;
+  for(let offset=1;offset<=total;offset++){
+    const index=(state.labelCurrent+offset)%total;
+    if(labelCount(state.samples[index].trace_id)<needed)return index;
+  }
+  return -1;
+}
+function renderLabelConversation(){
+  const el=document.querySelector("#label-conversation"),sample=currentLabel();
+  if(!sample){el.innerHTML='<div class="card empty">Select a conversation.</div>';return}
+  const t=sample.tuple||{},exp=sample.expected||{};
+  const storeId=sample.store_id??t.store_id??sample.meta?.store_id??"—";
+  el.innerHTML=`<div class="card conversation-header">
+    <div class="eyebrow">${esc(sample.scenario_group||"")} · ${esc(sample.batch||"review sample")}</div>
+    <h1>${esc(sample.scenario_id)}</h1>
+    <div class="chips"><span class="chip">${esc(t.role)}</span><span class="chip">${esc(t.intent)}</span><span class="chip">user ${esc(t.user_id)}</span><span class="chip">store ${esc(storeId)}</span><span class="chip">${sample.turns.length} turn${sample.turns.length===1?"":"s"}</span>${t.order_id?`<span class="chip">order ${esc(t.order_id)}</span>`:""}<a class="chip" href="${esc(sample.permalink||"#")}" target="_blank" rel="noreferrer">Canonical trace ↗</a></div>
+    <div class="answer-key"><strong>Expected outcome: ${esc(exp.outcome||"not supplied")}</strong><details><summary>Show full answer key and source</summary><p>${esc(exp.reason||"")}</p><pre>${esc(pretty(exp.source||{}))}</pre></details></div>
+  </div>
+  <div class="timeline">${sample.turns.map(turn=>renderTurn(turn,{idPrefix:"label-",annotatable:false,toolNotes:false})).join("")}</div>`;
+}
+function currentJudgment(traceId,mode){return state.labels.find(l=>l.trace_id===traceId&&l.mode===mode)}
+function renderLabels(resetScroll=false){
+  const el=document.querySelector("#label-modes"),sample=currentLabel(),all=labelModes();
+  const previousScroll=resetScroll?0:el.scrollTop;
+  if(!sample){el.innerHTML='<div class="empty">Select a conversation.</div>';return}
+  if(!all.length){el.innerHTML='<div class="empty">Structured labeling begins after failure modes are defined.</div>';return}
+  const nextIndex=nextIncompleteLabelIndex();
+  el.innerHTML=`<div class="label-modes-header"><div class="eyebrow">${esc(sample.scenario_id)} · ${esc(labelCompletion(sample.trace_id))}</div><div class="row"><h2>Failure modes</h2><button id="next-incomplete" class="secondary" ${nextIndex<0?"disabled":""}>Next incomplete →</button></div><button id="all-absent" class="secondary all-absent">Mark all unjudged modes Absent</button><div class="hint">Present means the failure occurs anywhere in this conversation.</div></div>`+all.map(mode=>{
+    const judgment=currentJudgment(sample.trace_id,mode.name);
+    return `<div class="label-card" data-mode="${esc(mode.name)}"><h3>${esc(mode.name)}</h3><div class="binary"><button class="present ${judgment?.label===1?"selected":""}" data-value="1">Present</button><button class="absent ${judgment?.label===0?"selected":""}" data-value="0">Absent</button></div><p>${esc(mode.definition||"")}</p><div class="label-note"><input value="${esc(judgment?.note||"")}" placeholder="Optional evidence or boundary note"></div></div>`
+  }).join("");
+  document.querySelector("#next-incomplete").onclick=()=>{const index=nextIncompleteLabelIndex();if(index>=0)selectLabelSample(index)};
+  document.querySelector("#all-absent").onclick=()=>saveUnjudgedAbsent(sample.trace_id);
+  el.querySelectorAll(".label-card").forEach(card=>card.querySelectorAll("[data-value]").forEach(button=>button.onclick=()=>saveLabel(sample.trace_id,card.dataset.mode,Number(button.dataset.value),card.querySelector("input").value)));
+  requestAnimationFrame(()=>{el.scrollTop=previousScroll});
+}
+async function saveLabel(traceId,mode,label,note){
+  try{
+    const response=await api.post("/api/labels",{trace_id:traceId,mode,label,note,evidence:note});
+    state.labels=state.labels.filter(row=>!(row.trace_id===traceId&&row.mode===mode));state.labels.push(response.label);
+    renderLabelSamples();renderLabels();renderProgress();toast(`${mode}: ${label?"present":"absent"} saved locally and to Langfuse`);
+  }catch(error){toast(`Could not save: ${error.message}`)}
+}
+async function saveUnjudgedAbsent(traceId){
+  const button=document.querySelector("#all-absent"),pending=labelModes().filter(mode=>!currentJudgment(traceId,mode.name));
+  if(!pending.length){toast("Every failure mode already has a judgment");return}
+  button.disabled=true;button.textContent="Saving…";
+  try{
+    for(const mode of pending){
+      const response=await api.post("/api/labels",{trace_id:traceId,mode:mode.name,label:0,note:"",evidence:""});
+      state.labels=state.labels.filter(row=>!(row.trace_id===traceId&&row.mode===mode.name));state.labels.push(response.label);
+    }
+    renderLabelSamples();renderLabels();renderProgress();toast(`${pending.length} unjudged mode${pending.length===1?"":"s"} marked absent locally and in Langfuse`);
+  }catch(error){
+    renderLabelSamples();renderLabels();renderProgress();toast(`Could not save every unjudged mode: ${error.message}`);
+  }
+}
+
+function renderProgress(){
+  const reviewed=reviewedIds().size,total=state.samples.length,allModes=labelModes();
+  const needed=total*allModes.length,done=state.labels.filter(label=>state.samples.some(s=>s.trace_id===label.trace_id)&&allModes.some(m=>m.name===label.mode)).length;
+  const batches=[...new Set(state.samples.map(s=>s.batch).filter(Boolean))];
+  document.querySelector("#progress-grid").innerHTML=`
+    <div class="progress-card"><div class="metric">${reviewed}/${total}</div><div class="metric-label">conversations open-coded</div></div>
+    <div class="progress-card"><div class="metric">${done}/${needed}</div><div class="metric-label">mode judgments complete</div></div>
+    <div class="progress-card"><div class="metric">${batches.length||"—"}</div><div class="metric-label">batches represented</div></div>`;
+  const el=document.querySelector("#suggestions");
+  if(!state.suggestions.length){el.innerHTML='<div class="empty">No suggestions yet.</div>';return}
+  el.innerHTML=state.suggestions.map(s=>`<div class="suggestion-row ${esc(s.status||"pending")}"><div><strong>${esc(s.mode||"candidate")}</strong> · <button class="scenario-link" data-open-suggestion="${esc(s.id)}">${esc(s.scenario_id||s.trace_id)}</button><br><span class="hint">“${esc(clip(s.quote,180))}”</span></div><div>${(!s.status||s.status==="pending")?`<button data-accept="${esc(s.id)}" class="primary">Accept</button> <button data-reject="${esc(s.id)}" class="danger">Reject</button>`:`${esc(s.status)}`}</div></div>`).join("");
+  el.querySelectorAll("[data-open-suggestion]").forEach(b=>b.onclick=()=>openSuggestion(b.dataset.openSuggestion));
+  el.querySelectorAll("[data-accept]").forEach(b=>b.onclick=()=>decideSuggestion(b.dataset.accept,true));
+  el.querySelectorAll("[data-reject]").forEach(b=>b.onclick=()=>decideSuggestion(b.dataset.reject,false));
+}
+async function decideSuggestion(id,accept){
+  const suggestion=state.suggestions.find(s=>s.id===id);if(!suggestion)return;
+  suggestion.status=accept?"accepted":"rejected";suggestion.decided_at=new Date().toISOString();
+  if(accept&&!state.annotations.some(a=>a.source_suggestion_id===id)){
+    state.annotations.push({id:`annotation-${Date.now()}`,trace_id:suggestion.trace_id,scenario_id:suggestion.scenario_id,segment_key:suggestion.segment_key,quote:suggestion.quote||"",note:suggestion.note||`Accepted suggestion for ${suggestion.mode}`,source:"accepted_suggestion",source_suggestion_id:id,created_at:new Date().toISOString()});
+    annotationRevision++;
+    await persistAnnotations();
+  }
+  await api.post("/api/suggestions",state.suggestions);renderAll();toast(accept?"Suggestion accepted":"Suggestion rejected and retained in history");
+}
+
+function openSuggestion(id){
+  const suggestion=state.suggestions.find(item=>item.id===id);if(!suggestion)return;
+  const index=state.samples.findIndex(sample=>sample.trace_id===suggestion.trace_id||sample.scenario_id===suggestion.scenario_id);
+  if(index<0){toast("That scenario is not in the current review set");return}
+  state.current=index;showView("review");renderSampleList();renderConversation();renderNotes();
+  requestAnimationFrame(()=>suggestion.segment_key?jumpEvidence(suggestion.segment_key):document.querySelector("#conversation")?.scrollIntoView({behavior:"smooth",block:"start"}));
+}
+
+function showView(name){
+  document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
+  document.querySelectorAll(".view").forEach(view=>view.classList.remove("active"));
+  document.querySelector(`#${name}-view`)?.classList.add("active");
+  if(name==="review")requestAnimationFrame(layoutNotes);
+}
+function openSupportingAnnotation(id){
+  const annotation=state.annotations.find(item=>item.id===id);if(!annotation)return;
+  const index=state.samples.findIndex(sample=>sample.trace_id===annotation.trace_id||sample.scenario_id===annotation.scenario_id);
+  if(index<0){toast("That scenario is not in the current review set");return}
+  state.current=index;showView("review");renderSampleList();renderConversation();renderNotes();
+  requestAnimationFrame(()=>annotation.segment_key?jumpEvidence(annotation.segment_key):document.querySelector("#conversation")?.scrollIntoView({behavior:"smooth",block:"start"}));
+}
+document.querySelectorAll(".tabs button").forEach(button=>button.onclick=()=>showView(button.dataset.view));
+window.addEventListener("resize",()=>requestAnimationFrame(layoutNotes));
+function toast(message){const el=document.querySelector("#toast");el.textContent=message;el.classList.add("show");clearTimeout(el.timer);el.timer=setTimeout(()=>el.classList.remove("show"),3000)}
+
+let pollSignature="";
+async function pollAgentState(){
+  if(document.querySelector("#popover").style.display==="block"||document.activeElement?.closest(".mode-card")||document.querySelector("#labeling-view").classList.contains("active"))return;
+  const revision=annotationRevision;
+  try{
+    const samples=await api.get("/api/samples");
+    const annotations=await api.get("/api/annotations");
+    const patterns=await api.get("/api/patterns");
+    const suggestions=await api.get("/api/suggestions");
+    const labels=await api.get("/api/labels");
+    if(revision!==annotationRevision||annotationSavePending)return;
+    const signature=JSON.stringify([samples.length,annotationList(annotations).length,patterns,suggestions,labels]);
+    if(signature===pollSignature)return;
+    pollSignature=signature;
+    state.samples=samples;state.annotations=annotationList(annotations);state.patterns=patterns;
+    state.suggestions=suggestions;state.labels=labels;
+    state.current=Math.min(state.current,Math.max(0,state.samples.length-1));
+    state.labelCurrent=Math.min(state.labelCurrent,Math.max(0,state.samples.length-1));
+    renderAll();
+  }catch{}
+}
+function modesFrom(patterns){return Array.isArray(patterns?.modes)?patterns.modes:Object.entries(patterns||{}).map(([name,value])=>({name,...value}))}
+
+load().then(()=>{pollSignature="loaded";setInterval(pollAgentState,2000)}).catch(error=>{document.querySelector("#conversation").innerHTML=`<div class="card empty">Could not load the app: ${esc(error.message)}</div>`});
+</script>
+</body>
+</html>
