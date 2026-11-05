@@ -143,3 +143,21 @@ def test_check_return_eligibility_scope(world: dict) -> None:
 
     for role in ("shopper", "merchant", "support"):
         assert "check_return_eligibility" in [t.name for t in TOOLS_BY_ROLE[role]]
+
+
+def test_search_products_accepts_store_id_name_or_slug(world: dict) -> None:
+    with db.connection() as conn:
+        token = db.list_products(conn, 1)[0].title.split()[-1]
+
+    by_name = tools.search_products(MERCHANT_STORE_1, token, store="Blue Heron Ceramics")
+    assert by_name["ok"] is True
+    assert by_name["count"] >= 1
+    assert all(p["store_id"] == 1 for p in by_name["products"])
+
+    for store in ("blue-heron-ceramics", "1", " 1 "):
+        assert tools.search_products(MERCHANT_STORE_1, token, store=store) == by_name
+
+    missing = tools.search_products(MERCHANT_STORE_1, token, store="999999")
+    assert missing["ok"] is False
+    assert missing["error"] == "not_found"
+    assert "999999" in missing["reason"]

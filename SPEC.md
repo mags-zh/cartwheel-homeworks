@@ -68,7 +68,7 @@ Successful results contain `ok: true` and the result fields. Expected failures c
 | --- | --- | --- | --- | --- |
 | TOOL-1 | `search_help_center` | query | none | read |
 | TOOL-2 | `get_policy` | policy identifier | none | read |
-| TOOL-3 | `search_products` | query, optional store and price ceiling, result limit | none | read |
+| TOOL-3 | `search_products` | query, optional store (store id, name, or slug) and price ceiling, result limit | none | read |
 | TOOL-4 | `get_order` | order identifier | none | read |
 | TOOL-5 | `list_my_orders` | none | none | read |
 | TOOL-6 | `find_order` | natural-language product description | none | read |

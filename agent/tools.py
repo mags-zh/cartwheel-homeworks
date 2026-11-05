@@ -101,10 +101,12 @@ def search_products(
         query: Free-text query. Must be non-empty after stripping whitespace;
             otherwise return {"ok": False, "error": "invalid_argument",
             "reason": ...}.
-        store: Optional store filter. Matched with
-            agent.db.get_store_by_name (case-insensitive name or slug). If
-            given and no store matches, return {"ok": False, "error":
-            "not_found", "reason": ...} naming the store string.
+        store: Optional store filter: a store name, slug, or numeric id.
+            Matched first with agent.db.get_store_by_name (case-insensitive
+            name or slug); if that finds nothing and the value is all digits,
+            matched as an id with agent.db.get_store. If given and no store
+            matches, return {"ok": False, "error": "not_found", "reason": ...}
+            naming the store string.
         max_price_usd: Optional inclusive price ceiling. If given and not
             strictly positive, return an "invalid_argument" error.
         limit: Maximum products to return. Clamp to the range
@@ -136,6 +138,8 @@ def search_products(
         store_id = None
         if store:
             found = db.get_store_by_name(conn, store)
+            if found is None and store.strip().isdigit():
+                found = db.get_store(conn, int(store))
             if found is None:
                 return {"ok": False, "error": "not_found", "reason": f"no store named {store!r}"}
             store_id = found.id
