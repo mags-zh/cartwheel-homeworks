@@ -1,8 +1,10 @@
 """Cartwheel conversation review app.
 
 Serves the HW4 interface and joins the selected review sample with the
-scenario answer keys and the raw Langfuse traces. Run from the repository
-root with:
+scenario answer keys and the raw Langfuse traces. Traces are loaded live from
+Langfuse at startup; the HW3 export is used only when Langfuse is not
+configured or cannot be reached (or with ``--trace-source export``). Run from
+the repository root with:
 
     uv run --env-file .env python analysis/review_app/server.py
 """
@@ -21,6 +23,7 @@ from typing import Any
 from agent import db
 from analysis.helpers import langfuse_io
 from analysis.helpers.normalization import normalize_trace
+from scenarios.export_langfuse import export_scenario_traces
 
 
 HERE = Path(__file__).resolve().parent
@@ -104,14 +107,50 @@ def _pattern_list(value: Any) -> list[dict[str, Any]]:
 
 
 class Catalog:
-    """In-memory conversation catalog built from the HW3 trace export."""
+    """In-memory conversation catalog built from live Langfuse traces.
 
-    def __init__(self, trace_export: Path, scenarios_path: Path) -> None:
+    Only traces whose ``cartwheel.scenario_id`` is a final ``support-*``
+    scenario are kept, so pilot, smoke and ``tmp-*`` side-test runs stay out.
+    """
+
+    def __init__(
+        self, trace_export: Path, scenarios_path: Path, trace_source: str = "langfuse"
+    ) -> None:
         self.trace_export = trace_export
         self.scenarios_path = scenarios_path
+        self.requested_source = trace_source
+        self.source = trace_source
+        self.source_note = ""
         self.by_canonical_id: dict[str, dict[str, Any]] = {}
         self.by_scenario_id: dict[str, dict[str, Any]] = {}
         self._load()
+        self.loaded_at = _utcnow()
+
+    def summary(self) -> dict[str, Any]:
+        return {
+            "trace_source": self.source,
+            "trace_source_note": self.source_note,
+            "traces_loaded_at": self.loaded_at,
+            "catalog_conversations": len(self.by_canonical_id),
+        }
+
+    def _raw_traces(self, scenario_ids: set[str]) -> list[Any]:
+        if self.requested_source == "langfuse":
+            if not langfuse_io.is_configured():
+                self.source_note = "Langfuse is not configured (start with --env-file .env)"
+            else:
+                try:
+                    from langfuse import Langfuse
+
+                    return export_scenario_traces(scenario_ids, Langfuse())
+                except Exception as exc:  # live Langfuse unreachable or failing
+                    self.source_note = f"Langfuse fetch failed: {exc}"
+            self.source = "export"
+        export = _read_json(self.trace_export, {})
+        raw_traces = export.get("traces", []) if isinstance(export, dict) else export
+        if not isinstance(raw_traces, list):
+            raise ValueError("trace export must contain a traces list")
+        return raw_traces
 
     def _load(self) -> None:
         scenario_rows = [
@@ -152,10 +191,7 @@ class Catalog:
                     int(store_id) if store_id is not None else None
                 )
 
-        export = _read_json(self.trace_export, {})
-        raw_traces = export.get("traces", []) if isinstance(export, dict) else export
-        if not isinstance(raw_traces, list):
-            raise ValueError("trace export must contain a traces list")
+        raw_traces = self._raw_traces(set(scenarios))
 
         grouped: dict[str, list[dict[str, Any]]] = {}
         for raw in raw_traces:
@@ -273,6 +309,13 @@ class ReviewApplication:
     def samples(self) -> list[dict[str, Any]]:
         return self.catalog.selected(self.get_state("samples.json"))
 
+    def reload_traces(self) -> dict[str, Any]:
+        # Build the new catalog fully before swapping, so requests served
+        # during the fetch keep reading the old one.
+        old = self.catalog
+        self.catalog = Catalog(old.trace_export, old.scenarios_path, old.requested_source)
+        return {**self.catalog.summary(), "selected_conversations": len(self.samples())}
+
     def labels(self) -> list[dict[str, Any]]:
         latest: dict[tuple[str, str], dict[str, Any]] = {}
         labels_dir = self.state_dir / "labels"
@@ -383,7 +426,7 @@ class ReviewHandler(BaseHTTPRequestHandler):
             self._json(
                 {
                     "ok": True,
-                    "catalog_conversations": len(APP.catalog.by_canonical_id),
+                    **APP.catalog.summary(),
                     "selected_conversations": len(APP.samples()),
                     "langfuse_configured": langfuse_io.is_configured(),
                 }
@@ -413,6 +456,8 @@ class ReviewHandler(BaseHTTPRequestHandler):
                 self._json({"ok": True, "count": len(APP.samples())})
             elif path == "/api/labels":
                 self._json({"ok": True, "label": APP.save_label(value)})
+            elif path == "/api/reload":
+                self._json({"ok": True, **APP.reload_traces()})
             else:
                 self._json({"error": f"cannot POST to {path}"}, 404)
         except (ValueError, json.JSONDecodeError) as exc:
@@ -426,6 +471,12 @@ def main() -> None:
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8020)
     parser.add_argument("--state-dir", type=Path, default=DEFAULT_STATE_DIR)
+    parser.add_argument(
+        "--trace-source",
+        choices=("langfuse", "export"),
+        default="langfuse",
+        help="where trace content comes from; langfuse falls back to the export",
+    )
     parser.add_argument("--trace-export", type=Path, default=DEFAULT_TRACE_EXPORT)
     parser.add_argument("--scenarios", type=Path, default=DEFAULT_SCENARIOS)
     args = parser.parse_args()
@@ -434,10 +485,18 @@ def main() -> None:
     global APP
     APP = ReviewApplication(
         args.state_dir.resolve(),
-        Catalog(args.trace_export.resolve(), args.scenarios.resolve()),
+        Catalog(
+            args.trace_export.resolve(), args.scenarios.resolve(), args.trace_source
+        ),
     )
     server = ThreadingHTTPServer((args.host, args.port), ReviewHandler)
     print(f"review app on http://{args.host}:{args.port}")
+    source = APP.catalog.source
+    if source == "export":
+        source += f" ({APP.catalog.trace_export})"
+    if APP.catalog.source_note:
+        source += f"; {APP.catalog.source_note}"
+    print(f"Trace source: {source}")
     print(
         f"{len(APP.catalog.by_canonical_id)} conversations catalogued; "
         f"{len(APP.samples())} selected"

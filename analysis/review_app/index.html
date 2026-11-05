@@ -22,6 +22,8 @@ code,pre,.mono{font-family:"SF Mono",ui-monospace,Menlo,monospace}
 .tabs button{border:1px solid var(--line);background:#fafafa;padding:7px 12px;border-radius:7px}
 .tabs button.active{background:var(--accent);border-color:var(--accent);color:white}
 .top-counts{margin-left:auto;color:var(--muted);font-size:12px}
+.trace-source{color:var(--muted);font-size:12px}.trace-source.fallback{color:var(--danger);font-weight:700}
+#refresh-traces{font-size:12px;padding:5px 10px}
 .view{display:none}.view.active{display:block}
 .workspace{display:grid;grid-template-columns:260px minmax(520px,780px) 260px;gap:18px;max-width:1360px;margin:0 auto;padding:18px}
 .sidebar{position:sticky;top:76px;align-self:start;max-height:calc(100vh - 94px);overflow:auto}
@@ -108,6 +110,8 @@ pre{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f3f
     <button data-view="progress">Progress</button>
   </div>
   <div class="top-counts" id="top-counts"></div>
+  <span class="trace-source" id="trace-source"></span>
+  <button id="refresh-traces" class="secondary">Refresh traces</button>
 </div>
 
 <section id="review-view" class="view active">
@@ -625,6 +629,31 @@ async function pollAgentState(){
     renderAll();
   }catch{}
 }
+function renderTraceSource(info){
+  const el=document.querySelector("#trace-source");
+  const loaded=info.traces_loaded_at?new Date(info.traces_loaded_at).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}):"";
+  const live=info.trace_source==="langfuse";
+  el.textContent=`Traces: ${live?"Langfuse":"export file"}${loaded?` · loaded ${loaded}`:""}`;
+  el.title=info.trace_source_note||"";
+  el.classList.toggle("fallback",!live);
+}
+async function refreshTraces(){
+  const button=document.querySelector("#refresh-traces");
+  button.disabled=true;button.textContent="Refreshing…";
+  try{
+    const info=await api.post("/api/reload",{});
+    state.samples=await api.get("/api/samples");
+    state.current=Math.min(state.current,Math.max(0,state.samples.length-1));
+    state.labelCurrent=Math.min(state.labelCurrent,Math.max(0,state.samples.length-1));
+    renderAll();renderTraceSource(info);
+    toast(info.trace_source==="langfuse"
+      ?`Reloaded ${info.catalog_conversations} conversations from Langfuse`
+      :`Langfuse unavailable, using the export file: ${info.trace_source_note}`);
+  }catch(error){toast(`Refresh failed: ${error.message}`)}
+  finally{button.disabled=false;button.textContent="Refresh traces"}
+}
+document.querySelector("#refresh-traces").onclick=refreshTraces;
+api.get("/api/health").then(renderTraceSource).catch(()=>{});
 function modesFrom(patterns){return Array.isArray(patterns?.modes)?patterns.modes:Object.entries(patterns||{}).map(([name,value])=>({name,...value}))}
 
 load().then(()=>{pollSignature="loaded";setInterval(pollAgentState,2000)}).catch(error=>{document.querySelector("#conversation").innerHTML=`<div class="card empty">Could not load the app: ${esc(error.message)}</div>`});
