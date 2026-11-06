@@ -30,6 +30,12 @@ code,pre,.mono{font-family:"SF Mono",ui-monospace,Menlo,monospace}
 .notes-panel{position:relative;align-self:stretch;overflow:visible;min-height:240px}
 .sidebar,.card,.notes-panel,.mode-card,.label-card,.progress-card{background:var(--panel);border:1px solid var(--line);border-radius:10px}
 .sidebar-title{padding:12px 13px;border-bottom:1px solid var(--line);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.list-tools{position:sticky;top:0;z-index:2;background:var(--panel);border-bottom:1px solid var(--line);border-radius:10px 10px 0 0}
+.list-tools .sidebar-title{border-bottom:0;padding-bottom:4px}
+.jump-row{display:block;margin:0;padding:0 10px 10px}
+.jump-row input{width:100%;border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:#fafafa;font:600 12px/1.4 ui-monospace,Menlo,monospace}
+.jump-row input::placeholder{font-weight:500;color:#9a9b94}
+.jump-row input:focus{outline:2px solid #c5cae8;border-color:var(--accent);background:white}
 .sample{width:100%;border:0;border-bottom:1px solid #eeede8;background:transparent;text-align:left;padding:10px 12px}
 .sample:hover{background:#faf9f6}.sample.active{background:#eef0ff}
 .sample .title{font-weight:700}.sample .sub{color:var(--muted);font-size:12px;margin-top:2px}
@@ -81,6 +87,7 @@ pre{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f3f
 .supporting{list-style:none;margin:9px 0 0;padding:0;font-size:12px}.supporting li{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:start;margin-top:6px}.scenario-link{border:0;background:none;color:var(--accent);padding:0;font:700 11px/1.5 ui-monospace,monospace;text-decoration:underline}
 .label-layout{display:grid;grid-template-columns:220px minmax(460px,1fr) minmax(340px,400px);gap:16px;align-items:start}
 .label-list{position:sticky;top:76px;background:white;border:1px solid var(--line);border-radius:9px;max-height:calc(100vh - 98px);overflow:auto}
+.label-list>.jump-row{position:sticky;top:0;z-index:2;background:white;padding:8px;border-bottom:1px solid var(--line)}
 .label-conversation{min-width:0}
 .label-modes-panel{position:sticky;top:76px;align-self:start;max-height:calc(100vh - 98px);overflow:auto;padding-right:4px}
 .label-modes-header{position:sticky;top:0;z-index:2;background:var(--bg);padding:0 0 9px}
@@ -95,9 +102,9 @@ pre{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f3f
 .suggestion-row{background:white;border:1px solid var(--line);border-radius:8px;padding:10px;margin:7px 0;display:grid;grid-template-columns:1fr auto;gap:8px}
 .suggestion-row.accepted{opacity:.65}.suggestion-row.rejected{opacity:.55;text-decoration:line-through}
 .toast{position:fixed;right:18px;bottom:18px;background:var(--ink);color:white;padding:10px 14px;border-radius:8px;opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1}
-@media(max-width:1200px){.label-layout{grid-template-columns:minmax(0,1fr) minmax(340px,400px)}.label-list{position:static;grid-column:1/-1;display:flex;max-height:118px;overflow:auto}.label-list .sample{min-width:190px;border-right:1px solid #eeede8}}
+@media(max-width:1200px){.label-layout{grid-template-columns:minmax(0,1fr) minmax(340px,400px)}.label-list{position:static;grid-column:1/-1;display:block;max-height:168px;overflow:auto}#label-samples{display:flex}.label-list .sample{min-width:190px;border-right:1px solid #eeede8}}
 @media(max-width:1050px){.workspace{grid-template-columns:220px 1fr}.notes-panel{position:static;grid-column:2;min-height:0}.notes-panel #notes{min-height:0!important}.notes-panel .note{position:static!important;top:auto!important}.mode-card{grid-template-columns:1fr 1.4fr}.mode-controls{grid-column:1/-1;justify-content:flex-start}}
-@media(max-width:720px){.topbar{height:auto;flex-wrap:wrap;padding:10px}.top-counts{width:100%}.workspace{display:block;padding:10px}.sidebar{position:static;max-height:220px;margin-bottom:10px}.notes-panel{margin-top:10px}.tabs{overflow:auto}.page{padding:14px}.mode-card{grid-template-columns:1fr}.mode-controls{grid-column:auto;flex-wrap:wrap}.label-layout{grid-template-columns:1fr}.label-list{display:block;max-height:220px}.label-list .sample{min-width:0;border-right:0}.label-modes-panel{position:static;max-height:none}}
+@media(max-width:720px){.topbar{height:auto;flex-wrap:wrap;padding:10px}.top-counts{width:100%}.workspace{display:block;padding:10px}.sidebar{position:static;max-height:220px;margin-bottom:10px}.notes-panel{margin-top:10px}.tabs{overflow:auto}.page{padding:14px}.mode-card{grid-template-columns:1fr}.mode-controls{grid-column:auto;flex-wrap:wrap}.label-layout{grid-template-columns:1fr}.label-list{display:block;max-height:220px}#label-samples{display:block}.label-list .sample{min-width:0;border-right:0}.label-modes-panel{position:static;max-height:none}}
 </style>
 </head>
 <body>
@@ -116,7 +123,7 @@ pre{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f3f
 
 <section id="review-view" class="view active">
   <div class="workspace">
-    <aside class="sidebar"><div class="sidebar-title">Current batch</div><div id="sample-list"></div></aside>
+    <aside class="sidebar"><div class="list-tools"><div class="sidebar-title">Current batch</div><form class="jump-row" id="review-jump" autocomplete="off"><input id="review-jump-input" type="text" inputmode="numeric" placeholder="Id, then Enter" aria-label="Find a scenario by id" spellcheck="false"></form></div><div id="sample-list"></div></aside>
     <main id="conversation"></main>
     <aside class="notes-panel"><div class="sidebar-title">Notes beside evidence</div><div id="notes"></div></aside>
   </div>
@@ -130,7 +137,7 @@ pre{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f3f
 <section id="labeling-view" class="view"><div class="page label-page">
   <h2>Structured labeling</h2><div class="page-intro">Read the complete conversation, then make a separate present/absent judgment for each final mode.</div>
   <div class="label-layout">
-    <aside id="label-samples" class="label-list"></aside>
+    <aside class="label-list"><form class="jump-row" id="label-jump" autocomplete="off"><input id="label-jump-input" type="text" inputmode="numeric" placeholder="Id, then Enter" aria-label="Find a scenario by id" spellcheck="false"></form><div id="label-samples"></div></aside>
     <main id="label-conversation" class="label-conversation"></main>
     <aside id="label-modes" class="label-modes-panel"></aside>
   </div>
@@ -202,11 +209,83 @@ function updateCounts(){
   document.querySelector("#top-counts").textContent=`${reviewed}/${state.samples.length} conversations reviewed · ${state.annotations.length} notes · ${labelModes().length}/${modes().length} candidates accepted`;
 }
 
+function scenarioNumber(id){
+  const matches=String(id??"").match(/\d+/g);
+  return matches?Number(matches[matches.length-1]):NaN;
+}
+function scenarioMatches(sample, raw){
+  const query=String(raw||"").trim().toLowerCase();
+  if(!query)return true;
+  const id=String(sample.scenario_id||"").toLowerCase();
+  if(id.includes(query))return true;
+  const digits=query.replace(/\D/g,"");
+  return Boolean(digits)&&String(scenarioNumber(sample.scenario_id)).includes(String(Number(digits)));
+}
+function filteredSamples(raw){
+  return state.samples.map((sample,index)=>({sample,index})).filter(({sample})=>scenarioMatches(sample,raw));
+}
+function resolveScenarioQuery(raw){
+  const query=String(raw||"").trim();
+  if(!query)return {status:"empty"};
+  const matches=filteredSamples(query);
+  if(!matches.length)return {status:"none"};
+  const digits=query.replace(/\D/g,"");
+  if(digits){
+    const exact=matches.filter(({sample})=>scenarioNumber(sample.scenario_id)===Number(digits));
+    if(exact.length===1)return {status:"one",index:exact[0].index};
+  }
+  if(matches.length===1)return {status:"one",index:matches[0].index};
+  return {status:"many",count:matches.length};
+}
+function revealInScrollParent(element){
+  if(!element)return;
+  let parent=element.parentElement;
+  while(parent){
+    const style=getComputedStyle(parent);
+    if(/(auto|scroll)/.test(style.overflowY)){
+      const parentRect=parent.getBoundingClientRect(),rect=element.getBoundingClientRect();
+      if(rect.top<parentRect.top)parent.scrollTop-=parentRect.top-rect.top;
+      else if(rect.bottom>parentRect.bottom)parent.scrollTop+=rect.bottom-parentRect.bottom;
+      return;
+    }
+    parent=parent.parentElement;
+  }
+}
+function jumpToScenario(raw, view){
+  const result=resolveScenarioQuery(raw);
+  if(result.status==="empty"){toast("Type a scenario number");return}
+  if(result.status==="none"){toast(`No scenario matches ${String(raw).trim()}`);return}
+  if(result.status==="many"){toast(`${result.count} scenarios match — click one, or type the full number`);return}
+  const input=document.querySelector(view==="labeling"?"#label-jump-input":"#review-jump-input");
+  if(input)input.value="";
+  if(view==="labeling"){
+    selectLabelSample(result.index);
+    requestAnimationFrame(()=>revealInScrollParent(document.querySelector(`#label-samples [data-label-index="${result.index}"]`)));
+  }else{
+    state.current=result.index;
+    renderSampleList();renderConversation();renderNotes();
+    requestAnimationFrame(()=>revealInScrollParent(document.querySelector(`#sample-list [data-index="${result.index}"]`)));
+  }
+}
+function bindScenarioJump(formId, inputId, view){
+  const form=document.querySelector(formId),input=document.querySelector(inputId);
+  form.addEventListener("submit",event=>{event.preventDefault();jumpToScenario(input.value,view)});
+  input.addEventListener("input",()=>view==="labeling"?renderLabelSamples():renderSampleList());
+  input.addEventListener("keydown",event=>{
+    if(event.key!=="Escape")return;
+    input.value="";
+    view==="labeling"?renderLabelSamples():renderSampleList();
+    input.blur();
+  });
+}
 function renderSampleList(){
   const el=document.querySelector("#sample-list");
+  const query=document.querySelector("#review-jump-input")?.value||"";
   if(!state.samples.length){el.innerHTML='<div class="empty">No batch selected yet.</div>';return}
   const reviewed=reviewedIds();
-  el.innerHTML=state.samples.map((sample,index)=>{
+  const rows=filteredSamples(query);
+  if(!rows.length){el.innerHTML=`<div class="empty">No scenario matches “${esc(query.trim())}”.</div>`;return}
+  el.innerHTML=rows.map(({sample,index})=>{
     const t=sample.tuple||{};
     return `<button class="sample ${index===state.current?"active":""}" data-index="${index}"><div class="title"><span class="status-dot ${reviewed.has(sample.trace_id)?"done":""}"></span>${esc(sample.scenario_id)}</div><div class="sub">${esc(t.role)} · ${esc(t.intent)} · ${sample.turns.length} turn${sample.turns.length===1?"":"s"}</div></button>`
   }).join("");
@@ -485,8 +564,11 @@ async function setModeStatus(index,requested){
 
 function renderLabelSamples(){
   const el=document.querySelector("#label-samples");
+  const query=document.querySelector("#label-jump-input")?.value||"";
   if(!state.samples.length){el.innerHTML='<div class="empty">No samples.</div>';return}
-  el.innerHTML=state.samples.map((sample,index)=>{
+  const rows=filteredSamples(query);
+  if(!rows.length){el.innerHTML=`<div class="empty">No scenario matches “${esc(query.trim())}”.</div>`;return}
+  el.innerHTML=rows.map(({sample,index})=>{
     const complete=labelCount(sample.trace_id)===labelModes().length;
     return `<button class="sample ${index===state.labelCurrent?"active":""}" data-label-index="${index}"><div class="title"><span class="status-dot ${complete?"done":""}"></span>${esc(sample.scenario_id)}</div><div class="sub">${esc(sample.tuple?.role)} · ${labelCompletion(sample.trace_id)}</div></button>`;
   }).join("");
@@ -605,6 +687,8 @@ function openSupportingAnnotation(id){
   requestAnimationFrame(()=>annotation.segment_key?jumpEvidence(annotation.segment_key):document.querySelector("#conversation")?.scrollIntoView({behavior:"smooth",block:"start"}));
 }
 document.querySelectorAll(".tabs button").forEach(button=>button.onclick=()=>showView(button.dataset.view));
+bindScenarioJump("#review-jump","#review-jump-input","review");
+bindScenarioJump("#label-jump","#label-jump-input","labeling");
 window.addEventListener("resize",()=>requestAnimationFrame(layoutNotes));
 function toast(message){const el=document.querySelector("#toast");el.textContent=message;el.classList.add("show");clearTimeout(el.timer);el.timer=setTimeout(()=>el.classList.remove("show"),3000)}
 
