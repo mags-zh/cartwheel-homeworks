@@ -19,6 +19,7 @@ from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
+from urllib.parse import parse_qs
 
 from agent import db
 from analysis.helpers import langfuse_io
@@ -373,6 +374,198 @@ class ReviewApplication:
         _append_jsonl(self.state_dir / "labels" / f"{mode}.jsonl", record)
         return record
 
+    # HW5 labels use the opposite convention to HW4: 1 = Pass (failure absent),
+    # 0 = Fail. They stay local, because the Langfuse score named after the
+    # mode holds the HW4 convention.
+    def _hw5_path(self, mode: str) -> Path:
+        if not MODE_RE.fullmatch(mode):
+            raise ValueError("mode must be a snake_case identifier")
+        return self.state_dir / "hw5_labels" / f"{mode}.jsonl"
+
+    def hw5_candidates(self) -> list[dict[str, Any]]:
+        """Extra conversations to label in the HW5 view, after the HW4 sample.
+
+        Read from ``hw5_candidates.json`` so the HW4 ``samples.json`` and its
+        open-coding counts stay unchanged. Candidate fields are selection
+        signals, not labels.
+        """
+        value = _read_json(self.state_path("hw5_candidates.json"), {})
+        rows = value.get("candidates", []) if isinstance(value, dict) else value
+        if not isinstance(rows, list):
+            return []
+        by_trace = {str(row.get("trace_id")): row for row in rows if isinstance(row, dict)}
+        in_sample = {sample["trace_id"] for sample in self.samples()}
+        output = []
+        for conversation in self.catalog.selected(rows):
+            if conversation["trace_id"] in in_sample:
+                continue
+            row = by_trace.get(conversation["trace_id"]) or next(
+                (r for r in rows if r.get("scenario_id") == conversation["scenario_id"]), {}
+            )
+            output.append(
+                {
+                    **conversation,
+                    "batch": conversation.get("batch") or "hw5-candidates",
+                    "candidate": {
+                        key: row.get(key)
+                        for key in ("rank", "score", "signal", "nearest_failure", "shares_with_labelled")
+                        if key in row
+                    },
+                }
+            )
+        return output
+
+    JUDGE_REVIEW_DECISIONS = ("judge_wrong", "label_wrong", "definition_unclear")
+
+    def _judge_record(self, judge_id: str) -> dict[str, Any]:
+        if not re.fullmatch(r"[a-z][a-z0-9_]*-v\d+", judge_id):
+            raise ValueError("judge_id must look like <mode>-v<N>")
+        judge = _read_json(self.state_dir / "judges" / f"{judge_id}.json", None)
+        if not isinstance(judge, dict):
+            raise ValueError(f"unknown judge {judge_id}")
+        return judge
+
+    def hw5_judges(self, mode: str) -> list[dict[str, Any]]:
+        self._hw5_path(mode)
+        history = _read_json(self.state_dir / "judges" / f"_history_{mode}.json", {"versions": []})
+        output = []
+        for version in history.get("versions", []):
+            judge = self._judge_record(version["judge_id"])
+            output.append(
+                {key: judge.get(key) for key in ("judge_id", "version", "status", "model", "created_at")}
+            )
+        return output
+
+    def hw5_judge(self, judge_id: str) -> dict[str, Any]:
+        """Verdicts and critiques beside the human labels for the HW5 review.
+
+        Test predictions are withheld until the judge is frozen, so they can't
+        influence the prompt while it is being revised.
+        """
+        judge = self._judge_record(judge_id)
+        frozen = judge.get("status") == "frozen"
+        splits = _read_json(self.state_path("splits.json"), {}).get(judge["mode"], {})
+        split_of = {
+            trace_id: name
+            for name in ("train", "dev", "test")
+            for trace_id in splits.get(name, [])
+        }
+        visible = {tid for tid, name in split_of.items() if name != "test" or frozen}
+        cache = judge.get("predictions", {}).get(judge["prompt_hash"], {})
+        critiques = judge.get("critiques", {}).get(judge["prompt_hash"], {})
+        pass_positive = judge.get("label_convention") == "pass_positive"
+        predictions = {
+            tid: int(pred) if pass_positive else 1 - int(pred)
+            for tid, pred in cache.items()
+            if tid in visible
+        }
+        reviews: dict[str, dict[str, Any]] = {}
+        for row in _read_jsonl(self.state_dir / "hw5_judge_reviews" / f"{judge_id}.jsonl"):
+            reviews[str(row.get("trace_id"))] = row
+        return {
+            "judge_id": judge_id,
+            "mode": judge["mode"],
+            "status": judge.get("status"),
+            "model": judge.get("model"),
+            "split_of": split_of,
+            "predictions": predictions,
+            "critiques": {tid: critiques[tid] for tid in predictions if tid in critiques},
+            "test_hidden": not frozen,
+            "reviews": reviews,
+        }
+
+    def save_judge_review(self, value: Any) -> dict[str, Any]:
+        if not isinstance(value, dict):
+            raise ValueError("expected a JSON object")
+        judge_id = str(value.get("judge_id", ""))
+        judge = self._judge_record(judge_id)
+        trace_id = str(value.get("trace_id", ""))
+        splits = _read_json(self.state_path("splits.json"), {}).get(judge["mode"], {})
+        split = next((name for name in ("train", "dev", "test") if trace_id in splits.get(name, [])), None)
+        decision = value.get("decision")
+        if trace_id not in self.catalog.by_canonical_id:
+            raise ValueError("trace_id must be a canonical conversation trace id")
+        if decision not in self.JUDGE_REVIEW_DECISIONS:
+            raise ValueError(f"decision must be one of {', '.join(self.JUDGE_REVIEW_DECISIONS)}")
+        record = {
+            "trace_id": trace_id,
+            "judge_id": judge_id,
+            "split": split,
+            "decision": decision,
+            "note": str(value.get("note", "")),
+            "source": "human",
+            "created_at": _utcnow(),
+        }
+        _append_jsonl(self.state_dir / "hw5_judge_reviews" / f"{judge_id}.jsonl", record)
+        return record
+
+    def hw5_labels(self, mode: str) -> list[dict[str, Any]]:
+        latest: dict[str, dict[str, Any]] = {}
+        for row in _read_jsonl(self._hw5_path(mode)):
+            trace_id = str(row.get("trace_id", ""))
+            if trace_id and row.get("label") in (0, 1) and not row.get("superseded_by"):
+                latest[trace_id] = row
+        return sorted(latest.values(), key=lambda row: row["trace_id"])
+
+    def save_hw5_label(self, value: Any) -> dict[str, Any]:
+        if not isinstance(value, dict):
+            raise ValueError("expected a JSON object")
+        trace_id = str(value.get("trace_id", ""))
+        mode = str(value.get("mode", ""))
+        label = value.get("label")
+        path = self._hw5_path(mode)
+        if trace_id not in self.catalog.by_canonical_id:
+            raise ValueError("label trace_id must be a canonical conversation trace id")
+        if label not in (0, 1):
+            raise ValueError("label must be 1 (Pass) or 0 (Fail)")
+        previous = next(
+            (row for row in self.hw5_labels(mode) if row["trace_id"] == trace_id), None
+        )
+        record = {
+            "id": f"hw5-label-{int(datetime.now().timestamp() * 1000)}",
+            "trace_id": trace_id,
+            "mode": mode,
+            "label": int(label),
+            "evidence": str(value.get("evidence", "")),
+            "note": str(value.get("note", "")),
+            "source": "human",
+            "created_at": _utcnow(),
+        }
+        if previous:
+            record["replaces"] = previous.get("id")
+        _append_jsonl(path, record)
+        return record
+
+    def import_hw4_labels(self, mode: str) -> dict[str, Any]:
+        """Start HW5 labels from the HW4 judgments: HW5 label = 1 - HW4 label.
+
+        Only conversations without an HW5 label are written, so running it
+        again never overwrites a judgment made in the HW5 view.
+        """
+        path = self._hw5_path(mode)
+        existing = {row["trace_id"] for row in self.hw5_labels(mode)}
+        created_at = _utcnow()
+        written = 0
+        for row in self.labels():
+            if row["mode"] != mode or row["trace_id"] in existing:
+                continue
+            _append_jsonl(
+                path,
+                {
+                    "id": f"hw5-label-{row['trace_id'][:12]}-hw4",
+                    "trace_id": row["trace_id"],
+                    "mode": mode,
+                    "label": 1 - int(row["label"]),
+                    "evidence": row.get("evidence", ""),
+                    "note": row.get("note", ""),
+                    "source": "hw4_converted",
+                    "hw4_label_id": row.get("id"),
+                    "created_at": created_at,
+                },
+            )
+            written += 1
+        return {"written": written, "total": len(self.hw5_labels(mode))}
+
 
 APP: ReviewApplication
 
@@ -407,7 +600,27 @@ class ReviewHandler(BaseHTTPRequestHandler):
         return json.loads(self.rfile.read(length))
 
     def do_GET(self) -> None:  # noqa: N802
-        path = self.path.split("?", 1)[0]
+        path, _, query = self.path.partition("?")
+        if path == "/api/hw5/labels":
+            try:
+                mode = parse_qs(query).get("mode", [""])[0]
+                self._json(APP.hw5_labels(mode))
+            except ValueError as exc:
+                self._json({"error": str(exc)}, 400)
+            return
+        if path == "/api/hw5/candidates":
+            self._json(APP.hw5_candidates())
+            return
+        if path in {"/api/hw5/judges", "/api/hw5/judge"}:
+            params = parse_qs(query)
+            try:
+                if path == "/api/hw5/judges":
+                    self._json(APP.hw5_judges(params.get("mode", [""])[0]))
+                else:
+                    self._json(APP.hw5_judge(params.get("judge_id", [""])[0]))
+            except ValueError as exc:
+                self._json({"error": str(exc)}, 400)
+            return
         if path in {"/", "/index.html"}:
             self._file(HERE / "index.html", "text/html; charset=utf-8")
         elif path == "/api/samples":
@@ -458,6 +671,13 @@ class ReviewHandler(BaseHTTPRequestHandler):
                 self._json({"ok": True, "label": APP.save_label(value)})
             elif path == "/api/reload":
                 self._json({"ok": True, **APP.reload_traces()})
+            elif path == "/api/hw5/labels":
+                self._json({"ok": True, "label": APP.save_hw5_label(value)})
+            elif path == "/api/hw5/judge_review":
+                self._json({"ok": True, "review": APP.save_judge_review(value)})
+            elif path == "/api/hw5/import":
+                mode = str((value or {}).get("mode", ""))
+                self._json({"ok": True, **APP.import_hw4_labels(mode)})
             else:
                 self._json({"error": f"cannot POST to {path}"}, 404)
         except (ValueError, json.JSONDecodeError) as exc:

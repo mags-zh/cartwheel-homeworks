@@ -98,6 +98,16 @@ pre{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f3f
 .binary{display:flex;gap:5px;align-items:center;margin-top:8px}.binary button{padding:6px 10px;border:1px solid var(--line);background:white;border-radius:6px}.binary button.present.selected{background:#fee4e2;border-color:#e47970}.binary button.absent.selected{background:#dcfce7;border-color:#69b982}
 .all-absent{width:100%;margin:8px 0;border-color:#69b982;background:#f0fbf4;color:#17623a;font-weight:700}
 .label-note{display:flex;gap:6px;margin-top:10px}.label-note input{flex:1;border:1px solid var(--line);border-radius:6px;padding:6px}
+.binary button.pass.selected{background:#dcfce7;border-color:#69b982}.binary button.fail.selected{background:#fee4e2;border-color:#e47970}
+.status-dot.pass{background:var(--assistant)}.status-dot.fail{background:var(--danger)}
+.hw5-controls{display:flex;flex-direction:column;gap:8px}.hw5-controls select{width:100%;padding:6px;border:1px solid var(--line);border-radius:6px;background:white}
+.hw5-counts{display:flex;gap:12px;font-weight:700}.hw5-counts .fail{color:var(--danger)}.hw5-counts .pass{color:#17623a}
+.hw5-evidence{display:block;width:100%;min-height:96px;margin-top:8px;border:1px solid var(--line);border-radius:6px;padding:7px;resize:vertical}
+.judge-card{margin-top:10px;border-top:1px solid var(--line);padding-top:10px}.judge-card .critique{white-space:pre-wrap;font-size:13px;background:#f6f6f2;border-radius:6px;padding:8px;max-height:320px;overflow:auto}
+.judge-verdict{font-weight:800}.judge-verdict.pass{color:#17623a}.judge-verdict.fail{color:var(--danger)}
+.disagree-chip{font-size:10px;font-weight:800;text-transform:uppercase;color:#8a1c12;background:#fee4e2;border-radius:8px;padding:1px 6px;margin-left:5px}
+.binary button.decision.selected{background:#e8eefc;border-color:#6b8be0}
+.changed-chip{font-size:10px;font-weight:800;text-transform:uppercase;color:#765b00;background:#fff4cc;border-radius:8px;padding:1px 6px;margin-left:5px}
 .metric{font-size:30px;font-weight:800}.metric-label{color:var(--muted)}
 .suggestion-row{background:white;border:1px solid var(--line);border-radius:8px;padding:10px;margin:7px 0;display:grid;grid-template-columns:1fr auto;gap:8px}
 .suggestion-row.accepted{opacity:.65}.suggestion-row.rejected{opacity:.55;text-decoration:line-through}
@@ -114,6 +124,7 @@ pre{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f3f
     <button class="active" data-view="review">Open coding</button>
     <button data-view="taxonomy">Failure modes</button>
     <button data-view="labeling">Labeling</button>
+    <button data-view="hw5">HW5 labels</button>
     <button data-view="progress">Progress</button>
   </div>
   <div class="top-counts" id="top-counts"></div>
@@ -140,6 +151,15 @@ pre{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f3f
     <aside class="label-list"><form class="jump-row" id="label-jump" autocomplete="off"><input id="label-jump-input" type="text" inputmode="numeric" placeholder="Id, then Enter" aria-label="Find a scenario by id" spellcheck="false"></form><div id="label-samples"></div></aside>
     <main id="label-conversation" class="label-conversation"></main>
     <aside id="label-modes" class="label-modes-panel"></aside>
+  </div>
+</div></section>
+
+<section id="hw5-view" class="view"><div class="page label-page">
+  <h2>HW5 labels</h2><div class="page-intro">One Pass/Fail judgment per conversation for the judged mode. Pass (1) means the failure is absent; Fail (0) means it is present anywhere in the conversation. Saved to <code>analysis/state/hw5_labels/&lt;mode&gt;.jsonl</code> only; HW4 labels and Langfuse scores are unchanged.</div>
+  <div class="label-layout">
+    <aside class="label-list"><form class="jump-row" id="hw5-jump" autocomplete="off"><input id="hw5-jump-input" type="text" inputmode="numeric" placeholder="Id, then Enter" aria-label="Find a scenario by id" spellcheck="false"></form><div id="hw5-samples"></div></aside>
+    <main id="hw5-conversation" class="label-conversation"></main>
+    <aside id="hw5-panel" class="label-modes-panel"></aside>
   </div>
 </div></section>
 
@@ -196,12 +216,13 @@ async function load(){
   state.suggestions=suggestions;state.labels=labels;state.manifest=manifest;
   const firstIncomplete=state.samples.findIndex(sample=>labelCount(sample.trace_id)<labelModes().length);
   if(firstIncomplete>=0)state.labelCurrent=firstIncomplete;
+  await loadHw5();
   renderAll();
 }
 
 function renderAll(){
   renderSampleList();renderConversation();renderNotes();renderTaxonomy();
-  renderLabelSamples();renderLabelConversation();renderLabels();renderProgress();updateCounts();
+  renderLabelSamples();renderLabelConversation();renderLabels();renderHw5();renderProgress();updateCounts();
 }
 
 function updateCounts(){
@@ -221,13 +242,13 @@ function scenarioMatches(sample, raw){
   const digits=query.replace(/\D/g,"");
   return Boolean(digits)&&String(scenarioNumber(sample.scenario_id)).includes(String(Number(digits)));
 }
-function filteredSamples(raw){
-  return state.samples.map((sample,index)=>({sample,index})).filter(({sample})=>scenarioMatches(sample,raw));
+function filteredSamples(raw,list=state.samples){
+  return list.map((sample,index)=>({sample,index})).filter(({sample})=>scenarioMatches(sample,raw));
 }
-function resolveScenarioQuery(raw){
+function resolveScenarioQuery(raw,list=state.samples){
   const query=String(raw||"").trim();
   if(!query)return {status:"empty"};
-  const matches=filteredSamples(query);
+  const matches=filteredSamples(query,list);
   if(!matches.length)return {status:"none"};
   const digits=query.replace(/\D/g,"");
   if(digits){
@@ -252,13 +273,16 @@ function revealInScrollParent(element){
   }
 }
 function jumpToScenario(raw, view){
-  const result=resolveScenarioQuery(raw);
+  const result=resolveScenarioQuery(raw,view==="hw5"?hw5Items():state.samples);
   if(result.status==="empty"){toast("Type a scenario number");return}
   if(result.status==="none"){toast(`No scenario matches ${String(raw).trim()}`);return}
   if(result.status==="many"){toast(`${result.count} scenarios match — click one, or type the full number`);return}
-  const input=document.querySelector(view==="labeling"?"#label-jump-input":"#review-jump-input");
+  const input=document.querySelector(view==="labeling"?"#label-jump-input":view==="hw5"?"#hw5-jump-input":"#review-jump-input");
   if(input)input.value="";
-  if(view==="labeling"){
+  if(view==="hw5"){
+    selectHw5Sample(result.index);
+    requestAnimationFrame(()=>revealInScrollParent(document.querySelector(`#hw5-samples [data-hw5-index="${result.index}"]`)));
+  }else if(view==="labeling"){
     selectLabelSample(result.index);
     requestAnimationFrame(()=>revealInScrollParent(document.querySelector(`#label-samples [data-label-index="${result.index}"]`)));
   }else{
@@ -270,11 +294,12 @@ function jumpToScenario(raw, view){
 function bindScenarioJump(formId, inputId, view){
   const form=document.querySelector(formId),input=document.querySelector(inputId);
   form.addEventListener("submit",event=>{event.preventDefault();jumpToScenario(input.value,view)});
-  input.addEventListener("input",()=>view==="labeling"?renderLabelSamples():renderSampleList());
+  const rerender=()=>view==="labeling"?renderLabelSamples():view==="hw5"?renderHw5Samples():renderSampleList();
+  input.addEventListener("input",rerender);
   input.addEventListener("keydown",event=>{
     if(event.key!=="Escape")return;
     input.value="";
-    view==="labeling"?renderLabelSamples():renderSampleList();
+    rerender();
     input.blur();
   });
 }
@@ -639,6 +664,157 @@ async function saveUnjudgedAbsent(traceId){
   }
 }
 
+const hw5={mode:localStorage.getItem("cartwheel_hw5_mode")||"missing_policy_lookup",labels:[],candidates:[],current:0,filter:"all",judges:[],judgeId:localStorage.getItem("cartwheel_hw5_judge")||"",judge:null};
+const hw5Items=()=>[...state.samples,...hw5.candidates];
+const JUDGE_DECISIONS=[["judge_wrong","Judge wrong (fix prompt)"],["label_wrong","My label wrong (fix label)"],["definition_unclear","Definition unclear"]];
+const judgePred=traceId=>hw5.judge?.predictions?.[traceId];
+const judgeDisagrees=traceId=>{const pred=judgePred(traceId),label=hw5Judgment(traceId)?.label;return pred!==undefined&&label!==undefined&&pred!==label};
+const hw5Judgment=traceId=>hw5.labels.find(l=>l.trace_id===traceId);
+const hw4Judgment=traceId=>currentJudgment(traceId,hw5.mode);
+const hw5Changed=traceId=>{const now=hw5Judgment(traceId),before=hw4Judgment(traceId);return Boolean(now&&before&&now.label!==1-before.label)};
+const hw5Verdict=label=>label===1?"Pass":label===0?"Fail":"unlabelled";
+function hw5Rows(){
+  const query=document.querySelector("#hw5-jump-input")?.value||"";
+  return filteredSamples(query,hw5Items()).filter(({sample})=>{
+    const judgment=hw5Judgment(sample.trace_id);
+    if(hw5.filter==="candidates")return Boolean(sample.candidate);
+    if(hw5.filter==="unlabelled")return !judgment;
+    if(hw5.filter==="pass")return judgment?.label===1;
+    if(hw5.filter==="fail")return judgment?.label===0;
+    if(hw5.filter==="changed")return hw5Changed(sample.trace_id);
+    if(hw5.filter==="disagree")return judgeDisagrees(sample.trace_id);
+    if(hw5.filter==="disagree_dev"||hw5.filter==="disagree_test")return judgeDisagrees(sample.trace_id)&&hw5.judge?.split_of?.[sample.trace_id]===hw5.filter.slice(9);
+    if(hw5.filter==="judged")return judgePred(sample.trace_id)!==undefined;
+    return true;
+  });
+}
+async function loadHw5(){
+  if(!labelModes().some(mode=>mode.name===hw5.mode)&&labelModes().length)hw5.mode=labelModes()[0].name;
+  hw5.labels=await api.get(`/api/hw5/labels?mode=${encodeURIComponent(hw5.mode)}`);
+  hw5.candidates=await api.get("/api/hw5/candidates");
+  hw5.judges=await api.get(`/api/hw5/judges?mode=${encodeURIComponent(hw5.mode)}`);
+  if(!hw5.judges.some(j=>j.judge_id===hw5.judgeId))hw5.judgeId=hw5.judges.at(-1)?.judge_id||"";
+  await loadHw5Judge();
+}
+async function loadHw5Judge(){
+  hw5.judge=hw5.judgeId?await api.get(`/api/hw5/judge?judge_id=${encodeURIComponent(hw5.judgeId)}`):null;
+}
+function renderHw5(){renderHw5Samples();renderHw5Conversation();renderHw5Panel()}
+function renderHw5Samples(){
+  const el=document.querySelector("#hw5-samples");
+  if(!hw5Items().length){el.innerHTML='<div class="empty">No samples.</div>';return}
+  const rows=hw5Rows();
+  if(!rows.length){el.innerHTML='<div class="empty">No conversation matches this filter.</div>';return}
+  el.innerHTML=rows.map(({sample,index})=>{
+    const judgment=hw5Judgment(sample.trace_id),verdict=hw5Verdict(judgment?.label);
+    const chip=(sample.candidate?`<span class="changed-chip">candidate ${esc(sample.candidate.rank??"")}</span>`:hw5Changed(sample.trace_id)?'<span class="changed-chip">changed</span>':"")+(judgeDisagrees(sample.trace_id)?`<span class="disagree-chip">≠ judge${hw5.judge.reviews?.[sample.trace_id]?" ✓":""}</span>`:"");
+    return `<button class="sample ${index===hw5.current?"active":""}" data-hw5-index="${index}"><div class="title"><span class="status-dot ${verdict.toLowerCase()}"></span>${esc(sample.scenario_id)}${chip}</div><div class="sub">${esc(sample.tuple?.role)} · ${esc(verdict)}</div></button>`;
+  }).join("");
+  el.querySelectorAll("[data-hw5-index]").forEach(b=>b.onclick=()=>selectHw5Sample(Number(b.dataset.hw5Index)));
+}
+function selectHw5Sample(index){
+  hw5.current=index;renderHw5();
+  document.querySelector("#hw5-view")?.scrollIntoView({block:"start"});
+}
+function renderHw5Conversation(){
+  const el=document.querySelector("#hw5-conversation"),sample=hw5Items()[hw5.current];
+  if(!sample){el.innerHTML='<div class="card empty">Select a conversation.</div>';return}
+  const t=sample.tuple||{};
+  const storeId=sample.store_id??t.store_id??sample.meta?.store_id??"—";
+  el.innerHTML=`<div class="card conversation-header">
+    <div class="eyebrow">${esc(sample.scenario_group||"")} · ${esc(sample.batch||"review sample")}</div>
+    <h1>${esc(sample.scenario_id)}</h1>
+    <div class="chips"><span class="chip">${esc(t.role)}</span><span class="chip">${esc(t.intent)}</span><span class="chip">user ${esc(t.user_id)}</span><span class="chip">store ${esc(storeId)}</span><span class="chip">${sample.turns.length} turn${sample.turns.length===1?"":"s"}</span>${t.order_id?`<span class="chip">order ${esc(t.order_id)}</span>`:""}<a class="chip" href="${esc(sample.permalink||"#")}" target="_blank" rel="noreferrer">Canonical trace ↗</a></div>
+  </div>
+  <div class="timeline">${sample.turns.map(turn=>renderTurn(turn,{idPrefix:"hw5-",annotatable:false,toolNotes:false})).join("")}</div>`;
+}
+function renderHw5Panel(){
+  const el=document.querySelector("#hw5-panel"),sample=hw5Items()[hw5.current];
+  const all=labelModes(),mode=all.find(m=>m.name===hw5.mode);
+  if(!all.length){el.innerHTML='<div class="empty">No final failure modes yet.</div>';return}
+  const judged=hw5Items().map(s=>hw5Judgment(s.trace_id));
+  const candidatesLabelled=hw5.candidates.filter(s=>hw5Judgment(s.trace_id)).length;
+  const passes=judged.filter(j=>j?.label===1).length,fails=judged.filter(j=>j?.label===0).length,unlabelled=judged.filter(j=>!j).length;
+  const importable=state.samples.filter(s=>!hw5Judgment(s.trace_id)&&hw4Judgment(s.trace_id)).length;
+  const changed=state.samples.filter(s=>hw5Changed(s.trace_id)).length;
+  const judgment=sample&&hw5Judgment(sample.trace_id),before=sample&&hw4Judgment(sample.trace_id);
+  const c=sample?.candidate;
+  const beforeText=before?`HW4: ${before.label===1?"Present":"Absent"}, so it starts as ${before.label===1?"Fail":"Pass"}`:c?`HW5 candidate ${c.rank??""}: ${c.signal||"search hit"}${c.score!=null?` (similarity ${Number(c.score).toFixed(3)}${c.nearest_failure?` to ${c.nearest_failure}`:""})`:""}. A search hit is not a label.${c.shares_with_labelled?.length?` Shares ${c.shares_with_labelled.join("; ")}.`:""}`:"HW4: not judged";
+  const sourceText=judgment?(judgment.source==="hw4_converted"?"Converted from HW4":"Your HW5 judgment")+` · ${new Date(judgment.created_at).toLocaleString()}`:"No HW5 label yet";
+  const disagreeIds=hw5Items().map(s=>s.trace_id).filter(judgeDisagrees);
+  const reviewed=disagreeIds.filter(id=>hw5.judge?.reviews?.[id]).length;
+  const bySplit=name=>{const ids=disagreeIds.filter(id=>hw5.judge?.split_of?.[id]===name);return `${ids.filter(id=>hw5.judge?.reviews?.[id]).length}/${ids.length} reviewed`};
+  const testVisible=hw5.judge&&!hw5.judge.test_hidden;
+  const judgedCount=hw5Items().filter(s=>judgePred(s.trace_id)!==undefined).length;
+  const filters=[["all","All conversations"],["unlabelled","Unlabelled"],["pass","Pass"],["fail","Fail"],["changed",`Changed from HW4 (${changed})`],["candidates",`HW5 candidates (${candidatesLabelled}/${hw5.candidates.length} labelled)`],...(hw5.judge?[["judged",`Judged by ${hw5.judge.judge_id} (${judgedCount})`],["disagree",`Judge disagreements (${reviewed}/${disagreeIds.length} reviewed)`],["disagree_dev",`Dev disagreements (${bySplit("dev")})`],...(testVisible?[["disagree_test",`Test disagreements (${bySplit("test")})`]]:[])]:[])];
+  const pred=sample&&judgePred(sample.trace_id),review=sample&&hw5.judge?.reviews?.[sample.trace_id];
+  const split=sample&&hw5.judge?.split_of?.[sample.trace_id];
+  const judgeCard=!hw5.judge?"":`<div class="judge-card"><h3>Judge ${esc(hw5.judge.judge_id)}</h3>
+    ${hw5.judge.status==="frozen"?'<p class="hint">Frozen: your calls here explain the result; the prompt can no longer change.</p>':""}
+    ${pred===undefined?`<p class="hint">${split==="test"&&hw5.judge.test_hidden?"Test conversation: predictions stay hidden until the judge is frozen.":split?`In the ${esc(split)} split; not judged by this version.`:"Not in any split (excluded or unlabelled)."}</p>`:`
+    <p><span class="judge-verdict ${pred===1?"pass":"fail"}">Judge: ${pred===1?"Pass":"Fail"}</span> · You: ${esc(hw5Verdict(judgment?.label))} · ${esc(split||"")} split ${judgeDisagrees(sample.trace_id)?'<span class="disagree-chip">disagree</span>':""}</p>
+    <div class="critique">${esc(hw5.judge.critiques?.[sample.trace_id]||"(no critique)")}</div>
+    ${judgeDisagrees(sample.trace_id)||review?`<p class="hint">Your call on this disagreement:</p>
+      <div class="binary" style="flex-wrap:wrap">${JUDGE_DECISIONS.map(([value,text])=>`<button class="decision ${review?.decision===value?"selected":""}" data-judge-decision="${value}">${esc(text)}</button>`).join("")}</div>
+      <textarea id="judge-review-note" class="hw5-evidence" placeholder="Why (optional): what the judge or the label got wrong">${esc(review?.note||"")}</textarea>
+      ${review?`<p class="hint">Saved ${new Date(review.created_at).toLocaleString()}</p>`:""}`:""}`}
+  </div>`;
+  el.innerHTML=`<div class="label-modes-header"><div class="eyebrow">${esc(sample?.scenario_id||"")} · HW5</div>
+    <div class="hw5-controls">
+      <label class="hint">Mode <select id="hw5-mode">${all.map(m=>`<option value="${esc(m.name)}" ${m.name===hw5.mode?"selected":""}>${esc(m.name)}</option>`).join("")}</select></label>
+      <div class="hw5-counts"><span class="pass">Pass ${passes}</span><span class="fail">Fail ${fails}</span><span>Unlabelled ${unlabelled}</span></div>
+      <label class="hint">Show <select id="hw5-filter">${filters.map(([value,text])=>`<option value="${value}" ${value===hw5.filter?"selected":""}>${esc(text)}</option>`).join("")}</select></label>
+      ${hw5.judges.length?`<label class="hint">Judge version <select id="hw5-judge">${hw5.judges.map(j=>`<option value="${esc(j.judge_id)}" ${j.judge_id===hw5.judgeId?"selected":""}>${esc(j.judge_id)} · ${esc(j.status)}</option>`).join("")}</select></label>`:""}
+      ${importable?`<button id="hw5-import" class="secondary all-absent">Start from HW4 labels (${importable} conversation${importable===1?"":"s"})</button><div class="hint">Writes Pass = 1 − HW4 label for every conversation without an HW5 label. Your HW5 judgments are never overwritten.</div>`:""}
+    </div></div>
+    ${sample?`<div class="label-card"><h3>${esc(hw5.mode)}</h3><p>${esc(beforeText)}</p>
+      <div class="binary"><button class="pass ${judgment?.label===1?"selected":""}" data-hw5-value="1">Pass (1)</button><button class="fail ${judgment?.label===0?"selected":""}" data-hw5-value="0">Fail (0)</button></div>
+      <textarea id="hw5-evidence" class="hw5-evidence" placeholder="Evidence: the reply text or tool result that decides Pass or Fail">${esc(judgment?.evidence||"")}</textarea>
+      <div class="binary"><button id="hw5-save-evidence" class="secondary">Save evidence</button><button id="hw5-next" class="secondary">Next in list →</button></div>
+      <p>${esc(sourceText)}</p>
+      ${mode?`<details><summary class="hint">HW4 definition and boundary</summary><p>${esc(mode.definition||"")}</p>${mode.boundary?`<p><strong>Boundary:</strong> ${esc(mode.boundary)}</p>`:""}</details>`:""}
+      ${judgeCard}
+    </div>`:""}`;
+  document.querySelector("#hw5-judge")?.addEventListener("change",async event=>{hw5.judgeId=event.target.value;localStorage.setItem("cartwheel_hw5_judge",hw5.judgeId);await loadHw5Judge();renderHw5()});
+  el.querySelectorAll("[data-judge-decision]").forEach(button=>button.onclick=()=>saveJudgeReview(sample.trace_id,button.dataset.judgeDecision));
+  document.querySelector("#hw5-mode").onchange=async event=>{hw5.mode=event.target.value;localStorage.setItem("cartwheel_hw5_mode",hw5.mode);await loadHw5();renderHw5()};
+  document.querySelector("#hw5-filter").onchange=event=>{hw5.filter=event.target.value;renderHw5Samples()};
+  document.querySelector("#hw5-import")?.addEventListener("click",importHw4Labels);
+  if(!sample)return;
+  el.querySelectorAll("[data-hw5-value]").forEach(button=>button.onclick=()=>saveHw5Label(sample.trace_id,Number(button.dataset.hw5Value)));
+  document.querySelector("#hw5-save-evidence").onclick=()=>{
+    if(!judgment){toast("Choose Pass or Fail first");return}
+    saveHw5Label(sample.trace_id,judgment.label);
+  };
+  document.querySelector("#hw5-next").onclick=()=>{
+    const rows=hw5Rows(),position=rows.findIndex(row=>row.index===hw5.current);
+    const next=rows[position+1]||rows[0];if(next)selectHw5Sample(next.index);
+  };
+}
+async function saveHw5Label(traceId,label){
+  const evidence=document.querySelector("#hw5-evidence")?.value.trim()||"";
+  try{
+    const response=await api.post("/api/hw5/labels",{trace_id:traceId,mode:hw5.mode,label,evidence});
+    hw5.labels=hw5.labels.filter(row=>row.trace_id!==traceId);hw5.labels.push(response.label);
+    renderHw5Samples();renderHw5Panel();toast(`${hw5.mode}: ${hw5Verdict(label)} saved to hw5_labels`);
+  }catch(error){toast(`Could not save: ${error.message}`)}
+}
+async function saveJudgeReview(traceId,decision){
+  const note=document.querySelector("#judge-review-note")?.value.trim()||"";
+  try{
+    const response=await api.post("/api/hw5/judge_review",{judge_id:hw5.judge.judge_id,trace_id:traceId,decision,note});
+    hw5.judge.reviews[traceId]=response.review;
+    renderHw5Samples();renderHw5Panel();toast(`Saved: ${JUDGE_DECISIONS.find(([v])=>v===decision)[1]}`);
+  }catch(error){toast(`Could not save: ${error.message}`)}
+}
+async function importHw4Labels(){
+  const button=document.querySelector("#hw5-import");button.disabled=true;button.textContent="Writing…";
+  try{
+    const result=await api.post("/api/hw5/import",{mode:hw5.mode});
+    await loadHw5();renderHw5();toast(`Wrote ${result.written} converted labels; ${result.total} conversations now have HW5 labels`);
+  }catch(error){toast(`Could not import: ${error.message}`);renderHw5Panel()}
+}
+
 function renderProgress(){
   const reviewed=reviewedIds().size,total=state.samples.length,allModes=labelModes();
   const needed=total*allModes.length,done=state.labels.filter(label=>state.samples.some(s=>s.trace_id===label.trace_id)&&allModes.some(m=>m.name===label.mode)).length;
@@ -689,12 +865,13 @@ function openSupportingAnnotation(id){
 document.querySelectorAll(".tabs button").forEach(button=>button.onclick=()=>showView(button.dataset.view));
 bindScenarioJump("#review-jump","#review-jump-input","review");
 bindScenarioJump("#label-jump","#label-jump-input","labeling");
+bindScenarioJump("#hw5-jump","#hw5-jump-input","hw5");
 window.addEventListener("resize",()=>requestAnimationFrame(layoutNotes));
 function toast(message){const el=document.querySelector("#toast");el.textContent=message;el.classList.add("show");clearTimeout(el.timer);el.timer=setTimeout(()=>el.classList.remove("show"),3000)}
 
 let pollSignature="";
 async function pollAgentState(){
-  if(document.querySelector("#popover").style.display==="block"||document.activeElement?.closest(".mode-card")||document.querySelector("#labeling-view").classList.contains("active"))return;
+  if(document.querySelector("#popover").style.display==="block"||document.activeElement?.closest(".mode-card")||document.querySelector("#labeling-view").classList.contains("active")||document.querySelector("#hw5-view").classList.contains("active"))return;
   const revision=annotationRevision;
   try{
     const samples=await api.get("/api/samples");

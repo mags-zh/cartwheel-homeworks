@@ -1,0 +1,221 @@
+{
+  "mode": "missing_policy_lookup",
+  "created_at": "2026-11-07T14:18:21.016558+00:00",
+  "trace_source": "traces/support_traces.json",
+  "method": "next_to_label enrich (bag-of-words cosine to the confirmed Fail labels), highest score per request type with quotas {'account_change': 5, 'cancellation': 4, 'dispute': 4, 'policy_question': 3, 'return_refund': 4}; skips shared orders or openings",
+  "note": "Selection signals, not labels. Label each candidate in the HW5 view.",
+  "pool": {
+    "unreviewed": 150,
+    "fail_seeds": 46
+  },
+  "skipped": [
+    {
+      "scenario_id": "support-0235",
+      "shares_with_labelled": [
+        "order 8003 with support-0232, support-0233"
+      ]
+    }
+  ],
+  "candidates": [
+    {
+      "trace_id": "e22793913d84fabf48630819bad7c588",
+      "scenario_id": "support-0044",
+      "request_type": "return_refund",
+      "helper_rank": 1,
+      "score": 0.8666,
+      "nearest_failure": "support-0181",
+      "signal": "semantic neighbor of a confirmed failure (return_refund, helper rank 1 of 150)",
+      "rank": 1
+    },
+    {
+      "trace_id": "bd622ec4fb5b2f4a7e50bc980328e448",
+      "scenario_id": "support-0040",
+      "request_type": "return_refund",
+      "helper_rank": 2,
+      "score": 0.8503,
+      "nearest_failure": "support-0035",
+      "signal": "semantic neighbor of a confirmed failure (return_refund, helper rank 2 of 150)",
+      "rank": 2
+    },
+    {
+      "trace_id": "1f8cb2f68c28e63abef57fea0bb5e622",
+      "scenario_id": "support-0149",
+      "request_type": "dispute",
+      "helper_rank": 4,
+      "score": 0.8335,
+      "nearest_failure": "support-0203",
+      "signal": "semantic neighbor of a confirmed failure (dispute, helper rank 4 of 150)",
+      "rank": 3
+    },
+    {
+      "trace_id": "5e1825e030a96b8444ec0a787f56963a",
+      "scenario_id": "support-0065",
+      "request_type": "return_refund",
+      "helper_rank": 5,
+      "score": 0.8238,
+      "nearest_failure": "support-0030",
+      "signal": "semantic neighbor of a confirmed failure (return_refund, helper rank 5 of 150)",
+      "rank": 4
+    },
+    {
+      "trace_id": "4ab5d879f72744f1e855aa160a15ac95",
+      "scenario_id": "support-0185",
+      "request_type": "return_refund",
+      "helper_rank": 6,
+      "score": 0.8194,
+      "nearest_failure": "support-0178",
+      "signal": "semantic neighbor of a confirmed failure (return_refund, helper rank 6 of 150)",
+      "rank": 5
+    },
+    {
+      "trace_id": "8c8bca2092748da62b5587ee14615589",
+      "scenario_id": "support-0142",
+      "request_type": "dispute",
+      "helper_rank": 24,
+      "score": 0.7799,
+      "nearest_failure": "support-0054",
+      "signal": "semantic neighbor of a confirmed failure (dispute, helper rank 24 of 150)",
+      "rank": 6
+    },
+    {
+      "trace_id": "80faaac130b32dc091000ce7eb40dae3",
+      "scenario_id": "support-0141",
+      "request_type": "dispute",
+      "helper_rank": 29,
+      "score": 0.7733,
+      "nearest_failure": "support-0148",
+      "signal": "semantic neighbor of a confirmed failure (dispute, helper rank 29 of 150)",
+      "rank": 7
+    },
+    {
+      "trace_id": "7c54b95abce009beab2c3711cba31593",
+      "scenario_id": "support-0091",
+      "request_type": "cancellation",
+      "helper_rank": 30,
+      "score": 0.7731,
+      "nearest_failure": "support-0093",
+      "signal": "semantic neighbor of a confirmed failure (cancellation, helper rank 30 of 150)",
+      "rank": 8
+    },
+    {
+      "trace_id": "54c2d13b37bdcdf40eea665ea05fc163",
+      "scenario_id": "support-0147",
+      "request_type": "dispute",
+      "helper_rank": 38,
+      "score": 0.7563,
+      "nearest_failure": "support-0148",
+      "signal": "semantic neighbor of a confirmed failure (dispute, helper rank 38 of 150)",
+      "rank": 9
+    },
+    {
+      "trace_id": "d98c74b1f98ed59da5b88a091d746656",
+      "scenario_id": "support-0081",
+      "request_type": "cancellation",
+      "helper_rank": 42,
+      "score": 0.7503,
+      "nearest_failure": "support-0093",
+      "signal": "semantic neighbor of a confirmed failure (cancellation, helper rank 42 of 150)",
+      "rank": 10
+    },
+    {
+      "trace_id": "fba77caad96c796348eddd0ba1643bf2",
+      "scenario_id": "support-0085",
+      "request_type": "cancellation",
+      "helper_rank": 43,
+      "score": 0.746,
+      "nearest_failure": "support-0203",
+      "signal": "semantic neighbor of a confirmed failure (cancellation, helper rank 43 of 150)",
+      "rank": 11
+    },
+    {
+      "trace_id": "8db1557cca9a797295216d90acc2269b",
+      "scenario_id": "support-0086",
+      "request_type": "cancellation",
+      "helper_rank": 45,
+      "score": 0.7454,
+      "nearest_failure": "support-0093",
+      "signal": "semantic neighbor of a confirmed failure (cancellation, helper rank 45 of 150)",
+      "rank": 12
+    },
+    {
+      "trace_id": "5f45fd82819513f1c3187f5f0e8a9372",
+      "scenario_id": "support-0154",
+      "request_type": "account_change",
+      "helper_rank": 61,
+      "score": 0.7165,
+      "nearest_failure": "support-0162",
+      "signal": "semantic neighbor of a confirmed failure (account_change, helper rank 61 of 150)",
+      "rank": 13
+    },
+    {
+      "trace_id": "bf1c43cab8cbc48c40b97f4e02b48b9b",
+      "scenario_id": "support-0114",
+      "request_type": "policy_question",
+      "helper_rank": 73,
+      "score": 0.6925,
+      "nearest_failure": "support-0184",
+      "signal": "semantic neighbor of a confirmed failure (policy_question, helper rank 73 of 150)",
+      "rank": 14
+    },
+    {
+      "trace_id": "931803ba219357c17c4ca510d7f62402",
+      "scenario_id": "support-0153",
+      "request_type": "account_change",
+      "helper_rank": 77,
+      "score": 0.68,
+      "nearest_failure": "support-0214",
+      "signal": "semantic neighbor of a confirmed failure (account_change, helper rank 77 of 150)",
+      "rank": 15
+    },
+    {
+      "trace_id": "8096778cb347be28465c4e0f073888ae",
+      "scenario_id": "support-0215",
+      "request_type": "account_change",
+      "helper_rank": 88,
+      "score": 0.6537,
+      "nearest_failure": "support-0162",
+      "signal": "semantic neighbor of a confirmed failure (account_change, helper rank 88 of 150)",
+      "rank": 16
+    },
+    {
+      "trace_id": "2a6d26d510061b7855576931f3c58222",
+      "scenario_id": "support-0157",
+      "request_type": "account_change",
+      "helper_rank": 101,
+      "score": 0.6299,
+      "nearest_failure": "support-0214",
+      "signal": "semantic neighbor of a confirmed failure (account_change, helper rank 101 of 150)",
+      "rank": 17
+    },
+    {
+      "trace_id": "37ca22f468bea989e8f3c145b606c88f",
+      "scenario_id": "support-0207",
+      "request_type": "policy_question",
+      "helper_rank": 105,
+      "score": 0.6161,
+      "nearest_failure": "support-0148",
+      "signal": "semantic neighbor of a confirmed failure (policy_question, helper rank 105 of 150)",
+      "rank": 18
+    },
+    {
+      "trace_id": "aeaa933b383f02dfb2ffa507c7ae24a4",
+      "scenario_id": "support-0099",
+      "request_type": "policy_question",
+      "helper_rank": 108,
+      "score": 0.6026,
+      "nearest_failure": "support-0148",
+      "signal": "semantic neighbor of a confirmed failure (policy_question, helper rank 108 of 150)",
+      "rank": 19
+    },
+    {
+      "trace_id": "874d0256363dd3b32196ce0b6c6e41d3",
+      "scenario_id": "support-0158",
+      "request_type": "account_change",
+      "helper_rank": 114,
+      "score": 0.5737,
+      "nearest_failure": "support-0159",
+      "signal": "semantic neighbor of a confirmed failure (account_change, helper rank 114 of 150)",
+      "rank": 20
+    }
+  ]
+}

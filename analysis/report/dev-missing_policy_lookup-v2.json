@@ -1,0 +1,36 @@
+{
+  "judge_id": "missing_policy_lookup-v2",
+  "split": "dev",
+  "tpr": 0.95,
+  "tnr": 0.7778,
+  "tpr_interval": [
+    0.7639,
+    0.9911
+  ],
+  "tnr_interval": [
+    0.5924,
+    0.8939
+  ],
+  "agreement": 0.8511,
+  "tp": 19,
+  "fn": 1,
+  "tn": 21,
+  "fp": 6,
+  "n": 47,
+  "disagreements": [
+    "73ed2681b621fdb8ed5adc2449a4d1af",
+    "8eaa6316a8d2b3daa3bcc1327fed305c",
+    "97de7efe303e4bb72856e35b91d833e1",
+    "b7f04473f78adf97f7c5b302d6eb7016",
+    "bd622ec4fb5b2f4a7e50bc980328e448",
+    "e7843f908b781e549f51bb2814a8b005",
+    "fba77caad96c796348eddd0ba1643bf2"
+  ],
+  "model": "gpt-4o-mini",
+  "prompt_hash": "8622d9e76aad",
+  "prompt_path": "analysis/prompts/missing_policy_lookup-v2.txt",
+  "class_counts": {
+    "pass": 20,
+    "fail": 27
+  }
+}
