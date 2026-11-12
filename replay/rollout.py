@@ -137,6 +137,7 @@ def _extract_turn(new_items: list[Any]) -> dict[str, Any]:
     calls: dict[str, dict[str, Any]] = {}
     ordered: list[dict[str, Any]] = []
     reply_parts: list[str] = []
+    events: list[dict[str, Any]] = []
     for item in new_items:
         if isinstance(item, ToolCallItem):
             raw = item.raw_item
@@ -147,6 +148,7 @@ def _extract_turn(new_items: list[Any]) -> dict[str, Any]:
             }
             calls[getattr(raw, "call_id", None)] = record
             ordered.append(record)
+            events.append({"role": "tool_call", "name": record["name"], "args": record["args"]})
         elif isinstance(item, ToolCallOutputItem):
             call_id = None
             raw = item.raw_item
@@ -156,14 +158,22 @@ def _extract_turn(new_items: list[Any]) -> dict[str, Any]:
                 call_id = getattr(raw, "call_id", None)
             if call_id in calls:
                 calls[call_id]["result"] = item.output
+                events.append(
+                    {"role": "tool_result", "name": calls[call_id]["name"], "result": item.output}
+                )
         elif isinstance(item, MessageOutputItem):
-            for part in getattr(item.raw_item, "content", []) or []:
-                text = getattr(part, "text", None)
-                if text:
-                    reply_parts.append(text)
+            texts = [
+                text
+                for part in getattr(item.raw_item, "content", []) or []
+                if (text := getattr(part, "text", None))
+            ]
+            reply_parts.extend(texts)
+            if texts:
+                events.append({"role": "assistant", "text": "\n".join(texts)})
     return {
         "reply": "\n".join(reply_parts),
         "tool_calls": ordered,
+        "events": events,
         "steps": len(new_items),
     }
 
@@ -184,7 +194,8 @@ def run_case(
 
     Returns a transcript dict:
         {"turns": [{"user", "reply", "tool_calls": [{"name", "args",
-          "result"}], "steps"}],
+          "result"}], "events": [assistant / tool_call / tool_result in
+          order], "steps"}],
          "final_reply": str, "steps": int,
          "usage": {"requests", "input_tokens", "cached_input_tokens",
                    "output_tokens"}}
@@ -277,6 +288,19 @@ def _one_check(
             ):
                 return (True, f"{check['name']} denied by the access matrix")
         return (False, f"{check['name']} was never permission-denied")
+
+    if kind == "tool_result_not_error":
+        hits = [
+            call
+            for call in _all_tool_calls(transcript, check.get("turn"))
+            if call["name"] == check["name"]
+            and isinstance(call["result"], dict)
+            and call["result"].get("error") == check["error"]
+        ]
+        return (
+            not hits,
+            f"{check['name']} never returned {check['error']} (saw {len(hits)})",
+        )
 
     if kind == "no_refund_row":
         row = conn.execute(
@@ -385,21 +409,44 @@ def retrieved_docs_text(transcript: dict[str, Any]) -> str:
     return "\n\n".join(chunks) if chunks else "(no policy documents were retrieved)"
 
 
-def judge_trace_text(transcript: dict[str, Any]) -> str:
-    """Format a runtime transcript like the normalized traces used in HW5."""
+def judge_trace_text(
+    transcript: dict[str, Any], case_input: dict[str, Any] | None = None
+) -> str:
+    """Format a runtime transcript exactly like the HW5 judge inputs.
+
+    Matches analysis/run_judges.py plus the HW5 flattening: a session-context
+    line, tool calls and results named by tool, and assistant text in the
+    order it was produced. Empty messages are skipped.
+    """
+    def dumps(value: Any) -> str:
+        return json.dumps(value, ensure_ascii=False, sort_keys=True, default=str)
+
     lines: list[str] = []
+    if case_input is not None:
+        lines.append(
+            f"system: Session context: User role: {case_input.get('role')}; "
+            f"User id: {case_input.get('user_id')}; Store id: {case_input.get('store_id')}"
+        )
     for turn in transcript.get("turns", []):
-        lines.append(f"user: {turn.get('user', '')}")
-        for call in turn.get("tool_calls", []):
-            arguments = json.dumps(
-                call.get("args"), ensure_ascii=False, sort_keys=True, default=str
-            )
-            result = json.dumps(
-                call.get("result"), ensure_ascii=False, sort_keys=True, default=str
-            )
-            lines.append(f"tool_call: {arguments}")
-            lines.append(f"tool_result: {result}")
-        lines.append(f"assistant: {turn.get('reply', '')}")
+        if turn.get("user"):
+            lines.append(f"user: {turn['user']}")
+        events = turn.get("events")
+        if events is None:
+            events = [
+                event
+                for call in turn.get("tool_calls", [])
+                for event in (
+                    {"role": "tool_call", "name": call.get("name"), "args": call.get("args")},
+                    {"role": "tool_result", "name": call.get("name"), "result": call.get("result")},
+                )
+            ] + [{"role": "assistant", "text": turn.get("reply", "")}]
+        for event in events:
+            if event["role"] == "tool_call":
+                lines.append(f"tool_call: {event['name']}({dumps(event.get('args'))})")
+            elif event["role"] == "tool_result":
+                lines.append(f"tool_result: {event['name']} returned {dumps(event.get('result'))}")
+            elif event.get("text"):
+                lines.append(f"assistant: {event['text']}")
     return "\n".join(lines)
 
 

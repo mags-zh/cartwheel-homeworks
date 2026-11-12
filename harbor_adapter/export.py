@@ -263,7 +263,8 @@ def _decode(row: dict) -> str:
 @criterion
 def cartwheel_judge(workspace: Path) -> bool:
     evidence = json.loads((workspace / "cartwheel-result.json").read_text())
-    content = judge_trace_text(evidence["transcript"])
+    case = json.loads((workspace / "case.json").read_text())
+    content = judge_trace_text(evidence["transcript"], case["input"])
     with tempfile.TemporaryDirectory(prefix="cartwheel-judge-") as directory:
         root = Path(directory)
         input_path = root / "input.json"

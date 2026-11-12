@@ -3,7 +3,7 @@ from __future__ import annotations
 import pytest
 
 from replay.harness import ReplayInfraError, replay_case, summarize_rollouts
-from replay.rollout import judge_trace_text
+from replay.rollout import _one_check, judge_trace_text
 
 
 def test_replay_resets_before_each_run_and_retries_only_infrastructure() -> None:
@@ -64,18 +64,52 @@ def test_rollout_summary_is_deterministic() -> None:
     assert first["steps"] == {"min": 2, "median": 4, "max": 6}
 
 
-def test_judge_trace_text_uses_the_hw5_normalized_roles() -> None:
+def test_judge_trace_text_matches_the_hw5_judge_input() -> None:
+    transcript = {
+        "turns": [
+            {
+                "user": "Where is my order?",
+                "reply": "Let me check.\nIt shipped today.",
+                "tool_calls": [
+                    {
+                        "name": "get_order",
+                        "args": {"order_id": 42},
+                        "result": {"status": "shipped", "ok": True},
+                    }
+                ],
+                "events": [
+                    {"role": "assistant", "text": "Let me check."},
+                    {"role": "tool_call", "name": "get_order", "args": {"order_id": 42}},
+                    {
+                        "role": "tool_result",
+                        "name": "get_order",
+                        "result": {"status": "shipped", "ok": True},
+                    },
+                    {"role": "assistant", "text": "It shipped today."},
+                ],
+            }
+        ]
+    }
+    case_input = {"role": "shopper", "user_id": 63, "message": "Where is my order?"}
+
+    assert judge_trace_text(transcript, case_input).splitlines() == [
+        "system: Session context: User role: shopper; User id: 63; Store id: None",
+        "user: Where is my order?",
+        "assistant: Let me check.",
+        'tool_call: get_order({"order_id": 42})',
+        'tool_result: get_order returned {"ok": true, "status": "shipped"}',
+        "assistant: It shipped today.",
+    ]
+
+
+def test_judge_trace_text_names_tools_for_transcripts_without_events() -> None:
     transcript = {
         "turns": [
             {
                 "user": "Where is my order?",
                 "reply": "It shipped today.",
                 "tool_calls": [
-                    {
-                        "name": "get_order",
-                        "args": {"order_id": 42},
-                        "result": {"ok": True, "status": "shipped"},
-                    }
+                    {"name": "get_order", "args": {"order_id": 42}, "result": {"ok": True}}
                 ],
             }
         ]
@@ -83,7 +117,25 @@ def test_judge_trace_text_uses_the_hw5_normalized_roles() -> None:
 
     assert judge_trace_text(transcript).splitlines() == [
         "user: Where is my order?",
-        'tool_call: {"order_id": 42}',
-        'tool_result: {"ok": true, "status": "shipped"}',
+        'tool_call: get_order({"order_id": 42})',
+        'tool_result: get_order returned {"ok": true}',
         "assistant: It shipped today.",
     ]
+
+
+def test_tool_result_not_error_fails_only_on_the_named_error() -> None:
+    def transcript(*results: dict) -> dict:
+        calls = [
+            {"name": "search_products", "args": {"store": "1"}, "result": result}
+            for result in results
+        ]
+        return {"turns": [{"reply": "", "tool_calls": calls}], "final_reply": ""}
+
+    check = {"check": "tool_result_not_error", "name": "search_products", "error": "not_found"}
+    not_found = {"ok": False, "error": "not_found", "reason": "no store named '1'"}
+    invalid = {"ok": False, "error": "invalid_argument", "reason": "empty query"}
+
+    assert _one_check(check, transcript({"ok": True, "products": []}), None)[0] is True
+    assert _one_check(check, transcript(invalid), None)[0] is True
+    assert _one_check(check, transcript({"ok": True}, not_found), None)[0] is False
+    assert _one_check(check, transcript(), None)[0] is True
