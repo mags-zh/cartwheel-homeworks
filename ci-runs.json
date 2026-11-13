@@ -1,0 +1,21 @@
+{
+  "pull_request": "https://github.com/mags-zh/cartwheel-homeworks/pull/1",
+  "model": "gpt-4o-mini",
+  "case_id": "store_identifier_mismatch",
+  "affected_cases": ["e-001", "e-002", "e-003", "e-004"],
+  "regression_run": {
+    "url": "https://github.com/mags-zh/cartwheel-homeworks/actions/runs/43395559802",
+    "commit": "4a8d745",
+    "change": "Removed the numeric store id fallback in search_products (agent/tools.py), undoing the store_identifier_mismatch fix from 151357c.",
+    "result": "failure",
+    "regression_passes": {"e-001": "0/5", "e-002": "0/5", "e-003": "0/5", "e-004": "0/5"}
+  },
+  "revert_run": {
+    "url": "https://github.com/mags-zh/cartwheel-homeworks/actions/runs/43398567984",
+    "commit": "ebca4bc",
+    "change": "git revert of 4a8d745; the code is identical to 375210a.",
+    "result": "success",
+    "regression_passes": {"e-001": "5/5", "e-002": "5/5", "e-003": "5/5", "e-004": "5/5"}
+  },
+  "explanation": "The intentional regression was a tool change rather than a prompt instruction: it brought back the HW4 store_identifier_mismatch bug, which I had fixed in the search_products tool before creating my judge in HW5. The regression code-judge for store_identifier_mismatch was made to guard against this re-emergence of this issue. After I reverted the tool fix, search_products returned not_found for the numeric store id in all 20 store runs, so the tool_result_not_error check failed and the job blocked. After re-applying the fix, all 20 store runs searched with the numeric id successfully and the job passed, so the original behaviour returned. Both runs completed 60 trials with no infrastructure exceptions."
+}
