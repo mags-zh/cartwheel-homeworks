@@ -138,8 +138,6 @@ def search_products(
         store_id = None
         if store:
             found = db.get_store_by_name(conn, store)
-            if found is None and store.strip().isdigit():
-                found = db.get_store(conn, int(store))
             if found is None:
                 return {"ok": False, "error": "not_found", "reason": f"no store named {store!r}"}
             store_id = found.id
