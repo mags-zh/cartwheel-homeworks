@@ -1,0 +1,57 @@
+name: monitor
+
+# Langfuse runs on the student's computer, so this job needs a self-hosted
+# runner on that computer (label cartwheel-monitor). It never runs on pull
+# requests, so code from a pull request cannot reach that runner.
+on:
+  schedule:
+    - cron: "30 6 * * *"
+  workflow_dispatch:
+    inputs:
+      hours:
+        description: Monitor the traces of the last N hours
+        default: "24"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: monitor
+
+jobs:
+  monitor:
+    name: sample, judge and score recent traces
+    runs-on: [self-hosted, cartwheel-monitor]
+    timeout-minutes: 30
+    env:
+      LANGFUSE_HOST: ${{ vars.LANGFUSE_HOST }}
+      LANGFUSE_PUBLIC_KEY: ${{ secrets.LANGFUSE_PUBLIC_KEY }}
+      LANGFUSE_SECRET_KEY: ${{ secrets.LANGFUSE_SECRET_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      HOURS: ${{ inputs.hours || '24' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync
+
+      # The judge input's session line reads the caller's store from the
+      # seeded world database, as in Homework 5.
+      - name: Seed the world database
+        run: uv run python -m seed.generate
+
+      - name: Monitor the last ${{ env.HOURS }} hours
+        run: |
+          mkdir -p monitoring/output
+          set -o pipefail
+          uv run python -m monitoring.run --last-hours "$HOURS" 2>&1 | tee monitoring/output/monitor.log
+
+      - name: Upload the monitoring output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monitor-${{ github.run_id }}
+          path: |
+            monitoring/output
+            monitoring/history.jsonl
+            monitoring/prevalence.svg
+          if-no-files-found: warn

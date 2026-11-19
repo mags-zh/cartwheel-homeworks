@@ -1,0 +1,20 @@
+{
+  "judge_id": "missing_policy_lookup-v1",
+  "judge_mode": "missing_policy_lookup",
+  "model": "gpt-4o-mini",
+  "random_rate": 0.2,
+  "risk_groups": ["multi_turn"],
+  "threshold": 0.25,
+  "periods": [
+    {
+      "label": "before",
+      "from": "2026-10-23T11:16:00Z",
+      "to": "2026-10-23T11:32:00Z"
+    },
+    {
+      "label": "after",
+      "from": "2026-11-19T14:00:27Z",
+      "to": "2026-11-19T14:06:29Z"
+    }
+  ]
+}
