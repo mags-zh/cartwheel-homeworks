@@ -1,0 +1,3 @@
+candidate,layer,predicted_effect,dev_score,write_pass_5,cost_per_100_conversations_usd,decision,git_commit,result_file
+starting_version,none,Baseline (Part B); no change,0.5,n/a,0.028856,keep,404aebf3fcd694fb364a4bf5ae0c08f201a8bfe6,optimize/results/development-starting-gpt-4o-mini-20261120-153038.json
+prompt_change,prompt,"Concrete lookup rule (question types; check_return_eligibility for order returns, search_help_center/get_policy otherwise). Predicted: improves the lookup cases but not to always looking up; some failures remain because gpt-4o-mini won't apply the instruction consistently",,,,,,
