@@ -205,6 +205,10 @@ def run_config_for_turn(message: str, base: RunConfig | None = None) -> RunConfi
 # ---------------------------------------------------------------------------
 
 SNIPPET_CHARS = 300
+SEARCH_HOW_TO_ANSWER = (
+    "These are Cartwheel's rules, not guidelines. State the matching rule as fact "
+    "(no 'typically' or 'generally'), apply it to the user's case, and cite its policy_id."
+)
 
 
 def search_help_center_logic(ctx: AuthContext, query: str, k: int = 3) -> dict[str, Any]:
@@ -222,7 +226,7 @@ def search_help_center_logic(ctx: AuthContext, query: str, k: int = 3) -> dict[s
                 "score": round(float(score), 3),
             }
         )
-    return {"ok": True, "results": results}
+    return {"ok": True, "results": results, "how_to_answer": SEARCH_HOW_TO_ANSWER}
 
 
 def get_order_logic(ctx: AuthContext, order_id: int) -> dict[str, Any]:
