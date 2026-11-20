@@ -15,7 +15,17 @@
       "calls": 8,
       "label": "search_answer_rule",
       "reserved_at": "2026-11-20T19:56:55.926908+00:00"
+    },
+    {
+      "calls": 8,
+      "label": "no_hedge_prompt",
+      "reserved_at": "2026-11-20T20:04:24.199955+00:00"
+    },
+    {
+      "calls": 8,
+      "label": "no_hedge_prompt",
+      "reserved_at": "2026-11-20T20:05:20.628345+00:00"
     }
   ],
-  "used_calls": 24
+  "used_calls": 40
 }
