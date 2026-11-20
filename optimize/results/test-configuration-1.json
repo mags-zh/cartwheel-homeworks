@@ -1,0 +1,106 @@
+{
+  "cached_fraction": 0.0,
+  "cached_input_tokens": 0,
+  "candidate": "starting-version-model-1",
+  "case_count": 4,
+  "cases": [
+    {
+      "case_id": "e-001",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        9.79
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "I\u2019ll search your store\u2019s product catalog for \u201ctrekking poles\u201d and cap the results at $30 so I can pull only the matching listings.\nI found 1 trekking-poles listing in your store priced at **$30 or under**:\n\n| Product ID | Listing | Price |\n|---:|---|---:|\n| 400 | **Walnut Trekking Poles** | **$26.00** |",
+          "judge_reasons": {},
+          "passed": true
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-005",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        6.7003
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "I\u2019ll quickly look up Juniper Home Goods\u2019 return policy so I can give you the exact return window and policy citation.\n14 days from delivery. (Policy: `store-juniper-home-goods-policy`)",
+          "judge_reasons": {},
+          "passed": true
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-007",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        7.9319
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "I\u2019ll check the return eligibility for order 5914 so I can confirm whether the Everyday Journal can still be returned and the exact return-by date.\nYes \u2014 the Everyday Journal from Northwind Books on order 5914 can still be returned.\n\nIt was delivered on June 3, 2026, and Northwind Books allows returns within 45 days of delivery, so the return window is open until July 18, 2026. You\u2019re currently 28 days after delivery, so it\u2019s still eligible.  \n\nPolicy: store-northwind-books-policy",
+          "judge_reasons": {},
+          "passed": true
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-010",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        7.1043
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "I\u2019ll check Cartwheel\u2019s help-center policy on escalations so I can give you the official response-time guidance.\nA human support agent should respond to an escalated case **within 24 hours**. That applies when the assistant can\u2019t resolve the case directly, or when the issue requires human review\u2014like higher-value refunds, account changes, or disputes (**cw-escalations**).\n\nIf it\u2019s already been more than 24 hours, I can help you check the related order/case details or open a fresh escalation with context.",
+          "judge_reasons": {
+            "missing_policy_lookup": "The assistant correctly states that a human support agent should respond to an escalated case \"within 24 hours\". This information was derived from the successful lookup of the policy in the help center using the `search_help_center` tool, which returned relevant policy information from `cw-escalations`. The assistant clearly mentioned the context under which the human response time applies while referencing the proper policy, fulfilling the requirement to rely on a policy source. No hedges or refusals are present in the messages. The assistant did not fail to reference any policy source for the information provided, hence all stated policy facts are backed by the tool result. Therefore, all criteria for a Pass evaluation are met.\n\nResult: Pass"
+          },
+          "passed": true
+        }
+      ],
+      "runs": 1
+    }
+  ],
+  "cost_per_100_conversations_usd": 1.701375,
+  "cost_usd": 0.068055,
+  "created_at": "2026-11-20T20:20:08.273904+00:00",
+  "evaluated_case_runs": 4,
+  "git_commit": "404aebf3fcd694fb364a4bf5ae0c08f201a8bfe6",
+  "input_tokens": 8403,
+  "median_latency_seconds": 7.5181,
+  "model": "gpt-5.5",
+  "output_tokens": 868,
+  "price_date": "2026-11-20",
+  "prompt_sha256_12": "d108f6949e5e",
+  "schema_version": 1,
+  "score": 1.0,
+  "split": "test",
+  "test_plan_sha256": "76516f4ff30c76fdd2114614469401a2e0e0e10cbba2111b093c713c3cf4ed38",
+  "write_pass_5": null
+}

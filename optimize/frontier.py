@@ -170,14 +170,31 @@ def run_one_configuration(
                 check=True,
             )
         finally:
+            # The scorer files checked out above leave the worktree modified.
             subprocess.run(
-                ["git", "worktree", "remove", str(worktree)],
+                ["git", "worktree", "remove", "--force", str(worktree)],
                 cwd=git_root,
                 check=True,
                 capture_output=True,
                 text=True,
             )
     return read_json(output)
+
+
+def saved_result_matches(
+    output: Path, configuration: dict[str, Any], plan: dict[str, Any]
+) -> bool:
+    """True when output is a finished test result of this configuration under this plan."""
+    if not output.exists():
+        return False
+    result = read_json(output)
+    return (
+        result.get("split") == "test"
+        and result.get("test_plan_sha256") == plan["plan_sha256"]
+        and result.get("git_commit") == configuration["git_commit"]
+        and result.get("model") == configuration["model"]
+        and result.get("candidate") == configuration["name"]
+    )
 
 
 def run_command() -> None:
@@ -202,6 +219,13 @@ def run_command() -> None:
     for configuration in plan["configurations"]:
         number = configuration["configuration"]
         output = RESULTS_DIR / f"test-configuration-{number}.json"
+        if number not in state["completed_configurations"] and saved_result_matches(
+            output, configuration, plan
+        ):
+            # A run can finish and save its result, then fail before it is marked
+            # completed; never run the test cases of that configuration twice.
+            state["completed_configurations"].append(number)
+            write_json(TEST_RUN_PATH, state)
         if number not in state["completed_configurations"]:
             result = run_one_configuration(configuration, plan, output)
             state["completed_configurations"].append(number)
