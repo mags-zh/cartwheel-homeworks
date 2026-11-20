@@ -30,12 +30,11 @@ from typing import Any
 from agents.exceptions import MaxTurnsExceeded, ModelBehaviorError
 
 from replay.harness import ReplayInfraError, replay_case, summarize_rollouts
+from replay.judge import judge_transcript
 from replay.rollout import (
     apply_checks,
-    judge_reply_with_text,
     load_cases,
     load_frozen_judge,
-    retrieved_docs_text,
     run_case,
     world_reset,
 )
@@ -127,15 +126,13 @@ def make_runner(
             raise
         outcome = apply_checks(case, transcript, db_path)
         failure_modes = list(outcome["failed"])
-        docs = retrieved_docs_text(transcript)
         judge_reasons = {}
         for mode, judge in judges.items():
             expected = case["expected"]["judges"][mode]
             try:
-                verdict, judge_reasons[mode] = judge_reply_with_text(
-                    judge, transcript["final_reply"], docs
+                verdict, judge_reasons[mode] = judge_transcript(
+                    judge, transcript, case["input"]
                 )
-                judge_reasons[mode] = judge_reasons[mode][:1000]
             except Exception as exc:  # noqa: BLE001
                 if _is_infra_error(exc):
                     raise ReplayInfraError(str(exc)) from exc

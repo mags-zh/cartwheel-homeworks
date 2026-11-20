@@ -32,6 +32,11 @@ from optimize.workflow import (
     write_json,
 )
 
+# Every configuration is scored by these files from the final version's commit,
+# so the configurations differ only in agent code and model.
+SCORER_FILES = ("replay/__main__.py", "replay/judge.py")
+
+
 def make_plan() -> dict[str, Any]:
     validate_split(read_json(SPLIT_PATH))
     starting_version = read_json(STARTING_VERSION_PATH)
@@ -85,6 +90,8 @@ def make_plan() -> dict[str, Any]:
                 "model": models[2],
             },
         ],
+        "scorer_commit": final_version["git_commit"],
+        "scorer_files": list(SCORER_FILES),
     }
     plan["plan_sha256"] = canonical_hash(plan)
     return plan
@@ -124,6 +131,13 @@ def run_one_configuration(
         )
         try:
             worktree_cartwheel = worktree / REPO_ROOT.resolve().relative_to(git_root.resolve())
+            subprocess.run(
+                ["git", "checkout", plan["scorer_commit"], "--", *plan["scorer_files"]],
+                cwd=worktree_cartwheel,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
             env = os.environ.copy()
             env["PYTHONDONTWRITEBYTECODE"] = "1"
             env["PYTHONPATH"] = os.pathsep.join(
