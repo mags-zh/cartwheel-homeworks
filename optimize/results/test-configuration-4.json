@@ -1,0 +1,114 @@
+{
+  "cached_fraction": 0.111123,
+  "cached_input_tokens": 1024,
+  "candidate": "final-version-model-3",
+  "case_count": 4,
+  "cases": [
+    {
+      "case_id": "e-001",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        5.3972
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "I will search for your trekking pole listings that are priced $30 or under. This will help identify the specific products you are looking for in your seller dashboard. \n\nI'll proceed with the search now.\nI found one listing for you: \n\n- **Walnut Trekking Poles** priced at **$26.00**.\n\nIf you need more information or further assistance, just let me know!",
+          "judge_reasons": {},
+          "passed": true,
+          "trace": "system: Session context: User role: merchant; User id: 9010; Store id: 10\nuser: Your seller dashboard search is being useless. Pull up my trekking poles listings that are priced $30 or under.\nassistant: I will search for your trekking pole listings that are priced $30 or under. This will help identify the specific products you are looking for in your seller dashboard. \n\nI'll proceed with the search now.\ntool_call: search_products({\"limit\": 5, \"max_price_usd\": 30, \"query\": \"trekking poles\", \"store\": \"10\"})\ntool_result: search_products returned {\"count\": 1, \"ok\": true, \"products\": [{\"price_usd\": 26.0, \"product_id\": 400, \"store_id\": 10, \"title\": \"Walnut Trekking Poles\"}]}\nassistant: I found one listing for you: \n\n- **Walnut Trekking Poles** priced at **$26.00**.\n\nIf you need more information or further assistance, just let me know!"
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-005",
+      "expected_write": false,
+      "failure_modes": [
+        "reply contains 'store-juniper-home-goods-policy'"
+      ],
+      "latencies_seconds": [
+        3.0267
+      ],
+      "pass_rate": 0.0,
+      "passes": 0,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [
+            "reply contains 'store-juniper-home-goods-policy'"
+          ],
+          "final_reply": "Juniper Home Goods accepts returns within **14 days of delivery**. This timeframe overrides the Cartwheel standard of 30 days.",
+          "judge_reasons": {},
+          "passed": false,
+          "trace": "system: Session context: User role: shopper; User id: 123; Store id: None\nuser: I\u2019m in a hurry, just tell me how long Juniper Home Goods gives for returns. I need the return timeframe, just the return timeframe.\ntool_call: search_help_center({\"query\": \"Juniper Home Goods return policy\"})\ntool_result: search_help_center returned {\"ok\": true, \"results\": [{\"policy_id\": \"store-juniper-home-goods-policy\", \"score\": 14.594, \"snippet\": \"# Juniper Home Goods store policy\\n\\nJuniper Home Goods accepts returns within 14 days of delivery, instead of the Cartwheel platform default of 30 days. This store window takes precedence for all Juniper Home Goods orders.\", \"title\": \"Juniper Home Goods store policy\"}, {\"policy_id\": \"cw-cancellations\", \"score\": 2.075, \"snippet\": \"# Cartwheel order cancellation policy\\n\\nAn order can be cancelled at no cost any time before the store ships it. Once an order has shipped it can no longer be cancelled; the buyer should instead wait for delivery and request a return under the Cartwheel return policy.\", \"title\": \"Cartwheel order cancellation policy\"}, {\"policy_id\": \"cw-returns\", \"score\": 2.047, \"snippet\": \"# Cartwheel return policy\\n\\nItems bought on Cartwheel can be returned within 30 days of delivery. The window counts from the delivery date, not the purchase date. Items must be in the condition described by the store's listing. Individual stores may override this window; see the store overrides polic\", \"title\": \"Cartwheel return policy\"}]}\nassistant: Juniper Home Goods accepts returns within **14 days of delivery**. This timeframe overrides the Cartwheel standard of 30 days."
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-007",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        6.0558
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "The Everyday Journal from Northwind Books can be returned, as it is eligible for a refund. According to the store's policy (policy ID: store-northwind-books-policy), you can return the item within 45 days of delivery. Since the order was delivered on June 3, 2026, you have until July 18, 2026, to initiate the return.",
+          "judge_reasons": {},
+          "passed": true,
+          "trace": "system: Session context: User role: shopper; User id: 396; Store id: None\nuser: Hi, just tell me if the Everyday Journal from Northwind Books on order 5914 can still be returned, and until when.\ntool_call: search_help_center({\"query\": \"returns policy\"})\ntool_result: search_help_center returned {\"ok\": true, \"results\": [{\"policy_id\": \"store-meridian-cycles-policy\", \"score\": 1.774, \"snippet\": \"# Meridian Cycles store policy\\n\\nMeridian Cycles accepts returns within 21 days of delivery, instead of the Cartwheel platform default of 30 days. This store window takes precedence for all Meridian Cycles orders.\", \"title\": \"Meridian Cycles store policy\"}, {\"policy_id\": \"store-northwind-books-policy\", \"score\": 1.774, \"snippet\": \"# Northwind Books store policy\\n\\nNorthwind Books accepts returns within 45 days of delivery, instead of the Cartwheel platform default of 30 days. This store window takes precedence for all Northwind Books orders.\", \"title\": \"Northwind Books store policy\"}, {\"policy_id\": \"store-saltbox-pantry-policy\", \"score\": 1.774, \"snippet\": \"# Saltbox Pantry store policy\\n\\nSaltbox Pantry accepts returns within 7 days of delivery, instead of the Cartwheel platform default of 30 days. This store window takes precedence for all Saltbox Pantry orders.\", \"title\": \"Saltbox Pantry store policy\"}]}\ntool_call: get_order({\"order_id\": 5914})\ntool_result: get_order returned {\"ok\": true, \"order\": {\"delivered_at\": \"2026-06-03\", \"order_id\": 5914, \"ordered_at\": \"2026-05-25\", \"product_id\": 265, \"quantity\": 1, \"refund_eligible\": true, \"shipped_at\": \"2026-05-27\", \"status\": \"delivered\", \"store_id\": 7, \"store_name\": \"Northwind Books\", \"total_usd\": 68.5}}\nassistant: The Everyday Journal from Northwind Books can be returned, as it is eligible for a refund. According to the store's policy (policy ID: store-northwind-books-policy), you can return the item within 45 days of delivery. Since the order was delivered on June 3, 2026, you have until July 18, 2026, to initiate the return."
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-010",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        3.3345
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "When a case is escalated to a human support agent, they typically respond within 24 hours. This information comes from the policy on escalations, identified as policy id cw-escalations. If you have any specific cases you need assistance with, feel free to let me know!",
+          "judge_reasons": {
+            "missing_policy_lookup": "The assistant states, \"When a case is escalated to a human support agent, they typically respond within 24 hours.\" This is a policy fact regarding escalation response times. However, the response does not cite a specific policy id in the assistant's message. While the assistant did retrieve relevant information via the tool call `search_help_center`, which returned the policy ID `cw-escalations`, and the assistant did mention that it received the information from a policy source, it failed to explicitly state it in the response. This is a citation problem rather than a lookup failure. Therefore, no failure applies according to rules 1-5, as the assistant did consult a policy source and conveyed a relevant fact based on that lookup.\n\nResult: Pass"
+          },
+          "passed": true,
+          "trace": "system: Session context: User role: support; User id: 9501; Store id: None\nuser: It\u2019s been sitting there for a while \u2014 how fast does a human actually pick up an escalated case?\ntool_call: search_help_center({\"query\": \"escalation response time\"})\ntool_result: search_help_center returned {\"ok\": true, \"results\": [{\"policy_id\": \"cw-cancellations\", \"score\": 2.401, \"snippet\": \"# Cartwheel order cancellation policy\\n\\nAn order can be cancelled at no cost any time before the store ships it. Once an order has shipped it can no longer be cancelled; the buyer should instead wait for delivery and request a return under the Cartwheel return policy.\", \"title\": \"Cartwheel order cancellation policy\"}, {\"policy_id\": \"cw-escalations\", \"score\": 2.379, \"snippet\": \"# When a case goes to a human\\n\\nSome cases always go to a human support agent: refunds above 100 dollars, account changes, disputes, and anything the assistant cannot resolve from policy and the order record. A human responds to an escalation within 24 hours.\", \"title\": \"When a case goes to a human\"}, {\"policy_id\": \"cw-account-security\", \"score\": 0.0, \"snippet\": \"# Account and payment security\\n\\nCartwheel support assistants never change payment cards, passwords, or account details in chat, and never ask for full card numbers. Account and payment changes happen only through account settings. Requests for legal advice are outside support's scope and are decline\", \"title\": \"Account and payment security\"}]}\nassistant: When a case is escalated to a human support agent, they typically respond within 24 hours. This information comes from the policy on escalations, identified as policy id cw-escalations. If you have any specific cases you need assistance with, feel free to let me know!"
+        }
+      ],
+      "runs": 1
+    }
+  ],
+  "cost_per_100_conversations_usd": 0.037571,
+  "cost_usd": 0.001503,
+  "created_at": "2026-11-20T20:24:00.783587+00:00",
+  "evaluated_case_runs": 4,
+  "git_commit": "4a7a7c116ca4891d64722d23f20f1e98042cf0fa",
+  "input_tokens": 9215,
+  "median_latency_seconds": 4.3659,
+  "model": "gpt-4o-mini",
+  "output_tokens": 329,
+  "price_date": "2026-11-20",
+  "prompt_sha256_12": "d108f6949e5e",
+  "schema_version": 1,
+  "score": 0.75,
+  "split": "test",
+  "test_plan_sha256": "76516f4ff30c76fdd2114614469401a2e0e0e10cbba2111b093c713c3cf4ed38",
+  "write_pass_5": null
+}

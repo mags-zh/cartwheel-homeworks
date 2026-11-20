@@ -1,5 +1,12 @@
 {
-  "completed_configurations": [],
+  "completed_at": "2026-11-20T20:24:01.664492+00:00",
+  "completed_configurations": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "frontier_csv": "/Users/sarahmaguire/CursorProjects/evals-course/cartwheel-homeworks/optimize/results/frontier.csv",
   "plan_sha256": "76516f4ff30c76fdd2114614469401a2e0e0e10cbba2111b093c713c3cf4ed38",
   "started_at": "2026-11-20T20:19:28.906684+00:00"
 }

@@ -1,0 +1,106 @@
+{
+  "cached_fraction": 0.0,
+  "cached_input_tokens": 0,
+  "candidate": "starting-version-model-2",
+  "case_count": 4,
+  "cases": [
+    {
+      "case_id": "e-001",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        9.1155
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "No worries \u2014 let me search your store's catalog for trekking poles under $30.\nHere's what I found in your store (Store 10) for trekking poles priced at $30 or under:\n\n| Product ID | Title | Price |\n|---|---|---|\n| 400 | Walnut Trekking Poles | $26.00 |\n\nOnly one listing matched those criteria. If you have other trekking pole listings priced above $30, they wouldn't show up here. Want me to run a broader search without the price cap?",
+          "judge_reasons": {},
+          "passed": true
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-005",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        5.4997
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "Let me quickly look up the return policy for Juniper Home Goods.\n**Juniper Home Goods gives you 14 days from delivery to make a return.** (Policy: `store-juniper-home-goods-policy`)",
+          "judge_reasons": {},
+          "passed": true
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-007",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        7.6744
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "Let me look up your order and check its return eligibility right away.\nGreat news \u2014 yes, your Everyday Journal from Northwind Books on order **#5914** is still eligible for a return! Here are the details:\n\n- **Delivered:** June 3, 2026 (28 days ago)\n- **Return window:** 45 days from delivery (Northwind Books offers an extended window beyond the standard 30 days)\n- **Deadline to return:** **July 18, 2026**\n\nSo you still have about 17 days left. If you'd like to go ahead and start the return, just let me know!\n\n*(Policy: store-northwind-books-policy)*",
+          "judge_reasons": {},
+          "passed": true
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-010",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        7.651
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "Good question! Let me check our help-center docs for the official response-time guidance on escalated cases.\nAccording to our policy (**cw-escalations**), a human support agent responds to an escalated case **within 24 hours**.\n\nIf you have a specific ticket or order number you'd like me to check on\u2014or if you'd like me to re-escalate something that feels overdue\u2014just let me know and I'm happy to help!",
+          "judge_reasons": {
+            "missing_policy_lookup": "The assistant's response includes the policy fact that a human support agent responds to an escalated case within 24 hours. This information was retrieved from the help center via the `search_help_center` tool, which returned a relevant policy document identified by the policy ID 'cw-escalations'. Therefore, every policy fact given in the message is backed by the correct policy source. There are no hedges, offers to look up policies, or other failing elements present in the interaction. Thus, all statements made by the assistant are valid and properly sourced. Pass 3 applies.\n\nResult: Pass"
+          },
+          "passed": true
+        }
+      ],
+      "runs": 1
+    }
+  ],
+  "cost_per_100_conversations_usd": 2.7425,
+  "cost_usd": 0.1097,
+  "created_at": "2026-11-20T20:23:10.754069+00:00",
+  "evaluated_case_runs": 4,
+  "git_commit": "404aebf3fcd694fb364a4bf5ae0c08f201a8bfe6",
+  "input_tokens": 17110,
+  "median_latency_seconds": 7.6627,
+  "model": "claude-opus-4-6",
+  "output_tokens": 966,
+  "price_date": "2026-11-20",
+  "prompt_sha256_12": "d108f6949e5e",
+  "schema_version": 1,
+  "score": 1.0,
+  "split": "test",
+  "test_plan_sha256": "76516f4ff30c76fdd2114614469401a2e0e0e10cbba2111b093c713c3cf4ed38",
+  "write_pass_5": null
+}

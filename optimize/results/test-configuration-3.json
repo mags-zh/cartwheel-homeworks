@@ -1,0 +1,118 @@
+{
+  "cached_fraction": 0.0,
+  "cached_input_tokens": 0,
+  "candidate": "starting-version-model-3",
+  "case_count": 4,
+  "cases": [
+    {
+      "case_id": "e-001",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        5.0215
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "I will search your product catalog for trekking poles listed at $30 or under. This will help identify any specific products that meet your criteria. \n\nLet's look that up now.\nI found one listing for trekking poles priced at $30 or under:\n\n- **Walnut Trekking Poles** - $26.00\n\nIf you need more details or want to modify anything, just let me know!",
+          "judge_reasons": {},
+          "passed": true
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-005",
+      "expected_write": false,
+      "failure_modes": [
+        "reply contains 'store-juniper-home-goods-policy'"
+      ],
+      "latencies_seconds": [
+        3.8248
+      ],
+      "pass_rate": 0.0,
+      "passes": 0,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [
+            "reply contains 'store-juniper-home-goods-policy'"
+          ],
+          "final_reply": "Juniper Home Goods accepts returns within **14 days of delivery**. This timeframe overrides the standard Cartwheel return policy of 30 days.",
+          "judge_reasons": {},
+          "passed": false
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-007",
+      "expected_write": false,
+      "failure_modes": [
+        "reply contains 'store-northwind-books-policy'"
+      ],
+      "latencies_seconds": [
+        5.4185
+      ],
+      "pass_rate": 0.0,
+      "passes": 0,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [
+            "reply contains 'store-northwind-books-policy'"
+          ],
+          "final_reply": "I'll check the return eligibility for order 5914 to see if the Everyday Journal from Northwind Books can still be returned and until when. Please hold on for a moment.\nThe Everyday Journal from Northwind Books on order 5914 is eligible for return. You can return it until July 18, 2026, as Northwind Books offers a return window of 45 days from the delivery date.",
+          "judge_reasons": {},
+          "passed": false
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-010",
+      "expected_write": false,
+      "failure_modes": [
+        "judge:missing_policy_lookup"
+      ],
+      "latencies_seconds": [
+        2.3798
+      ],
+      "pass_rate": 0.0,
+      "passes": 0,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [
+            "judge:missing_policy_lookup"
+          ],
+          "final_reply": "The response time for escalated cases can vary based on the volume of inquiries and the complexity of the issue. Generally, a human support agent will follow up as soon as they are able, but I can't provide an exact timeframe. If you have a specific case in mind, I can help look into it further!",
+          "judge_reasons": {
+            "missing_policy_lookup": "The assistant states, \"Generally, a human support agent will follow up as soon as they are able, but I can't provide an exact timeframe,\" which serves as a hedge about policy regarding human response times. This statement fails to look up the specific policy about response times for escalated cases or provide any reference to a policy tool. Since it relies on a point about response time without consulting an applicable policy source, Fail 2 applies.\n\nResult: Fail"
+          },
+          "passed": false
+        }
+      ],
+      "runs": 1
+    }
+  ],
+  "cost_per_100_conversations_usd": 0.030229,
+  "cost_usd": 0.001209,
+  "created_at": "2026-11-20T20:23:34.881359+00:00",
+  "evaluated_case_runs": 4,
+  "git_commit": "404aebf3fcd694fb364a4bf5ae0c08f201a8bfe6",
+  "input_tokens": 6705,
+  "median_latency_seconds": 4.4231,
+  "model": "gpt-4o-mini",
+  "output_tokens": 339,
+  "price_date": "2026-11-20",
+  "prompt_sha256_12": "d108f6949e5e",
+  "schema_version": 1,
+  "score": 0.25,
+  "split": "test",
+  "test_plan_sha256": "76516f4ff30c76fdd2114614469401a2e0e0e10cbba2111b093c713c3cf4ed38",
+  "write_pass_5": null
+}
