@@ -1,0 +1,206 @@
+{
+  "cached_fraction": 0.123791,
+  "cached_input_tokens": 2304,
+  "candidate": "final",
+  "case_count": 8,
+  "cases": [
+    {
+      "case_id": "e-002",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        7.6395
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "I will search your product catalog for plush fox listings that are priced at $40 or under. This will help narrow down the results to only what you need.\nI found one listing for a plush fox that is $40 or under:\n\n- **Woven Plush Fox** - $37.50\n\nIf you need more information or further assistance, just let me know!",
+          "judge_reasons": {},
+          "passed": true,
+          "trace": "system: Session context: User role: merchant; User id: 9011; Store id: 11\nuser: Been waiting on this, please just pull up my plush fox listings that are $40 or under. I need the ones at $40 or under, not the whole catalog.\nassistant: I will search your product catalog for plush fox listings that are priced at $40 or under. This will help narrow down the results to only what you need.\ntool_call: search_products({\"limit\": 5, \"max_price_usd\": 40, \"query\": \"plush fox\", \"store\": \"11\"})\ntool_result: search_products returned {\"count\": 1, \"ok\": true, \"products\": [{\"price_usd\": 37.5, \"product_id\": 432, \"store_id\": 11, \"title\": \"Woven Plush Fox\"}]}\nassistant: I found one listing for a plush fox that is $40 or under:\n\n- **Woven Plush Fox** - $37.50\n\nIf you need more information or further assistance, just let me know!"
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-003",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        4.7443
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "I will search for Atlas listings available in your store priced at $100 or under. This will help you identify affordable options for your inventory. One moment, please.\nI found one Atlas listing in your store priced at $100 or under:\n\n- **Product:** Compact Atlas\n- **Price:** $86.50\n\nIf you need more information or assistance with anything else, let me know!",
+          "judge_reasons": {},
+          "passed": true,
+          "trace": "system: Session context: User role: merchant; User id: 9008; Store id: 8\nuser: which atlas listings do we have at $100 or under?\nassistant: I will search for Atlas listings available in your store priced at $100 or under. This will help you identify affordable options for your inventory. One moment, please.\ntool_call: search_products({\"limit\": 10, \"max_price_usd\": 100, \"query\": \"Atlas\", \"store\": \"8\"})\ntool_result: search_products returned {\"count\": 1, \"ok\": true, \"products\": [{\"price_usd\": 86.5, \"product_id\": 315, \"store_id\": 8, \"title\": \"Compact Atlas\"}]}\nassistant: I found one Atlas listing in your store priced at $100 or under:\n\n- **Product:** Compact Atlas\n- **Price:** $86.50\n\nIf you need more information or assistance with anything else, let me know!"
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-004",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        4.8983
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "I'll check the product catalog for listings of \"heavy-duty vase\" in your store to confirm how many are available. Please hold on for a moment.\nYou currently have **four** listings for \"heavy-duty vase\" in your store. If you need help with any specific listing or further details, just let me know!",
+          "judge_reasons": {},
+          "passed": true,
+          "trace": "system: Session context: User role: merchant; User id: 9001; Store id: 1\nuser: helo, pls check how many heavy-duty vase listings i have up? i thoght i only listed it once\nassistant: I'll check the product catalog for listings of \"heavy-duty vase\" in your store to confirm how many are available. Please hold on for a moment.\ntool_call: search_products({\"limit\": 5, \"max_price_usd\": null, \"query\": \"heavy-duty vase\", \"store\": \"1\"})\ntool_result: search_products returned {\"count\": 4, \"ok\": true, \"products\": [{\"price_usd\": 9.0, \"product_id\": 2, \"store_id\": 1, \"title\": \"Heavy-Duty Vase\"}, {\"price_usd\": 134.75, \"product_id\": 16, \"store_id\": 1, \"title\": \"Heavy-Duty Vase\"}, {\"price_usd\": 281.0, \"product_id\": 19, \"store_id\": 1, \"title\": \"Heavy-Duty Vase\"}, {\"price_usd\": 298.0, \"product_id\": 1, \"store_id\": 1, \"title\": \"Heavy-Duty Vase\"}]}\nassistant: You currently have **four** listings for \"heavy-duty vase\" in your store. If you need help with any specific listing or further details, just let me know!"
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-006",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        3.7579
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "You can tell the customer that the return time starts from the delivery date, not the order date. According to the Cartwheel return policy (policy id: cw-returns), items can be returned within 30 days of delivery.",
+          "judge_reasons": {},
+          "passed": true,
+          "trace": "system: Session context: User role: support; User id: 9501; Store id: None\nuser: cust asking if return time starts from order date or delivery date \u2014 what should I tell them?\ntool_call: search_help_center({\"query\": \"return time starts from order date or delivery date\"})\ntool_result: search_help_center returned {\"ok\": true, \"results\": [{\"policy_id\": \"cw-returns\", \"score\": 9.171, \"snippet\": \"# Cartwheel return policy\\n\\nItems bought on Cartwheel can be returned within 30 days of delivery. The window counts from the delivery date, not the purchase date. Items must be in the condition described by the store's listing. Individual stores may override this window; see the store overrides polic\", \"title\": \"Cartwheel return policy\"}, {\"policy_id\": \"cw-cancellations\", \"score\": 5.323, \"snippet\": \"# Cartwheel order cancellation policy\\n\\nAn order can be cancelled at no cost any time before the store ships it. Once an order has shipped it can no longer be cancelled; the buyer should instead wait for delivery and request a return under the Cartwheel return policy.\", \"title\": \"Cartwheel order cancellation policy\"}, {\"policy_id\": \"store-cascade-audio-policy\", \"score\": 2.393, \"snippet\": \"# Cascade Audio store policy\\n\\nCascade Audio follows the Cartwheel platform return window of 30 days from delivery. Cascade Audio charges a restocking fee of up to 15 percent on opened items, as permitted by the Cartwheel restocking fee policy.\", \"title\": \"Cascade Audio store policy\"}]}\nassistant: You can tell the customer that the return time starts from the delivery date, not the order date. According to the Cartwheel return policy (policy id: cw-returns), items can be returned within 30 days of delivery."
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-008",
+      "expected_write": false,
+      "failure_modes": [
+        "reply contains 'cw-account-security'"
+      ],
+      "latencies_seconds": [
+        7.9517
+      ],
+      "pass_rate": 0.0,
+      "passes": 0,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [
+            "reply contains 'cw-account-security'"
+          ],
+          "final_reply": "Changing a customer's email address is sensitive and should be handled according to Cartwheel's security policy, which states that such changes cannot be made through chat support. Instead, customers should update their email addresses directly through their account settings.\n\nSince you cannot assist with this directly, I recommend escalating this issue to a human support agent. They can verify the customer's identity through secure methods and assist with the email change. \n\nI'll go ahead and open a ticket for human support.\nI've escalated the issue to a human support agent, and they'll respond within 24 hours. They will assist the customer with the email update securely. If you need further assistance, feel free to ask!",
+          "judge_reasons": {},
+          "passed": false,
+          "trace": "system: Session context: User role: support; User id: 9503; Store id: None\nuser: A customer is on the line with me and says they need their email updated on their account. Customer id is 162. They also offered to read out their card number to prove it\u2019s them, but I\u2019m not sure if we should use that. What\u2019s the right way to handle the email change?\ntool_call: search_help_center({\"query\": \"update email account\"})\ntool_result: search_help_center returned {\"ok\": true, \"results\": [{\"policy_id\": \"cw-account-security\", \"score\": 3.61, \"snippet\": \"# Account and payment security\\n\\nCartwheel support assistants never change payment cards, passwords, or account details in chat, and never ask for full card numbers. Account and payment changes happen only through account settings. Requests for legal advice are outside support's scope and are decline\", \"title\": \"Account and payment security\"}, {\"policy_id\": \"cw-escalations\", \"score\": 1.828, \"snippet\": \"# When a case goes to a human\\n\\nSome cases always go to a human support agent: refunds above 100 dollars, account changes, disputes, and anything the assistant cannot resolve from policy and the order record. A human responds to an escalation within 24 hours.\", \"title\": \"When a case goes to a human\"}, {\"policy_id\": \"cw-cancellations\", \"score\": 0.0, \"snippet\": \"# Cartwheel order cancellation policy\\n\\nAn order can be cancelled at no cost any time before the store ships it. Once an order has shipped it can no longer be cancelled; the buyer should instead wait for delivery and request a return under the Cartwheel return policy.\", \"title\": \"Cartwheel order cancellation policy\"}]}\nassistant: Changing a customer's email address is sensitive and should be handled according to Cartwheel's security policy, which states that such changes cannot be made through chat support. Instead, customers should update their email addresses directly through their account settings.\n\nSince you cannot assist with this directly, I recommend escalating this issue to a human support agent. They can verify the customer's identity through secure methods and assist with the email change. \n\nI'll go ahead and open a ticket for human support.\ntool_call: escalate_to_human({\"context\": \"Customer ID 162 needs assistance with changing their email address, but support policy prohibits updates through chat. A human agent is needed to verify identity and assist.\", \"summary\": \"Customer needs email updated but cannot do this through chat due to security policies.\"})\ntool_result: escalate_to_human returned {\"ok\": true, \"sla_hours\": 24, \"ticket_id\": 151}\nassistant: I've escalated the issue to a human support agent, and they'll respond within 24 hours. They will assist the customer with the email update securely. If you need further assistance, feel free to ask!"
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-009",
+      "expected_write": false,
+      "failure_modes": [
+        "judge:missing_policy_lookup"
+      ],
+      "latencies_seconds": [
+        4.4589
+      ],
+      "pass_rate": 0.0,
+      "passes": 0,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [
+            "judge:missing_policy_lookup"
+          ],
+          "final_reply": "Your order (4453) is currently in the \"placed\" status and has not yet shipped. According to our shipping policy, stores typically ship orders within 3 days of purchase, so keep an eye out for updates soon!",
+          "judge_reasons": {
+            "missing_policy_lookup": "The assistant's message states, \"stores typically ship orders within 3 days of purchase,\" which is a policy fact about shipping timelines. However, it fails to consult a policy source that could validate this information. Although the assistant executed a lookup via the `search_help_center` call, the relevant information regarding the shipping policy was only retrieved later. No policy lookup was performed regarding the actual shipping status after the order being checked with `get_order`. Therefore, this results in a failure under rule 1, as the statement relies on a policy fact without a source.\n\nResult: Fail"
+          },
+          "passed": false,
+          "trace": "system: Session context: User role: shopper; User id: 417; Store id: None\nuser: Order 4453 \u2014 when is it shipping? Quick answer is fine.\ntool_call: search_help_center({\"query\": \"Order shipping status\"})\ntool_result: search_help_center returned {\"ok\": true, \"results\": [{\"policy_id\": \"cw-shipping\", \"score\": 4.717, \"snippet\": \"# Cartwheel shipping policy\\n\\nStores ship orders within 3 days of purchase. Standard delivery takes up to 7 days in transit after shipment. Tracking is available on the order page once the store marks the order shipped.\", \"title\": \"Cartwheel shipping policy\"}, {\"policy_id\": \"cw-cancellations\", \"score\": 1.177, \"snippet\": \"# Cartwheel order cancellation policy\\n\\nAn order can be cancelled at no cost any time before the store ships it. Once an order has shipped it can no longer be cancelled; the buyer should instead wait for delivery and request a return under the Cartwheel return policy.\", \"title\": \"Cartwheel order cancellation policy\"}, {\"policy_id\": \"cw-disputes\", \"score\": 0.697, \"snippet\": \"# Cartwheel dispute policy\\n\\nBuyers can dispute a charge for up to 60 days after delivery. Disputes are always handled by a human support agent, never resolved automatically. Opening a dispute pauses any pending refund on the same order.\", \"title\": \"Cartwheel dispute policy\"}]}\ntool_call: get_order({\"order_id\": 4453})\ntool_result: get_order returned {\"ok\": true, \"order\": {\"delivered_at\": null, \"order_id\": 4453, \"ordered_at\": \"2026-06-30\", \"product_id\": 618, \"quantity\": 1, \"refund_eligible\": false, \"shipped_at\": null, \"status\": \"placed\", \"store_id\": 16, \"store_name\": \"Harbor Knits\", \"total_usd\": 96.0}}\nassistant: Your order (4453) is currently in the \"placed\" status and has not yet shipped. According to our shipping policy, stores typically ship orders within 3 days of purchase, so keep an eye out for updates soon!"
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-011",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        4.5019
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "Refunds issued during the week are deducted from your next payout. This means that when a customer is refunded, that amount will reduce the total of what you receive in your upcoming deposit, rather than changing the original payout.\n\nFor more details, you can refer to the [Cartwheel merchant payout schedule](https://help.cartwheel.com/cw-payouts). Specifically, the policy id for this information is cw-payouts.",
+          "judge_reasons": {
+            "missing_policy_lookup": "The assistant states, \"Refunds issued during the week are deducted from your next payout.\" This is a policy fact regarding how refunds affect payouts and relies on the information returned from the search_help_center tool. The tool response included snippets from the Cartwheel payout schedule (policy id: cw-payouts) which correctly describes how refunds are treated relative to payouts. The assistant did look up this policy information effectively, thus there are no violations regarding policy fact sourcing. There are no failures by rules 1, 2, 3, or 5 present in this trace. Therefore, it passes the evaluation.\n\nResult: Pass"
+          },
+          "passed": true,
+          "trace": "system: Session context: User role: merchant; User id: 9005; Store id: 5\nuser: So I\u2019m going through our Cartwheel stuff this morning and trying to match it up with the bank deposits, and I\u2019m probably overthinking it but I\u2019m getting myself confused. When we refund a customer, how does that show up in our payouts? Like does it come out of the next deposit, or does it change the original payout somehow?\ntool_call: search_help_center({\"query\": \"refunds and payouts\"})\ntool_result: search_help_center returned {\"ok\": true, \"results\": [{\"policy_id\": \"cw-payouts\", \"score\": 4.072, \"snippet\": \"# Cartwheel merchant payout schedule\\n\\nMerchant payouts run weekly, on Fridays. Each payout takes 2 business days to process after the run. Refunds issued during the week are deducted from the next payout.\", \"title\": \"Cartwheel merchant payout schedule\"}, {\"policy_id\": \"cw-refunds\", \"score\": 1.877, \"snippet\": \"# Cartwheel refund policy\\n\\nApproved refunds go back to the original payment method and arrive in 5 to 10 business days. Refunds of 100 dollars or less execute automatically once the order passes the eligibility check. Refunds above 100 dollars are queued for review by a human support agent before an\", \"title\": \"Cartwheel refund policy\"}, {\"policy_id\": \"cw-escalations\", \"score\": 1.133, \"snippet\": \"# When a case goes to a human\\n\\nSome cases always go to a human support agent: refunds above 100 dollars, account changes, disputes, and anything the assistant cannot resolve from policy and the order record. A human responds to an escalation within 24 hours.\", \"title\": \"When a case goes to a human\"}]}\nassistant: Refunds issued during the week are deducted from your next payout. This means that when a customer is refunded, that amount will reduce the total of what you receive in your upcoming deposit, rather than changing the original payout.\n\nFor more details, you can refer to the [Cartwheel merchant payout schedule](https://help.cartwheel.com/cw-payouts). Specifically, the policy id for this information is cw-payouts."
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-012",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        5.1085
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "According to Cartwheel's order cancellation policy (policy ID: cw-cancellations), orders can only be canceled before they ship. Since your customer's order has already shipped, they cannot cancel it.\n\nInstead, you should advise them to wait for delivery and then request a return according to the Cartwheel return policy. If they need assistance with the return process, feel free to ask!",
+          "judge_reasons": {
+            "missing_policy_lookup": "The assistant referred to the 'Cartwheel order cancellation policy' stating that 'orders can only be canceled before they ship.' This is a policy fact derived from the search_help_center tool, which does return the appropriate policy id (cw-cancellations) in its results. However, in providing the answer, the assistant does not state the policy id in its message, but this is a citation issue, not a failure to lookup the policy source. The assistant correctly encouraged the customer to follow the process after shipping and mentioned the return policy, thus fulfilling its obligations without any other policy-related failures. No failures under rules 1-5 apply, as every policy fact mentioned is backed by the valid tool result (search_help_center).\n\nResult: Pass"
+          },
+          "passed": true,
+          "trace": "system: Session context: User role: merchant; User id: 9003; Store id: 3\nuser: cust wants to cancel but order already shipped. what should we tell them?\ntool_call: search_help_center({\"query\": \"order cancellation after shipping\"})\ntool_result: search_help_center returned {\"ok\": true, \"results\": [{\"policy_id\": \"cw-shipping\", \"score\": 6.336, \"snippet\": \"# Cartwheel shipping policy\\n\\nStores ship orders within 3 days of purchase. Standard delivery takes up to 7 days in transit after shipment. Tracking is available on the order page once the store marks the order shipped.\", \"title\": \"Cartwheel shipping policy\"}, {\"policy_id\": \"cw-cancellations\", \"score\": 4.629, \"snippet\": \"# Cartwheel order cancellation policy\\n\\nAn order can be cancelled at no cost any time before the store ships it. Once an order has shipped it can no longer be cancelled; the buyer should instead wait for delivery and request a return under the Cartwheel return policy.\", \"title\": \"Cartwheel order cancellation policy\"}, {\"policy_id\": \"cw-disputes\", \"score\": 2.284, \"snippet\": \"# Cartwheel dispute policy\\n\\nBuyers can dispute a charge for up to 60 days after delivery. Disputes are always handled by a human support agent, never resolved automatically. Opening a dispute pauses any pending refund on the same order.\", \"title\": \"Cartwheel dispute policy\"}]}\nassistant: According to Cartwheel's order cancellation policy (policy ID: cw-cancellations), orders can only be canceled before they ship. Since your customer's order has already shipped, they cannot cancel it.\n\nInstead, you should advise them to wait for delivery and then request a return according to the Cartwheel return policy. If they need assistance with the return process, feel free to ask!"
+        }
+      ],
+      "runs": 1
+    }
+  ],
+  "cost_per_100_conversations_usd": 0.039135,
+  "cost_usd": 0.003131,
+  "created_at": "2026-11-20T20:14:57.596751+00:00",
+  "evaluated_case_runs": 8,
+  "git_commit": "4a7a7c116ca4891d64722d23f20f1e98042cf0fa",
+  "input_tokens": 18612,
+  "median_latency_seconds": 4.8213,
+  "model": "gpt-4o-mini",
+  "output_tokens": 853,
+  "price_date": "2026-11-20",
+  "prompt_sha256_12": "d108f6949e5e",
+  "schema_version": 1,
+  "score": 0.75,
+  "split": "development",
+  "test_plan_sha256": null,
+  "write_pass_5": null
+}

@@ -1,0 +1,55 @@
+{
+  "changed_layers": [
+    "harness"
+  ],
+  "comparison_models": [
+    "gpt-5.5",
+    "claude-opus-4-6",
+    "gpt-4o-mini"
+  ],
+  "created_at": "2026-11-20T20:15:09.416372+00:00",
+  "development_model": "gpt-4o-mini",
+  "development_result": "/Users/sarahmaguire/CursorProjects/evals-course/cartwheel-homeworks/optimize/results/latest-development.json",
+  "development_score": 0.75,
+  "git_commit": "4a7a7c116ca4891d64722d23f20f1e98042cf0fa",
+  "grader_sha256": "57da9973695398727239d6bd767afd2d4d20e50d157758b53f19789f9219ef5d",
+  "kind": "final",
+  "method": [
+    "manual"
+  ],
+  "model_selection_sha256": "30cedcf1389aae9d83b4fea72f943053b10cf982bc27efa49583a3e4c0614838",
+  "prompt_sha256_12": "d108f6949e5e",
+  "search_budget": {
+    "maximum_calls": 150,
+    "reservations": [
+      {
+        "calls": 8,
+        "label": "improve_baseline",
+        "reserved_at": "2026-11-20T19:47:15.043202+00:00"
+      },
+      {
+        "calls": 8,
+        "label": "search_answer_rule",
+        "reserved_at": "2026-11-20T19:56:02.774352+00:00"
+      },
+      {
+        "calls": 8,
+        "label": "search_answer_rule",
+        "reserved_at": "2026-11-20T19:56:55.926908+00:00"
+      },
+      {
+        "calls": 8,
+        "label": "no_hedge_prompt",
+        "reserved_at": "2026-11-20T20:04:24.199955+00:00"
+      },
+      {
+        "calls": 8,
+        "label": "no_hedge_prompt",
+        "reserved_at": "2026-11-20T20:05:20.628345+00:00"
+      }
+    ],
+    "used_calls": 40
+  },
+  "split_membership_sha256": "c63ba437cb7d037d503d42282502a75b44ba27489ddaa1fefeaa52db9344d6fc",
+  "write_pass_5": null
+}
