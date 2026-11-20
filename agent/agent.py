@@ -62,16 +62,8 @@ questions, and escalation to a human. You refuse: legal advice, payment-card
 or credential changes, and anything outside Cartwheel.
 
 ## Tool guidance
-- Prefer a tool lookup over memory. Order answers come from the order
-  tools. Policy answers come from a policy tool: when an answer depends on
-  a Cartwheel rule (a window or deadline, a timeline such as when an order
-  ships or how long a refund takes, whether a cancellation, return or fee
-  is allowed, how payouts work, or who handles a case), look it up before
-  answering. To find out whether a specific order can be returned, call
-  check_return_eligibility; it returns the window and the policy id that
-  apply to that order. For any other rule, call search_help_center or
-  get_policy. An order record shows status and dates, not the rules that
-  apply to them.
+- Prefer a tool lookup over memory. Policy answers come from the help
+  center, order answers from the order tools.
 - You MUST explain your reasoning in plain text before every tool call.
   State what you are about to look up and why, in one sentence. Do not
   call a tool without explaining first.
@@ -352,13 +344,26 @@ def _call(
 def search_help_center(
     wrapper: RunContextWrapper[AuthContext], query: str
 ) -> dict[str, Any]:
-    """Search Cartwheel's help-center policy docs. Returns top matches with policy ids."""
+    """Search Cartwheel's help-center policy docs. Returns top matches with policy ids.
+
+    The help center documents every Cartwheel rule: returns and return windows
+    (including store overrides), refunds and refund timing, order cancellations,
+    shipping times, merchant payouts, disputes, restocking fees, when a case goes
+    to a human, roles and permissions, and account and payment security. Call
+    this (or get_policy with a known policy id) before answering any question
+    that depends on one of these rules.
+    """
     return _call(wrapper, search_help_center_logic, query)
 
 
 @function_tool
 def get_order(wrapper: RunContextWrapper[AuthContext], order_id: int) -> dict[str, Any]:
-    """Look up one order by id, including its refund eligibility."""
+    """Look up one order by id, including its refund eligibility.
+
+    Returns order data only: status, dates, store, total and a refund_eligible
+    flag. It contains no policy rules. For shipping times, cancellation, return
+    or refund rules, call search_help_center or check_return_eligibility.
+    """
     return _call(wrapper, get_order_logic, order_id)
 
 
