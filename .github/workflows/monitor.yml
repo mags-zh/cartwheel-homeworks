@@ -1,11 +1,11 @@
 name: monitor
 
 # Langfuse runs on the student's computer, so this job needs a self-hosted
-# runner on that computer (label cartwheel-monitor). It never runs on pull
-# requests, so code from a pull request cannot reach that runner.
+# runner on that computer (label cartwheel-monitor). The runner is started by
+# hand, so the job runs only on a manual trigger, never on a schedule or a pull
+# request. The Langfuse keys and host come from the runner's own .env file on
+# that computer, not from GitHub.
 on:
-  schedule:
-    - cron: "30 6 * * *"
   workflow_dispatch:
     inputs:
       hours:
@@ -24,12 +24,21 @@ jobs:
     runs-on: [self-hosted, cartwheel-monitor]
     timeout-minutes: 30
     env:
-      LANGFUSE_HOST: ${{ vars.LANGFUSE_HOST }}
-      LANGFUSE_PUBLIC_KEY: ${{ secrets.LANGFUSE_PUBLIC_KEY }}
-      LANGFUSE_SECRET_KEY: ${{ secrets.LANGFUSE_SECRET_KEY }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       HOURS: ${{ inputs.hours || '24' }}
     steps:
+      # The repository is public, so mask the keys in case any output prints them.
+      - name: Check the runner's Langfuse settings
+        run: |
+          for name in LANGFUSE_HOST LANGFUSE_PUBLIC_KEY LANGFUSE_SECRET_KEY; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error::$name is not set in the runner's .env file"
+              exit 1
+            fi
+          done
+          echo "::add-mask::$LANGFUSE_PUBLIC_KEY"
+          echo "::add-mask::$LANGFUSE_SECRET_KEY"
+
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
       - run: uv sync
