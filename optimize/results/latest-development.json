@@ -1,7 +1,7 @@
 {
-  "cached_fraction": 0.0,
-  "cached_input_tokens": 0,
-  "candidate": "starting_rescored",
+  "cached_fraction": 0.146579,
+  "cached_input_tokens": 2048,
+  "candidate": "prompt_change_rescored",
   "case_count": 8,
   "cases": [
     {
@@ -9,7 +9,7 @@
       "expected_write": false,
       "failure_modes": [],
       "latencies_seconds": [
-        7.2719
+        4.7071
       ],
       "pass_rate": 1.0,
       "passes": 1,
@@ -17,7 +17,7 @@
         {
           "error": null,
           "failure_modes": [],
-          "final_reply": "I will search for your plush fox listings that are priced at $40 or under. This will help you find the specific items you need without sifting through the entire catalog. Let's get that information.\nI've found one plush fox listing for you that is priced at $40 or under:\n\n- **Product:** Woven Plush Fox\n- **Price:** $37.50\n\nIf you need more details or further assistance, just let me know!",
+          "final_reply": "I'll look up your plush fox listings that are priced at $40 or under in your store. This will help us find exactly what you need without sifting through all the items. Let's get that sorted.\nI've found one plush fox listing in your store that is priced at $40 or under:\n\n- **Woven Plush Fox**: $37.50\n\nIf you need more details or additional listings, just let me know!",
           "judge_reasons": {},
           "passed": true
         }
@@ -29,7 +29,7 @@
       "expected_write": false,
       "failure_modes": [],
       "latencies_seconds": [
-        4.3557
+        4.1881
       ],
       "pass_rate": 1.0,
       "passes": 1,
@@ -37,7 +37,7 @@
         {
           "error": null,
           "failure_modes": [],
-          "final_reply": "I will search for Atlas listings in your store that are priced at $100 or under. This will help you identify any products that fit within that budget range.\nYou have one Atlas listing priced at $100 or under:\n\n- **Product:** Compact Atlas\n- **Price:** $86.50\n\nIf you need further details or assistance with this product, feel free to ask!",
+          "final_reply": "I'll look up the Atlas listings available in your store that are priced at $100 or under. Please hold on for a moment while I gather this information.\nYou have one Atlas listing available under $100:\n\n- **Compact Atlas**: $86.50\n\nLet me know if you need more information!",
           "judge_reasons": {},
           "passed": true
         }
@@ -49,7 +49,7 @@
       "expected_write": false,
       "failure_modes": [],
       "latencies_seconds": [
-        5.1247
+        5.0161
       ],
       "pass_rate": 1.0,
       "passes": 1,
@@ -57,7 +57,7 @@
         {
           "error": null,
           "failure_modes": [],
-          "final_reply": "I'll check your product listings to see how many heavy-duty vase listings you have. Please hold on a moment.\nYou currently have **four listings** for heavy-duty vases in your store. If you need any further assistance with these listings, feel free to ask!",
+          "final_reply": "I will search your product listings for \"heavy-duty vase\" to see how many are listed. Let's check that now.\nYou currently have **four** listings for \"Heavy-Duty Vase\" in your store. If you need help with anything else related to these listings, just let me know!",
           "judge_reasons": {},
           "passed": true
         }
@@ -67,23 +67,19 @@
     {
       "case_id": "e-006",
       "expected_write": false,
-      "failure_modes": [
-        "reply contains 'cw-returns'"
-      ],
+      "failure_modes": [],
       "latencies_seconds": [
-        2.8338
+        4.5563
       ],
-      "pass_rate": 0.0,
-      "passes": 0,
+      "pass_rate": 1.0,
+      "passes": 1,
       "run_details": [
         {
           "error": null,
-          "failure_modes": [
-            "reply contains 'cw-returns'"
-          ],
-          "final_reply": "The return time typically starts from the delivery date, not the order date. This means customers have a certain number of days after receiving their items to initiate a return.\n\nIf you need a specific policy reference or the exact time frames, I can look that up for you. Let me know!",
+          "failure_modes": [],
+          "final_reply": "The return time starts from the delivery date, not the order date. I will confirm this with the specific policy details to ensure accuracy. \n\nLet me look that up.\nThe return policy specifies that items can be returned within 30 days of delivery, not from the order date. This means the return window starts counting from when the customer receives their order. \n\nYou can refer to policy ID cw-returns for any further details. If they have more questions, feel free to ask!",
           "judge_reasons": {},
-          "passed": false
+          "passed": true
         }
       ],
       "runs": 1
@@ -95,7 +91,7 @@
         "reply contains 'cw-account-security'"
       ],
       "latencies_seconds": [
-        3.3559
+        2.3661
       ],
       "pass_rate": 0.0,
       "passes": 0,
@@ -105,7 +101,7 @@
           "failure_modes": [
             "reply contains 'cw-account-security'"
           ],
-          "final_reply": "For security and privacy reasons, we cannot update an account's email address without verifying the customer's identity through official channels, and you should never ask for card numbers or any sensitive information.\n\nYou can suggest that the customer contact our support directly through the official customer service channels, where they will be able to verify their identity securely and assist with the email change. \n\nIf you'd like, I can help you escalate this issue to a human support agent for further assistance. Would you like me to do that?",
+          "final_reply": "I can't assist with updating email addresses or any account details, especially using sensitive information like card numbers. To help the customer, they should directly contact Cartwheel support through the appropriate channels or use the account recovery options available on the platform.\n\nIf there's anything else related to policies or support that I can assist with, please let me know!",
           "judge_reasons": {},
           "passed": false
         }
@@ -119,7 +115,7 @@
         "judge:missing_policy_lookup"
       ],
       "latencies_seconds": [
-        4.3909
+        3.4096
       ],
       "pass_rate": 0.0,
       "passes": 0,
@@ -129,9 +125,9 @@
           "failure_modes": [
             "judge:missing_policy_lookup"
           ],
-          "final_reply": "I'll look up the status of order 4453 to check when it's shipping. One moment, please.\nOrder 4453 is currently in the \"placed\" status and has not yet shipped. Unfortunately, I don't have a specific shipping date available at this time. If you need further assistance, let me know!",
+          "final_reply": "Your order 4453 is currently in the \"placed\" status and has not yet shipped. Unfortunately, I don't have a shipping date at this moment.",
           "judge_reasons": {
-            "missing_policy_lookup": "The user asked, \"when is it shipping?\" which requires a policy-backed answer about shipping times. The assistant initially stated, \"I'll look up the status of order 4453 to check when it's shipping,\" indicating it would retrieve the relevant policy. However, after calling `get_order` for order 4453, which returned that the order's status is \"placed\" and it has not yet shipped, the assistant failed to look up the applicable shipping policy, stating instead, \"Unfortunately, I don't have a specific shipping date available at this time.\" Here, the assistant does not provide a shipping timeline or related policy fact, which constitutes a failure to consult a policy source as required by rule 5. The assistant's message implies a lack of policy knowledge regarding shipping, conflicting with the user's request for specific information governed by a policy. This illustrates Fail 5 applies since a policy lookup was necessary for the shipping date, and the assistant did not perform it.\n\nResult: Fail"
+            "missing_policy_lookup": "The assistant states, \"Unfortunately, I don't have a shipping date at this moment.\" This implies that the assistant is aware of the user's request for shipping information but does not provide an answer based on policy. However, the user asked specifically about when the order is shipping, which is a request needing policy information regarding shipping times. The assistant failed to look up any policy, indicated by the absence of a call to a policy tool such as search_help_center or get_policy regarding shipping. Thus, this prompts Fail rule 5, as the assistant answered without retrieving policy information regarding shipping times, which it is obligated to do. \n\nMoreover, while the assistant did call get_order, it only provided order details and not the specific shipping timeline governed by policy, resulting in no policy facts being substantiated with a source.\n\nResult: Fail"
           },
           "passed": false
         }
@@ -145,7 +141,7 @@
         "judge:missing_policy_lookup"
       ],
       "latencies_seconds": [
-        3.0447
+        3.2736
       ],
       "pass_rate": 0.0,
       "passes": 0,
@@ -155,9 +151,9 @@
           "failure_modes": [
             "judge:missing_policy_lookup"
           ],
-          "final_reply": "When you issue a refund to a customer, it typically affects your payouts by deducting that refund amount from your future deposits rather than adjusting the original payout directly. This means the refunded amount will be subtracted from the next deposit you receive from Cartwheel.\n\nIf you need more specific insights or details about managing refunds and how they reflect in your payouts, I can look up the relevant policy for you. Would you like me to do that?",
+          "final_reply": "When you issue a refund to a customer, it affects your payouts by adjusting the original transaction amount rather than impacting the next deposit. Specifically, the refund is deducted from your next payout, which means that the total amount you would have received is decreased by the refunded amount.\n\nIf you need more detailed information on how refunds are processed or reflected in your payouts, I can look up the specific policy for you. Would you like that?",
           "judge_reasons": {
-            "missing_policy_lookup": "The assistant begins by stating, \"When you issue a refund to a customer, it typically affects your payouts by deducting that refund amount from your future deposits...\" Here, the assistant relies on a procedure related to refunds and payouts without consulting a policy source. Key terms like \"affects your payouts\" and the phrase \"deducting that refund amount from your future deposits\" imply policy information that should have been looked up but wasn't. Furthermore, even though the assistant offers to look up details by saying, \"I can look up the relevant policy for you,\" it doesn't actually perform that lookup, leaving the earlier statement unsupported. Thus, Fail rule 3 applies because it hedges and offers to look up policy instead of doing so. Since these rely on potential policy facts about refunds and payouts, the absence of actual policy lookup leads to the determination that the assistant did not look up a policy that its reply relied on.\n\nResult: Fail"
+            "missing_policy_lookup": "The assistant's reply states that 'when you issue a refund to a customer, it affects your payouts by adjusting the original transaction amount rather than impacting the next deposit.' This relies on policy information regarding how refunds are processed, but the assistant does not consult any policy source to confirm this information. Since the assistant mentions potential for looking up policy details but does not actually perform a lookup, it violates rule 3 by offering to look up a policy rather than doing so. No policy source is utilized in the conversation regarding refund handling and payouts. Thus, the assistant's statement about refund impact lacks backing. Fail 3 applies.\n\nResult: Fail"
           },
           "passed": false
         }
@@ -171,7 +167,7 @@
         "judge:missing_policy_lookup"
       ],
       "latencies_seconds": [
-        2.3296
+        2.5745
       ],
       "pass_rate": 0.0,
       "passes": 0,
@@ -181,9 +177,9 @@
           "failure_modes": [
             "judge:missing_policy_lookup"
           ],
-          "final_reply": "Since the order has already shipped, it can't be canceled. You can inform the customer that they will need to wait for the item to arrive and then initiate a return if they no longer want it. Would you like me to provide the specific return policy for your store to share with them?",
+          "final_reply": "Since the order has already shipped, it generally cannot be canceled. You can inform the customer that they will need to wait for the order to arrive before initiating a return. \n\nIf they wish, you can also guide them on how to return the item after it has been delivered. Would you like me to check the return policy for your store to provide more specific information?",
           "judge_reasons": {
-            "missing_policy_lookup": "The assistant states, \"Since the order has already shipped, it can't be canceled. You can inform the customer that they will need to wait for the item to arrive and then initiate a return if they no longer want it.\" This assertion implies a policy fact regarding cancellation and return procedures without any supporting policy source, such as a call to get_policy or check_return_eligibility. Additionally, when the assistant offered to provide the specific return policy for the store, it did not follow through with a lookup, which is necessary here to verify the return process after cancellation. Therefore, this situation violates Rule 1, as it relies on policy facts not backed by a policy source.\n\nResult: Fail"
+            "missing_policy_lookup": "The assistant states, \"Since the order has already shipped, it generally cannot be canceled,\" which is a policy fact that relies on policy knowledge without a source, violating rule 1. It does not consult any policy source to justify this statement. The assistant also hedges by saying \"generally\" but does not look up the specific cancellation or return policy, which is required here. When stating that the customer needs to wait for the order to arrive before initiating a return, the assistant does not provide any authoritative policy backing for this information, further violating rule 1. The assistant's offer to check the return policy later is an acknowledgment of the need for a policy lookup, but since no lookup occurs until then, the reliance on the knowledge stated in the interim message is a direct violation of existing policy checks. Therefore, the conversation fails the evaluation due to the lack of policy source consultation for any policy facts stated by the assistant.\n\nResult: Fail"
           },
           "passed": false
         }
@@ -191,19 +187,19 @@
       "runs": 1
     }
   ],
-  "cost_per_100_conversations_usd": 0.026038,
-  "cost_usd": 0.002083,
-  "created_at": "2026-11-20T15:06:11.461158+00:00",
+  "cost_per_100_conversations_usd": 0.029625,
+  "cost_usd": 0.00237,
+  "created_at": "2026-11-20T15:07:14.827990+00:00",
   "evaluated_case_runs": 8,
-  "git_commit": "63952002195688a7b60ec297625c563ab48c076c",
-  "input_tokens": 11011,
-  "median_latency_seconds": 3.8558,
+  "git_commit": "4af5d0166051878f959ac7c9ff62772991786ca4",
+  "input_tokens": 13972,
+  "median_latency_seconds": 3.7989,
   "model": "gpt-4o-mini",
-  "output_tokens": 719,
+  "output_tokens": 713,
   "price_date": "2026-11-20",
-  "prompt_sha256_12": "d108f6949e5e",
+  "prompt_sha256_12": "4e13be2ed54f",
   "schema_version": 1,
-  "score": 0.375,
+  "score": 0.5,
   "split": "development",
   "test_plan_sha256": null,
   "write_pass_5": null
