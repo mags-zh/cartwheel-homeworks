@@ -123,6 +123,7 @@ def build_conversations(traces: list[dict[str, Any]], key: str) -> list[dict[str
                 "scenario_id": group[0]["meta"].get("scenario_id"),
                 "session_id": group[0]["meta"].get("session_id"),
                 "trace_ids": [trace["trace_id"] for trace in group],
+                "timestamp": group[-1].get("timestamp"),
                 "models": list(dict.fromkeys(m for trace in group for m in trace["models"])),
                 "tools": list(
                     dict.fromkeys(
@@ -170,6 +171,17 @@ def judge_text(conversation: dict[str, Any], conn: Any) -> str:
     messages = [_session_context(conn, conversation["metadata"])]
     messages += [_judge_message(message) for message in conversation["messages"]]
     return normalize_trace({"trace_id": conversation["id"], "trace": messages})["text"]
+
+
+def score_time(
+    score: dict[str, Any], conversations_by_id: dict[str, dict[str, Any]], window: tuple[datetime, datetime]
+) -> datetime:
+    """Place a score at its conversation's time, and a period score at the window end,
+    so dashboards show when the judged traffic happened rather than when it was scored."""
+    conversation = conversations_by_id.get(score["trace_id"]) if score["trace_id"] else None
+    if conversation and conversation.get("timestamp"):
+        return _utc(conversation["timestamp"])
+    return window[1]
 
 
 def attach_period_trace(
@@ -276,12 +288,13 @@ def monitor(
     risk_verdicts = {tid: verdicts[tid] for tid in risk_ids}
 
     estimate = corrected_mode_prevalence(list(random_verdicts.values()), *judge_test_data(config["judge_id"]))
+    by_id = {c["id"]: c for c in conversations}
     scores = build_score_records(config["judge_mode"], random_verdicts, risk_verdicts, estimate, label)
+    scores = [{**s, "timestamp": score_time(s, by_id, window)} for s in scores]
     if post is None:
         scores = attach_period_trace(scores, record, estimate)
     posted = (post or post_scores)(scores)
 
-    by_id = {c["id"]: c for c in conversations}
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     (OUTPUT_DIR / f"{label}.json").write_text(
         json.dumps(
