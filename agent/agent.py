@@ -344,26 +344,13 @@ def _call(
 def search_help_center(
     wrapper: RunContextWrapper[AuthContext], query: str
 ) -> dict[str, Any]:
-    """Search Cartwheel's help-center policy docs. Returns top matches with policy ids.
-
-    The help center documents every Cartwheel rule: returns and return windows
-    (including store overrides), refunds and refund timing, order cancellations,
-    shipping times, merchant payouts, disputes, restocking fees, when a case goes
-    to a human, roles and permissions, and account and payment security. Call
-    this (or get_policy with a known policy id) before answering any question
-    that depends on one of these rules.
-    """
+    """Search Cartwheel's help-center policy docs. Returns top matches with policy ids."""
     return _call(wrapper, search_help_center_logic, query)
 
 
 @function_tool
 def get_order(wrapper: RunContextWrapper[AuthContext], order_id: int) -> dict[str, Any]:
-    """Look up one order by id, including its refund eligibility.
-
-    Returns order data only: status, dates, store, total and a refund_eligible
-    flag. It contains no policy rules. For shipping times, cancellation, return
-    or refund rules, call search_help_center or check_return_eligibility.
-    """
+    """Look up one order by id, including its refund eligibility."""
     return _call(wrapper, get_order_logic, order_id)
 
 
