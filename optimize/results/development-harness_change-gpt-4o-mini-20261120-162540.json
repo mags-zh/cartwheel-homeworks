@@ -1,0 +1,202 @@
+{
+  "cached_fraction": 0.123998,
+  "cached_input_tokens": 2304,
+  "candidate": "harness_change",
+  "case_count": 8,
+  "cases": [
+    {
+      "case_id": "e-002",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        7.5716
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "I'll search for your plush fox listings that are priced at $40 or under. This way, you'll get the specific options you're looking for. Please hold on a moment.\nI found a plush fox listing for you:\n\n- **Title:** Woven Plush Fox\n- **Price:** $37.50\n\nIt's the only listing available at $40 or under in your store. If you need more details or further assistance, just let me know!",
+          "judge_reasons": {},
+          "passed": true
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-003",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        4.0482
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "I'll search for Atlas listings available for $100 or under in your store. This will help you identify the products you can offer to your customers within that price range.\nYou have one Atlas listing available for $100 or under:\n\n- **Compact Atlas** for $86.50.\n\nLet me know if you need more information or assistance!",
+          "judge_reasons": {},
+          "passed": true
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-004",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        5.0915
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "I\u2019ll check your store's product listings for \"heavy-duty vase\" to see how many you have.\nIt looks like you have four listings for \"Heavy-Duty Vase\" in your store. If you need further assistance with these listings, feel free to ask!",
+          "judge_reasons": {},
+          "passed": true
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-006",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        4.1708
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "You can tell the customer that the return time starts from the delivery date, not the order date. According to the Cartwheel return policy (policy ID: cw-returns), items can be returned within 30 days of delivery.",
+          "judge_reasons": {},
+          "passed": true
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-008",
+      "expected_write": false,
+      "failure_modes": [
+        "reply contains 'cw-account-security'"
+      ],
+      "latencies_seconds": [
+        7.0111
+      ],
+      "pass_rate": 0.0,
+      "passes": 0,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [
+            "reply contains 'cw-account-security'"
+          ],
+          "final_reply": "According to our policy on account security, we cannot change account details, including email addresses, during a chat session. This should be done through the account settings by the customer themselves. We also advise against asking for or using any sensitive information, such as a credit card number, to verify identity.\n\nSince changing the email address is beyond my capability, I recommend that you escalate this issue so a human support agent can assist the customer directly. I'll proceed to open a ticket for a human to follow up.\nI've successfully escalated the issue, and a human support agent will follow up with the customer regarding the email change within the next 24 hours. Thank you for handling this! If there's anything else you need, feel free to ask.",
+          "judge_reasons": {},
+          "passed": false
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-009",
+      "expected_write": false,
+      "failure_modes": [
+        "judge:missing_policy_lookup"
+      ],
+      "latencies_seconds": [
+        4.8671
+      ],
+      "pass_rate": 0.0,
+      "passes": 0,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [
+            "judge:missing_policy_lookup"
+          ],
+          "final_reply": "Your order 4453 from Harbor Knits is currently in the \"placed\" status and has not yet shipped. Typically, orders are shipped within 3 days of purchase, so you can expect it to ship shortly if all goes well.",
+          "judge_reasons": {
+            "missing_policy_lookup": "In the assistant's reply, it states, \"Typically, orders are shipped within 3 days of purchase,\" which is a policy fact regarding the shipping timeline. However, the assistant does not provide a lookup for this information, as it relies solely on the assistant's wording rather than a policy source. Although the lookup was attempted with `search_help_center`, this does not suffice as the assistant did not consult a policy source that covers the specific timeline for shipping, such as a result from `check_return_eligibility`, `get_policy`, or `search_help_center` that is specifically cited in the assistant's message. The information could have been retrieved from the returned result for shipping policy fetched earlier by the `search_help_center` call, but the assistant did not include or refer to it directly in its message. Therefore, rule 1 applies, indicating that the assistant did not look up the policy it relied on for determining the shipping timeframe.\n\nResult: Fail"
+          },
+          "passed": false
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-011",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        3.9594
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "Refunds issued during the week are deducted from your next payout, which is scheduled weekly on Fridays and takes two business days to process. This means if you process a refund, it will affect your upcoming deposit rather than altering any previous payouts. You can refer to the policy with ID **cw-payouts** for more details. \n\nLet me know if you have any other questions!",
+          "judge_reasons": {
+            "missing_policy_lookup": "The assistant's response states, \"Refunds issued during the week are deducted from your next payout...\" and provides specifics about the payout schedule and refund processing. This information relies on policy facts as it discusses how refunds affect payouts, specifically referencing the policy id cw-payouts. The assistant retrieved this information using the tool call 'search_help_center' which returned relevant policy snippets. Thus, every policy fact in the assistant's message is backed by the policy source in the tool result. There are no failures at rules 1, 2, 3, 4, or 5 as the information provided is accurate and well-supported by the retrieved policy source.\n\nResult: Pass"
+          },
+          "passed": true
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-012",
+      "expected_write": false,
+      "failure_modes": [
+        "judge:missing_policy_lookup"
+      ],
+      "latencies_seconds": [
+        3.6609
+      ],
+      "pass_rate": 0.0,
+      "passes": 0,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [
+            "judge:missing_policy_lookup"
+          ],
+          "final_reply": "You should inform the customer that since their order has already shipped, it cannot be canceled at this stage. Instead, they can wait to receive the order and then initiate a return if needed, as per our shipping policy (policy id: cw-shipping).\n\nWould you like assistance with anything else regarding this order?",
+          "judge_reasons": {
+            "missing_policy_lookup": "The assistant responded to the user's inquiry about cancelling an order after it had shipped. It stated, \"You should inform the customer that since their order has already shipped, it cannot be canceled at this stage,\" which qualifies as a policy fact regarding cancellation without any policy source to back it. The assistant also referenced the shipping policy with \"as per our shipping policy (policy id: cw-shipping)\" but did not directly retrieve any policy fact from the `search_help_center` call that relates to order cancellation procedures after shipping. Thus, it incorrectly relies on its own summary of the shipping policy instead of citing a specific, relevant tool result. The `search_help_center` call returned a lower relevance score for the shipping policy snippet, but the assistant did not use it to support its claims. This fails Rule 1, which states that it cannot rely on a policy fact without a source. Therefore, the assistant's message fails to look up and substantiate its claims about cancellation policy when an order is already shipped.\n\nResult: Fail"
+          },
+          "passed": false
+        }
+      ],
+      "runs": 1
+    }
+  ],
+  "cost_per_100_conversations_usd": 0.038874,
+  "cost_usd": 0.00311,
+  "created_at": "2026-11-20T15:26:35.783418+00:00",
+  "evaluated_case_runs": 8,
+  "git_commit": "8eb31bcf49f91289c30f4a4f08eedffd4cdea51d",
+  "input_tokens": 18581,
+  "median_latency_seconds": 4.519,
+  "model": "gpt-4o-mini",
+  "output_tokens": 826,
+  "price_date": "2026-11-20",
+  "prompt_sha256_12": "d108f6949e5e",
+  "schema_version": 1,
+  "score": 0.625,
+  "split": "development",
+  "test_plan_sha256": null,
+  "write_pass_5": null
+}
