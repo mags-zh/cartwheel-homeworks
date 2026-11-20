@@ -1,0 +1,39 @@
+{
+  "configurations": [
+    {
+      "configuration": 1,
+      "git_commit": "404aebf3fcd694fb364a4bf5ae0c08f201a8bfe6",
+      "model": "gpt-5.5",
+      "name": "starting-version-model-1",
+      "parent": ""
+    },
+    {
+      "configuration": 2,
+      "git_commit": "404aebf3fcd694fb364a4bf5ae0c08f201a8bfe6",
+      "model": "claude-opus-4-6",
+      "name": "starting-version-model-2",
+      "parent": ""
+    },
+    {
+      "configuration": 3,
+      "git_commit": "404aebf3fcd694fb364a4bf5ae0c08f201a8bfe6",
+      "model": "gpt-4o-mini",
+      "name": "starting-version-model-3",
+      "parent": ""
+    },
+    {
+      "configuration": 4,
+      "git_commit": "4a7a7c116ca4891d64722d23f20f1e98042cf0fa",
+      "model": "gpt-4o-mini",
+      "name": "final-version-model-3",
+      "parent": "starting-version-model-3"
+    }
+  ],
+  "created_at": "2026-11-20T20:17:07.465892+00:00",
+  "plan_sha256": "76516f4ff30c76fdd2114614469401a2e0e0e10cbba2111b093c713c3cf4ed38",
+  "scorer_commit": "4a7a7c116ca4891d64722d23f20f1e98042cf0fa",
+  "scorer_files": [
+    "replay/__main__.py",
+    "replay/judge.py"
+  ]
+}
