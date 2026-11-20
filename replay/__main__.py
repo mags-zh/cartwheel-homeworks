@@ -33,6 +33,7 @@ from replay.harness import ReplayInfraError, replay_case, summarize_rollouts
 from replay.judge import judge_transcript
 from replay.rollout import (
     apply_checks,
+    judge_trace_text,
     load_cases,
     load_frozen_judge,
     run_case,
@@ -149,6 +150,7 @@ def make_runner(
             "usage": transcript["usage"],
             "final_reply": transcript["final_reply"],
             "judge_reasons": judge_reasons,
+            "trace": judge_trace_text(transcript, case["input"]),
             "agent_latency_seconds": agent_latency_seconds,
         }
 

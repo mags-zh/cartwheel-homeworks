@@ -152,6 +152,7 @@ def run_evaluation(args: argparse.Namespace) -> dict[str, Any]:
                             "failure_modes": record.get("failure_modes", []),
                             "final_reply": record.get("final_reply", "")[:2000],
                             "judge_reasons": record.get("judge_reasons", {}),
+                            "trace": record.get("trace", ""),
                             "error": record.get("error"),
                         }
                         for record in case_records
