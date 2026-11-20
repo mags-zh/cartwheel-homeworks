@@ -1,5 +1,11 @@
 {
   "maximum_calls": 150,
-  "reservations": [],
-  "used_calls": 0
+  "reservations": [
+    {
+      "calls": 8,
+      "label": "improve_baseline",
+      "reserved_at": "2026-11-20T19:47:15.043202+00:00"
+    }
+  ],
+  "used_calls": 8
 }
