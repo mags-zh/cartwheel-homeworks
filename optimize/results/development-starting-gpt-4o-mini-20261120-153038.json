@@ -1,0 +1,206 @@
+{
+  "cached_fraction": 0.0,
+  "cached_input_tokens": 0,
+  "candidate": "starting",
+  "case_count": 8,
+  "cases": [
+    {
+      "case_id": "e-002",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        10.9679
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "I will search for your plush fox listings that are priced at $40 or under. This will help you find the specific options available within your price range. Let's take a look!\nI found one plush fox listing priced at $37.50:\n\n- **Woven Plush Fox**\n\nIf you need more information or want to list additional items, let me know!",
+          "judge_reasons": {},
+          "passed": true
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-003",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        7.0888
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "I will search for Atlas listings in your store that are priced at $100 or under. Please hold on while I gather this information.\nYou have one Atlas listing available for $100 or under:\n\n- **Compact Atlas**: $86.50\n\nIf you need more details or assistance with anything else, let me know!",
+          "judge_reasons": {},
+          "passed": true
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-004",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        4.483
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "I will search for your product listings to see how many heavy-duty vase listings you have. This will help clarify if there are multiple listings or just one.\nYou currently have four listings for \"Heavy-Duty Vase\" in your store. If you need assistance editing or managing these listings, just let me know!",
+          "judge_reasons": {},
+          "passed": true
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-006",
+      "expected_write": false,
+      "failure_modes": [],
+      "latencies_seconds": [
+        4.2673
+      ],
+      "pass_rate": 1.0,
+      "passes": 1,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [],
+          "final_reply": "The return time typically starts from the delivery date, not the order date. I'll confirm this by checking the relevant policy. Please hold on while I look it up.\nThe return time starts from the delivery date, not the order date. According to the Cartwheel return policy (policy id: cw-returns), items can be returned within 30 days of delivery. Let the customer know this information for clarity!",
+          "judge_reasons": {},
+          "passed": true
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-008",
+      "expected_write": false,
+      "failure_modes": [
+        "reply contains 'cw-account-security'"
+      ],
+      "latencies_seconds": [
+        2.9152
+      ],
+      "pass_rate": 0.0,
+      "passes": 0,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [
+            "reply contains 'cw-account-security'"
+          ],
+          "final_reply": "It's important to prioritize customer security and privacy. Updating a customer's email should be done through a secure process, and we should never ask for sensitive information like card numbers to verify identity.\n\nIn this case, I recommend letting the customer know that they need to reach out to our support team or use the platform's account settings to request an email change. If they are unable to do it themselves, you can create a ticket for them to follow up with a human support agent who can assist.\n\nIf you'd like, I can help by escalating this issue for further assistance. Would you like me to do that?",
+          "judge_reasons": {},
+          "passed": false
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-009",
+      "expected_write": false,
+      "failure_modes": [
+        "judge:missing_policy_lookup"
+      ],
+      "latencies_seconds": [
+        4.0634
+      ],
+      "pass_rate": 0.0,
+      "passes": 0,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [
+            "judge:missing_policy_lookup"
+          ],
+          "final_reply": "I'll check the shipping status of Order 4453 for you. One moment, please.\nOrder 4453 is currently in the \"placed\" status and has not yet shipped. You\u2019ll be updated once it ships from Harbor Knits. If you need further assistance, let me know!",
+          "judge_reasons": {
+            "missing_policy_lookup": "The assistant states, \"Order 4453 is currently in the 'placed' status and has not yet shipped.\" This information is derived from the order status, which does not require a policy lookup. However, the assistant does not consult any policy source, as no tool calls were made to retrieve policy information. Since the assistant provided information about the order status without looking up any relevant policy, this violates rule 3, which requires looking up policy information when providing details about shipping status.\n\nResult: Fail"
+          },
+          "passed": false
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-011",
+      "expected_write": false,
+      "failure_modes": [
+        "judge:missing_policy_lookup"
+      ],
+      "latencies_seconds": [
+        2.6197
+      ],
+      "pass_rate": 0.0,
+      "passes": 0,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [
+            "judge:missing_policy_lookup"
+          ],
+          "final_reply": "When you issue a refund to a customer, it affects your payouts in a certain way. Refunds typically reduce the total amount in your next payout rather than changing the original payout that has already been processed. \n\nSo if you refund a customer, that amount will be deducted from your upcoming deposits, which helps balance out the overall earnings from sales and refunds.\n\nIf you need more specific information or details about your store's transactions, feel free to ask!",
+          "judge_reasons": {
+            "missing_policy_lookup": "The assistant states that \"Refunds typically reduce the total amount in your next payout rather than changing the original payout that has already been processed.\" This is a policy fact regarding how refunds affect payouts. However, the assistant did not look up any policy source to support this statement, as indicated by the absence of any tool calls that would retrieve relevant policy documents. Therefore, this reliance on a policy fact without a source violates rule 1.\n\nResult: Fail"
+          },
+          "passed": false
+        }
+      ],
+      "runs": 1
+    },
+    {
+      "case_id": "e-012",
+      "expected_write": false,
+      "failure_modes": [
+        "judge:missing_policy_lookup"
+      ],
+      "latencies_seconds": [
+        2.8796
+      ],
+      "pass_rate": 0.0,
+      "passes": 0,
+      "run_details": [
+        {
+          "error": null,
+          "failure_modes": [
+            "judge:missing_policy_lookup"
+          ],
+          "final_reply": "Since the order has already shipped, it cannot be canceled. You can inform the customer that they will need to receive the order and then initiate a return if they wish to do so. \n\nYou can also explain the return process and what options are available for them to return the item. If you'd like, I can look up the specific return policy for your store.",
+          "judge_reasons": {
+            "missing_policy_lookup": "The assistant states, \"Since the order has already shipped, it cannot be canceled,\" which is a policy fact regarding the cancellation process. This statement relies on a policy source that was not consulted, as there were no tool calls made to check the cancellation policy. Additionally, the assistant offers to look up the return policy but does not actually perform the lookup, which violates rule 3. Therefore, the assistant's response fails to meet the requirement of looking up the relevant policy.\n\nResult: Fail"
+          },
+          "passed": false
+        }
+      ],
+      "runs": 1
+    }
+  ],
+  "cost_per_100_conversations_usd": 0.028856,
+  "cost_usd": 0.002308,
+  "created_at": "2026-11-20T14:31:27.727651+00:00",
+  "evaluated_case_runs": 8,
+  "git_commit": "404aebf3fcd694fb364a4bf5ae0c08f201a8bfe6",
+  "input_tokens": 12258,
+  "median_latency_seconds": 4.1654,
+  "model": "gpt-4o-mini",
+  "output_tokens": 783,
+  "price_date": "2026-11-20",
+  "prompt_sha256_12": "d108f6949e5e",
+  "schema_version": 1,
+  "score": 0.5,
+  "split": "development",
+  "test_plan_sha256": null,
+  "write_pass_5": null
+}

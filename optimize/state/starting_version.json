@@ -1,0 +1,18 @@
+{
+  "comparison_models": [
+    "gpt-5.5",
+    "claude-opus-4-6",
+    "gpt-4o-mini"
+  ],
+  "created_at": "2026-11-20T14:31:38.848593+00:00",
+  "development_model": "gpt-4o-mini",
+  "development_result": "/Users/sarahmaguire/CursorProjects/evals-course/cartwheel-homeworks/optimize/results/latest-development.json",
+  "development_score": 0.5,
+  "git_commit": "404aebf3fcd694fb364a4bf5ae0c08f201a8bfe6",
+  "grader_sha256": "57da9973695398727239d6bd767afd2d4d20e50d157758b53f19789f9219ef5d",
+  "kind": "starting",
+  "model_selection_sha256": "30cedcf1389aae9d83b4fea72f943053b10cf982bc27efa49583a3e4c0614838",
+  "prompt_sha256_12": "d108f6949e5e",
+  "split_membership_sha256": "c63ba437cb7d037d503d42282502a75b44ba27489ddaa1fefeaa52db9344d6fc",
+  "write_pass_5": null
+}
