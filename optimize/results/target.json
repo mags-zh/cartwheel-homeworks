@@ -1,0 +1,12 @@
+{
+  "failure_mode": "missing_policy_lookup",
+  "source": "Homework 7 monitor: frozen HW5 judge on 10 random conversations per period, 3 of 10 flagged in both periods, corrected for judge error (95% bootstrap interval about 0 to 0.53). The mode was chosen as the highest share in the Homework 4 review (36 of 100, a sample fraction).",
+  "prevalence": 0.0858,
+  "requirement": "PURPOSE-1, SCOPE-1",
+  "example_trace_ids": [
+    "3d6b5f984f64c42240fab96561944bd2",
+    "b7f04473f78adf97f7c5b302d6eb7016",
+    "b2fc2382514828fe3d8906ab1f557b43"
+  ],
+  "why_agent_can_change_it": "In all three traces the answer was in a help-center policy that every role may read: cw-returns (the window counts from the delivery date) for support-0095, cw-shipping (stores ship within 3 days) for support-0025, and cw-cancellations (a shipped order can't be cancelled; request a return instead) for support-0090. The agent had search_help_center and get_policy but didn't call them. It answered from general knowledge or from a bare get_order result, and in two traces it offered to look the policy up instead of doing it. Nothing in permissions or data blocked the lookup. So the failure lies in the agent's decision to retrieve, which the prompt (look it up, don't offer), the tools (the get_order result could point to the relevant policy) or the harness (retrieve the policy for policy-dependent requests) can change."
+}
