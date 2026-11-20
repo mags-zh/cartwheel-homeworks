@@ -42,7 +42,7 @@ from agents.items import RunItem
 from opentelemetry import trace
 
 from agent import db
-from agent.agent import build_agent, prompt_version
+from agent.agent import build_agent, prompt_version, run_config_for_turn
 from agent.auth import AuthContext
 from agent.config import REPO_ROOT
 from observability.instrument import load_env, setup_openai_tracing, setup_tracing
@@ -136,7 +136,7 @@ async def chat(
                 session=session,
                 context=ctx,
                 max_turns=MAX_TURNS,
-                run_config=run_config,
+                run_config=run_config_for_turn(line, run_config),
             )
 
         # ------------------------------------------------------------------

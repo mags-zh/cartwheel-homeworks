@@ -16,11 +16,13 @@ The mapping from concept to SDK primitive, stated once: the loop is
 
 from __future__ import annotations
 
+import dataclasses
 import hashlib
 import json
+import re
 from typing import Any
 
-from agents import Agent, ModelSettings, RunContextWrapper, function_tool
+from agents import Agent, ModelSettings, RunConfig, RunContextWrapper, function_tool
 
 from agent import db
 from agent import tools as hw_tools
@@ -161,6 +163,40 @@ def model_settings_for(model: Any) -> ModelSettings:
             include_usage=True,
         )
     return ModelSettings()
+
+
+# ---------------------------------------------------------------------------
+# Harness step control. A user message that names a policy topic (the topics
+# of the help center's platform policies) starts with a forced
+# search_help_center call; the model writes the query, and the SDK returns the
+# tool choice to the model after that first call (Agent.reset_tool_choice).
+# Every caller that starts a turn (replay, server, CLI) passes
+# run_config_for_turn(message), so evaluation and production behave alike.
+# ---------------------------------------------------------------------------
+
+POLICY_TOPIC_PATTERN = re.compile(
+    r"\b(returns?|returned|returning|refunds?|refunded|cancel\w*|ship|ships|shipped"
+    r"|shipping|shipment|deliver\w*|payouts?|deposits?|disputes?|disputed"
+    r"|chargebacks?|restock\w*|fees?|escalat\w*|human|account|password|card"
+    r"|payments?|polic(?:y|ies))\b",
+    re.IGNORECASE,
+)
+
+
+def policy_tool_for(message: str) -> str | None:
+    """The tool to force first for this user message, or None."""
+    return "search_help_center" if POLICY_TOPIC_PATTERN.search(message) else None
+
+
+def run_config_for_turn(message: str, base: RunConfig | None = None) -> RunConfig:
+    """Run settings for one user turn, forcing the first tool when the rule says so."""
+    config = base or RunConfig()
+    tool = policy_tool_for(message)
+    if tool is None:
+        return config
+    forced = ModelSettings(tool_choice=tool)
+    settings = config.model_settings.resolve(forced) if config.model_settings else forced
+    return dataclasses.replace(config, model_settings=settings)
 
 
 # ---------------------------------------------------------------------------

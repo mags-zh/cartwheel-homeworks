@@ -202,7 +202,7 @@ def run_case(
     """
     from agents import Runner, SQLiteSession
 
-    from agent.agent import build_agent
+    from agent.agent import build_agent, run_config_for_turn
 
     ctx = _auth_context(case["input"])
     agent = build_agent(ctx, model=model, prompt_template=prompt_template)
@@ -219,7 +219,12 @@ def run_case(
         }
         for message in messages:
             result = await Runner.run(
-                agent, message, context=ctx, session=session, max_turns=max_turns
+                agent,
+                message,
+                context=ctx,
+                session=session,
+                max_turns=max_turns,
+                run_config=run_config_for_turn(message),
             )
             turn = _extract_turn(result.new_items)
             turn["user"] = message

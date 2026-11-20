@@ -38,7 +38,7 @@ from opentelemetry import trace
 from pydantic import BaseModel
 
 from agent import db
-from agent.agent import build_agent, prompt_version
+from agent.agent import build_agent, prompt_version, run_config_for_turn
 from agent.auth import ROLES, AuthContext
 from agent.config import REPO_ROOT, db_path
 from observability.instrument import load_env, setup_tracing
@@ -202,7 +202,12 @@ async def post_message(
                 ),
             )
         result = await Runner.run(
-            agent, body.message, session=session, context=ctx, max_turns=MAX_TURNS
+            agent,
+            body.message,
+            session=session,
+            context=ctx,
+            max_turns=MAX_TURNS,
+            run_config=run_config_for_turn(body.message),
         )
         reply = str(result.final_output)
         if capture:
