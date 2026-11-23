@@ -8,6 +8,7 @@
   "prices_per_million_tokens_usd": {
     "claude-opus-4-6": {"input": 5.00, "cached_input": 0.50, "output": 25.00},
     "gpt-4o-mini": {"input": 0.15, "cached_input": 0.075, "output": 0.60},
+    "gpt-5-nano": {"input": 0.05, "cached_input": 0.005, "output": 0.40},
     "gpt-5.5": {"input": 5.00, "cached_input": 0.50, "output": 30.00}
   }
 }
