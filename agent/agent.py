@@ -380,13 +380,13 @@ def _call(
 def search_help_center(
     wrapper: RunContextWrapper[AuthContext], query: str
 ) -> dict[str, Any]:
-    """Search Cartwheel's help-center policy docs. Returns top matches with policy ids."""
+    """Search help-center policies. Returns matches with policy ids."""
     return _call(wrapper, search_help_center_logic, query)
 
 
 @function_tool
 def get_order(wrapper: RunContextWrapper[AuthContext], order_id: int) -> dict[str, Any]:
-    """Look up one order by id, including its refund eligibility."""
+    """Get one order by id, with its refund eligibility."""
     return _call(wrapper, get_order_logic, order_id)
 
 
@@ -394,13 +394,7 @@ def get_order(wrapper: RunContextWrapper[AuthContext], order_id: int) -> dict[st
 def check_return_eligibility(
     wrapper: RunContextWrapper[AuthContext], order_id: int
 ) -> dict[str, Any]:
-    """Check whether an order can be returned for a refund, and why.
-
-    Returns the return window that applies (a store override or the platform
-    default), days since delivery, the date the window closes, the policy id to
-    cite, and a one-sentence reason. If the order record is inconsistent,
-    eligible is null and data_issue says why.
-    """
+    """Check if an order can be returned: window, days since delivery, policy id to cite, reason. If the record is inconsistent, eligible is null and data_issue says why."""
     return _call(wrapper, hw_tools.check_return_eligibility, order_id)
 
 
@@ -417,7 +411,7 @@ def _issue_refund_impl(
 def issue_refund(
     wrapper: RunContextWrapper[AuthContext], order_id: int, amount_usd: float, reason: str
 ) -> dict[str, Any]:
-    """Issue a refund on an order. Large refunds are queued for human approval."""
+    """Refund an order. Large refunds are queued for human approval."""
     return _issue_refund_impl(wrapper, order_id, amount_usd, reason)
 
 
@@ -425,13 +419,13 @@ def issue_refund(
 def escalate_to_human(
     wrapper: RunContextWrapper[AuthContext], summary: str, context: str
 ) -> dict[str, Any]:
-    """Open a ticket for a human support agent when a case is above your authority."""
+    """Open a ticket for a human when a case is above your authority."""
     return _call(wrapper, escalate_to_human_logic, summary, context)
 
 
 @function_tool
 def get_policy(wrapper: RunContextWrapper[AuthContext], policy_id: str) -> dict[str, Any]:
-    """Fetch the full text of one policy doc by its exact policy id."""
+    """Get one policy's full text by policy id."""
     return _call(wrapper, hw_tools.get_policy, policy_id)
 
 
@@ -443,7 +437,7 @@ def search_products(
     max_price_usd: float | None = None,
     limit: int = 5,
 ) -> dict[str, Any]:
-    """Search the product catalog, optionally within one store or under a price."""
+    """Search products, optionally by store or max price."""
     ctx = wrapper.context
     try:
         result = hw_tools.search_products(
@@ -457,7 +451,7 @@ def search_products(
 
 @function_tool
 def list_my_orders(wrapper: RunContextWrapper[AuthContext]) -> dict[str, Any]:
-    """List the caller's recent orders (shopper) or their store's recent orders (merchant)."""
+    """List your recent orders (shopper) or your store's (merchant)."""
     return _call(wrapper, hw_tools.list_my_orders)
 
 
@@ -483,10 +477,7 @@ def search_customer_orders(
     customer_id: int,
     product_query: str | None = None,
 ) -> dict[str, Any]:
-    """Search one customer's orders (support staff only), newest first, up to 10.
-
-    Results include product titles and report total_matches; when truncated is
-    true, older matches exist that are not shown.
+    """Search one customer's orders (support only), newest first, up to 10. If truncated is true, older matches exist.
 
     Args:
         customer_id: The customer's user id.
@@ -516,6 +507,27 @@ TOOLS_BY_ROLE = {
 }
 
 
+def _without_titles(schema: Any) -> Any:
+    """Drop the Pydantic ``title`` fields, which only repeat each parameter's name.
+
+    A string-valued ``title`` is schema metadata; a parameter named ``title``
+    would be a dict under ``properties`` and is kept.
+    """
+    if isinstance(schema, dict):
+        return {
+            key: _without_titles(value)
+            for key, value in schema.items()
+            if not (key == "title" and isinstance(value, str))
+        }
+    if isinstance(schema, list):
+        return [_without_titles(value) for value in schema]
+    return schema
+
+
+for _tool in {id(t): t for tools in TOOLS_BY_ROLE.values() for t in tools}.values():
+    _tool.params_json_schema = _without_titles(_tool.params_json_schema)
+
+
 def _defended_refund_tool() -> Any:
     """Rebuild the refund tool with the Module 4 ``needs_approval`` predicate.
 
@@ -532,13 +544,13 @@ def _defended_refund_tool() -> Any:
     """
     from agent.guards import refund_needs_human
 
-    return function_tool(
+    tool = function_tool(
         name_override="issue_refund",
-        description_override=(
-            "Issue a refund on an order. Large refunds are queued for human approval."
-        ),
+        description_override="Refund an order. Large refunds are queued for human approval.",
         needs_approval=refund_needs_human,
     )(_issue_refund_impl)
+    tool.params_json_schema = _without_titles(tool.params_json_schema)
+    return tool
 
 
 def _tools_with_defenses(role: str) -> list[Any]:
