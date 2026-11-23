@@ -1,0 +1,12 @@
+{
+  "threshold": 0.67,
+  "agreement_with_oracle": 0.9348,
+  "agreement_with_human_labels": 0.8913,
+  "proxy_share": 0.5,
+  "cost_per_1000_verdicts_usd": 0.365829,
+  "disagreements_with_oracle": 3,
+  "n": 46,
+  "agreement_requirement": 0.95,
+  "meets_requirement": false,
+  "oracle_cost_per_1000_verdicts_usd": 0.43458
+}
