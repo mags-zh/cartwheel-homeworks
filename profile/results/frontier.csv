@@ -1,0 +1,7 @@
+candidate,model,development_score,write_pass_5,cost_per_100_conversations_usd,median_latency_seconds,frontier_status
+final,gpt-4o-mini,0.75,,0.039135,4.8213,dominated
+fewer-tokens,gpt-4o-mini,0.875,,0.034644,4.8215,dominated
+cache-before,gpt-4o-mini,0.625,,0.033381,4.0767,dominated
+cache-after,gpt-4o-mini,0.875,,0.03228,4.1225,frontier
+cache-after-run2,gpt-4o-mini,0.75,,0.032807,4.2098,dominated
+cache-after-run3,gpt-4o-mini,0.75,,0.032271,4.2232,frontier
