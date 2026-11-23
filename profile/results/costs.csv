@@ -1,0 +1,6 @@
+cost_category,call_site,purpose,model,calls,input_tokens,output_tokens,cost_usd
+customer_conversation,server/app.py:204,"HW3 trace dataset: 250 scenarios (293 traces) answered by the agent through the HTTP server; 154,880 of the input tokens were cached",gpt-4o-mini,594,689629,39903,0.11577
+customer_conversation,replay/rollout.py:221,"HW8 development runs of optimize.runner: 14 runs x 8 cases, agent answering the case's user messages; 34,816 of the input tokens were cached",gpt-4o-mini,112,232303,11381,0.039063
+judge,analysis/helpers/scale.py:259,"HW5 missing_policy_lookup judge: development runs of prompts v0, v1, v2 and the test run of v1; 453,632 of the input tokens were cached",gpt-4o-mini,187,617542,28540,0.075733
+judge,monitoring/run_judges.py:127,"HW7 monitor with missing_policy_lookup-v1: before and after periods and one manual CI run; 55,936 of the input tokens were cached",gpt-4o-mini,33,113611,5288,0.016019
+judge,replay/judge.py:61,"HW8 development scoring with missing_policy_lookup-v1 in optimize.runner; logged calls only: the 3 runs before the scorer fix (9 calls) saved no token counts; 77,312 of the input tokens were cached",gpt-4o-mini,33,113184,5279,0.014347
